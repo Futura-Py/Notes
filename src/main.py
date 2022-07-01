@@ -1,4 +1,4 @@
-import tkinter, sv_ttk, ntkutils
+import tkinter, sv_ttk, ntkutils, sys
 from tkinter import filedialog, ttk
 from pynput.keyboard import HotKey, Key, KeyCode, Listener
 
@@ -28,6 +28,7 @@ def save():
 
 def openfile():
     file = filedialog.askopenfile()
+    
     try:
         content = file.read()
         filename.set(file.name)
@@ -60,6 +61,9 @@ filedir = tkinter.Label(footer, textvariable=filename).pack(side=tkinter.LEFT)
 hotkeys = [
     HotKey(
         [Key.ctrl, KeyCode(char="s")], save
+    ),
+    HotKey(
+        [Key.ctrl, KeyCode(char="o")], openfile
     ),
 ]
 
