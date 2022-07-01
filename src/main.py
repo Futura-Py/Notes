@@ -1,4 +1,4 @@
-import tkinter, sv_ttk, ntkutils, sys
+import tkinter, sv_ttk, ntkutils
 from tkinter import filedialog, ttk
 from pynput.keyboard import HotKey, Key, KeyCode, Listener
 
@@ -41,6 +41,7 @@ def openfile():
 
 filename = tkinter.StringVar(value="unsaved")
 keyhandlerstatus = True
+fileboxstate = tkinter.StringVar(value="File")
 
 header = tkinter.Frame(root, height="50")
 header.pack(fill="both")
@@ -53,8 +54,16 @@ footer = tkinter.Frame(root)
 footer.pack(fill="both", expand=True)
 footer.pack_propagate(False)
 
-btnsave = ttk.Button(header, text="Save", command=save).pack(side=tkinter.LEFT, padx=10)
-btnopen = ttk.Button(header, text="Open", command=openfile).pack(side=tkinter.LEFT)
+filemenu = ttk.Combobox(
+    header, textvariable=fileboxstate, state="readonly", width=3, 
+    values=[
+        "Save",
+        "Save As",
+        "Open",
+        "New"
+    ]
+)
+filemenu.pack(side=tkinter.LEFT, padx=10)
 
 filedir = tkinter.Label(footer, textvariable=filename).pack(side=tkinter.LEFT)
 
@@ -78,6 +87,15 @@ l.start()
 def refreshtitle(e):
     if not root.wm_title().endswith("*"):
         root.title(root.wm_title() + "*")
+
+def fileboxaction(*args):
+    action = fileboxstate.get()
+    filemenu.set("File")
+
+    if action == "Save": save()
+    elif action == "Open": openfile()
+    
+fileboxstate.trace("w", fileboxaction)
 
 textwidget.bind("<KeyPress>", refreshtitle)
 root.mainloop()
