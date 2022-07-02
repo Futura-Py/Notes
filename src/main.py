@@ -1,6 +1,6 @@
 import tkinter, sv_ttk, ntkutils
 from tkinter import filedialog, ttk
-from pynput.keyboard import HotKey, Key, KeyCode, Listener
+from pynput import keyboard
 
 try: import generatesize as size 
 except: import src.generatesize as size
@@ -12,8 +12,8 @@ ntkutils.dark_title_bar(root)
 ntkutils.placeappincenter(root)
 root.update()
 
-def save():
-    if filename.get() == "unsaved":
+def save(saveas=False):
+    if filename.get() == "unsaved" or saveas:
         file = filedialog.asksaveasfile()
     else:
         file = open(filename.get(), "w")
@@ -25,6 +25,9 @@ def save():
         root.title("txt2 - {}".format(filename.get().split("/")[-1]))
     except AttributeError:
         pass
+
+def saveas():
+    save(True)
 
 def openfile():
     file = filedialog.askopenfile()
@@ -40,8 +43,6 @@ def openfile():
         pass
 
 filename = tkinter.StringVar(value="unsaved")
-keyhandlerstatus = True
-fileboxstate = tkinter.StringVar(value="File")
 
 header = tkinter.Frame(root, height="50")
 header.pack(fill="both")
@@ -54,6 +55,10 @@ footer = tkinter.Frame(root)
 footer.pack(fill="both", expand=True)
 footer.pack_propagate(False)
 
+filedir = tkinter.Label(footer, textvariable=filename).pack(side=tkinter.LEFT)
+
+fileboxstate = tkinter.StringVar(value="File")
+
 filemenu = ttk.Combobox(
     header, textvariable=fileboxstate, state="readonly", width=3, 
     values=[
@@ -65,14 +70,28 @@ filemenu = ttk.Combobox(
 )
 filemenu.pack(side=tkinter.LEFT, padx=10)
 
-filedir = tkinter.Label(footer, textvariable=filename).pack(side=tkinter.LEFT)
+def fileboxaction(*args):
+    action = fileboxstate.get()
+    filemenu.set("File")
+
+    if action == "Save": save()
+    elif action == "Open": openfile()
+    elif action == "Save As": saveas()
+    
+fileboxstate.trace("w", fileboxaction)
+
+def refreshtitle(e):
+    if not root.wm_title().endswith("*"):
+        root.title(root.wm_title() + "*")
+
+textwidget.bind("<KeyPress>", refreshtitle)
 
 hotkeys = [
-    HotKey(
-        [Key.ctrl, KeyCode(char="s")], save
+    keyboard.HotKey(
+        [keyboard.Key.ctrl, keyboard.KeyCode(char="s")], save
     ),
-    HotKey(
-        [Key.ctrl, KeyCode(char="o")], openfile
+    keyboard.HotKey(
+        [keyboard.Key.ctrl, keyboard.KeyCode(char="o")], openfile
     ),
 ]
 
@@ -81,21 +100,7 @@ def signal_press_to_hotkeys(key):
 def signal_release_to_hotkeys(key):
     for hotkey in hotkeys: hotkey.release(l.canonical(key))
 
-l = Listener(on_press=signal_press_to_hotkeys, on_release=signal_release_to_hotkeys)
-l.start()
+l = keyboard.Listener(on_press=signal_press_to_hotkeys, on_release=signal_release_to_hotkeys)
+#l.start()
 
-def refreshtitle(e):
-    if not root.wm_title().endswith("*"):
-        root.title(root.wm_title() + "*")
-
-def fileboxaction(*args):
-    action = fileboxstate.get()
-    filemenu.set("File")
-
-    if action == "Save": save()
-    elif action == "Open": openfile()
-    
-fileboxstate.trace("w", fileboxaction)
-
-textwidget.bind("<KeyPress>", refreshtitle)
 root.mainloop()
