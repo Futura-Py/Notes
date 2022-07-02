@@ -42,6 +42,11 @@ def openfile():
     except AttributeError:
         pass
 
+def new():
+    filename.set(value="unsaved")
+    root.title("txt2 - Untitled *")
+    textwidget.delete("1.0", "end")
+
 filename = tkinter.StringVar(value="unsaved")
 
 header = tkinter.Frame(root, height="50")
@@ -77,6 +82,7 @@ def fileboxaction(*args):
     if action == "Save": save()
     elif action == "Open": openfile()
     elif action == "Save As": saveas()
+    elif action == "New": new()
     
 fileboxstate.trace("w", fileboxaction)
 
