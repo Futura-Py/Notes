@@ -1,4 +1,4 @@
-import tkinter, sv_ttk, ntkutils
+import tkinter, sv_ttk, ntkutils, os
 from tkinter import filedialog, ttk
 from pynput import keyboard
 
@@ -26,9 +26,6 @@ def save(saveas=False):
     except AttributeError:
         pass
 
-def saveas():
-    save(True)
-
 def openfile():
     file = filedialog.askopenfile()
     
@@ -46,6 +43,25 @@ def new():
     filename.set(value="unsaved")
     root.title("txt2 - Untitled *")
     textwidget.delete("1.0", "end")
+
+def changetype():
+    if filename.get() == "unsaved":
+        save()
+    else:
+        def change():
+            new_path = filename.get().removesuffix("." + filename.get().split(".")[-1]) + entry.get()
+            os.rename(filename.get(), new_path)
+            filetype.destroy()
+            filename.set(new_path)
+            root.title("txt2 - {}".format(new_path.split("/")[-1]))
+        filetype = tkinter.Toplevel()
+        ntkutils.dark_title_bar(filetype)
+        filetype.title("txt2 - Change file type")
+        lbl = tkinter.Label(filetype, text="Change file extension:", font=("", 20)).pack(pady=5)
+        entry = ttk.Entry(filetype)
+        entry.pack(pady=5)
+        btn = ttk.Button(filetype, text="Apply", command=change).pack(pady=5)
+
 
 filename = tkinter.StringVar(value="unsaved")
 
@@ -75,7 +91,8 @@ filemenu = ttk.Combobox(
         "Save",
         "Save As",
         "Open",
-        "New"
+        "New",
+        "File Type"
     ]
 )
 filemenu.pack(side=tkinter.LEFT, padx=10)
@@ -86,8 +103,9 @@ def fileboxaction(*args):
 
     if action == "Save": save()
     elif action == "Open": openfile()
-    elif action == "Save As": saveas()
+    elif action == "Save As": save(True)
     elif action == "New": new()
+    elif action == "File Type": changetype()
     
 fileboxstate.trace("w", fileboxaction)
 
