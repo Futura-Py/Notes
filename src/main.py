@@ -1,4 +1,4 @@
-import tkinter, sv_ttk, ntkutils, os
+import tkinter, sv_ttk, ntkutils
 from tkinter import filedialog, ttk
 from pynput import keyboard
 
@@ -6,6 +6,7 @@ try: import generatesize as size
 except: import src.generatesize as size
 
 import filetype as f
+import settings
 
 root = tkinter.Tk()
 sv_ttk.set_theme("dark")
@@ -52,7 +53,6 @@ def changetype():
     else:
         f.changetype(filename, root)
 
-
 filename = tkinter.StringVar(value="unsaved")
 
 header = tkinter.Frame(root, height="50")
@@ -98,6 +98,8 @@ def fileboxaction(*args):
     elif action == "File Type": changetype()
     
 fileboxstate.trace("w", fileboxaction)
+
+btnsettings = ttk.Button(header, text="Settings", command=lambda:settings.build()).pack(side=tkinter.LEFT)
 
 def refreshtitle(e):
     if not root.wm_title().endswith("*"):
