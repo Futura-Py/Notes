@@ -2,11 +2,14 @@ import tkinter, sv_ttk, ntkutils
 from tkinter import filedialog, ttk
 from pynput import keyboard
 
-try: import generatesize as size 
-except: import src.generatesize as size
-
-import filetype as f
-import settings
+try: 
+    import generatesize as size 
+    import filetype as f
+    import settings
+except: 
+    import src.generatesize as size
+    import src.filetype as f
+    import src.settings as settings
 
 root = tkinter.Tk()
 sv_ttk.set_theme("dark")
