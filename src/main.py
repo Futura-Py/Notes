@@ -5,6 +5,8 @@ from pynput import keyboard
 try: import generatesize as size 
 except: import src.generatesize as size
 
+import filetype as f
+
 root = tkinter.Tk()
 sv_ttk.set_theme("dark")
 ntkutils.windowsetup(root, title="txt2 - Untitled *", resizeable=False, size=size.get(), icon="assets/logo.png")
@@ -48,19 +50,7 @@ def changetype():
     if filename.get() == "unsaved":
         save()
     else:
-        def change():
-            new_path = filename.get().removesuffix("." + filename.get().split(".")[-1]) + entry.get()
-            os.rename(filename.get(), new_path)
-            filetype.destroy()
-            filename.set(new_path)
-            root.title("txt2 - {}".format(new_path.split("/")[-1]))
-        filetype = tkinter.Toplevel()
-        ntkutils.dark_title_bar(filetype)
-        filetype.title("txt2 - Change file type")
-        lbl = tkinter.Label(filetype, text="Change file extension:", font=("", 20)).pack(pady=5)
-        entry = ttk.Entry(filetype)
-        entry.pack(pady=5)
-        btn = ttk.Button(filetype, text="Apply", command=change).pack(pady=5)
+        f.changetype(filename, root)
 
 
 filename = tkinter.StringVar(value="unsaved")
