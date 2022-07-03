@@ -54,6 +54,11 @@ header.pack(fill="both")
 header.pack_propagate(False)
 
 textwidget = tkinter.Text(root, height=int((root.winfo_height() - 50) / 17.5))
+
+scrollbar = ttk.Scrollbar(root, command=textwidget.yview)
+textwidget.config(yscrollcommand=scrollbar.set)
+scrollbar.pack(side="right", fill="y", expand=False, pady=(0, 25))
+
 textwidget.pack(fill="x")
 
 footer = tkinter.Frame(root)
