@@ -18,7 +18,7 @@ cfg = config.cfg
 root = tkinter.Tk()
 sv_ttk.set_theme(cfg["theme"].lower())
 ntkutils.windowsetup(root, title="txt2 - Untitled *", resizeable=False, size=size.get(), icon="assets/logo.png")
-ntkutils.dark_title_bar(root)
+if cfg["theme"] == "Dark": ntkutils.dark_title_bar(root)
 ntkutils.placeappincenter(root)
 root.update()
 
