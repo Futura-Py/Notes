@@ -32,11 +32,11 @@ def build():
     ntkutils.windowsetup(settings, "txt2 - Settings", "assets/logo.png", False, "500x400")
     ntkutils.dark_title_bar(settings)
 
-    frameleft = tkinter.Frame(settings, width=175, borderwidth=1, relief=RIDGE)
+    frameleft = tkinter.Frame(settings, width=175, bg="#202020")
     frameleft.pack(side=tkinter.LEFT, fill="y")
     frameleft.pack_propagate(False)
 
-    frameright = tkinter.Frame(settings, borderwidth=1, relief=RIDGE, width=325)
+    frameright = tkinter.Frame(settings, width=325)
     frameright.pack(side=tkinter.LEFT, fill="both")
     frameright.pack_propagate(False)
 
