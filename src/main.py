@@ -1,3 +1,5 @@
+ver = "0.3"
+
 import tkinter, sv_ttk, ntkutils
 from tkinter import filedialog, ttk
 from pynput import keyboard
