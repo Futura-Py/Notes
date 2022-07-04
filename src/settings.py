@@ -1,9 +1,14 @@
 import tkinter, ntkutils
 from tkinter import E, ttk, font
-import config
+
+try:
+    import config
+except:
+    import src.config as config
 
 cfg = config.cfg
 page = ""
+save = False
 
 def appearance():
     global box1, box2, page
@@ -47,15 +52,19 @@ def savechanges():
     elif page == "experimental":
         pass
 
-def exit_():
+def apply():
     global page
-    
+
+    savechanges()
+
     ntkutils.cfgtools.SaveCFG(cfg)
-    page = ""
+    save = True
     settings.destroy()
 
 def build():
-    global frameright, frameleft, btnappearence, btnexperimental, settings
+    global frameright, frameleft, btnappearence, btnexperimental, settings, page
+
+    page = ""
 
     settings = tkinter.Toplevel()
     ntkutils.windowsetup(settings, "txt2 - Settings", "assets/logo.png", False, "500x400")
@@ -64,6 +73,9 @@ def build():
     frameleft = tkinter.Frame(settings, width=175, bg="#202020")
     frameleft.pack(side=tkinter.LEFT, fill="y")
     frameleft.pack_propagate(False)
+
+    if not cfg["theme"] == "Dark":
+        frameleft.configure(bg="#f3f3f3")
 
     frameright = tkinter.Frame(settings, width=325)
     frameright.pack(side=tkinter.LEFT, fill="both")
@@ -74,7 +86,7 @@ def build():
     btnexperimental = ttk.Button(frameleft, text="Experimental Features", width=20, command=experimental)
     btnexperimental.pack()
 
-    btnapply = ttk.Button(frameleft, text="Apply", style="Accent.TButton", width=20, command=exit_).pack(side=tkinter.BOTTOM, pady=10)
+    btnapply = ttk.Button(frameleft, text="Apply", style="Accent.TButton", width=20, command=apply).pack(side=tkinter.BOTTOM, pady=10)
 
     getfonts()
     appearance()

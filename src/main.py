@@ -6,13 +6,17 @@ try:
     import generatesize as size 
     import filetype as f
     import settings
+    import config
 except: 
     import src.generatesize as size
     import src.filetype as f
     import src.settings as settings
+    import src.config as config
+
+cfg = config.cfg
 
 root = tkinter.Tk()
-sv_ttk.set_theme("dark")
+sv_ttk.set_theme(cfg["theme"].lower())
 ntkutils.windowsetup(root, title="txt2 - Untitled *", resizeable=False, size=size.get(), icon="assets/logo.png")
 ntkutils.dark_title_bar(root)
 ntkutils.placeappincenter(root)
@@ -55,6 +59,15 @@ def changetype():
         save()
     else:
         f.changetype(filename, root)
+
+def settings_():
+    global cfg
+
+    settings.build()
+    root.wait_window(settings.settings)
+    cfg = settings.cfg
+    sv_ttk.set_theme(cfg["theme"].lower())
+    
 
 filename = tkinter.StringVar(value="unsaved")
 
@@ -102,7 +115,7 @@ def fileboxaction(*args):
     
 fileboxstate.trace("w", fileboxaction)
 
-btnsettings = ttk.Button(header, text="Settings", command=lambda:settings.build()).pack(side=tkinter.LEFT)
+btnsettings = ttk.Button(header, text="Settings", command=settings_).pack(side=tkinter.LEFT)
 
 def refreshtitle(e):
     if not root.wm_title().endswith("*"):
