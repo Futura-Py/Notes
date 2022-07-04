@@ -1,32 +1,61 @@
 import tkinter, ntkutils
-from tkinter import E, RIDGE, ttk, font
+from tkinter import E, ttk, font
+import config
+
+cfg = config.cfg
+page = ""
 
 def appearance():
+    global box1, box2, page
+
+    if not page == "":
+        savechanges()
+
     clearstates()
     btnappearence.configure(style="Accent.TButton")
     ntkutils.clearwin(frameright)
 
+    page = "appearance"
+
     lbl1 = tkinter.Label(frameright, text="Theme:").place(x=10, y=12)
-    theme = tkinter.StringVar(value="Dark")
-    box1 = ttk.Combobox(frameright, values=["Dark", "Light", "System"], textvariable=theme, state="readonly").pack(padx=10, pady=10, anchor=E)
-    def resettheme(*args): theme.set("Dark")
-    theme.trace("w", resettheme)
+    box1 = ttk.Combobox(frameright, values=["Dark", "Light", "System"], state="readonly")
+    box1.set(cfg["theme"])
+    box1.pack(padx=10, pady=10, anchor=E)
 
     lbl2 = tkinter.Label(frameright, text="Font:").place(x=10, y=67)
-    font = tkinter.StringVar(value="Courier New")
-    box2 = ttk.Combobox(frameright, textvariable=font, state="readonly", values=fonts).pack(padx=10, pady=10, anchor=E)
-    def resetfont(*args): font.set("Courier New")
-    font.trace("w", resetfont)
+    box2 = ttk.Combobox(frameright, textvariable=font, state="readonly", values=fonts)
+    box2.set(cfg["font"])
+    box2.pack(padx=10, pady=10, anchor=E)
 
 def experimental():
+    global page
+
+    savechanges()
+
     clearstates()
     btnexperimental.configure(style="Accent.TButton")
     ntkutils.clearwin(frameright)
 
-    btn1 = ttk.Button(frameright, text="I am another button").pack()
+    page = "experimental"
+
+    lbl1 = tkinter.Label(frameright, text="Experimental features go here").pack(pady=10)
+
+def savechanges():
+    if page == "appearance":
+        cfg["theme"] = box1.get()
+        cfg["font"] = box2.get()
+    elif page == "experimental":
+        pass
+
+def exit_():
+    global page
+    
+    ntkutils.cfgtools.SaveCFG(cfg)
+    page = ""
+    settings.destroy()
 
 def build():
-    global frameright, frameleft, btnappearence, btnexperimental
+    global frameright, frameleft, btnappearence, btnexperimental, settings
 
     settings = tkinter.Toplevel()
     ntkutils.windowsetup(settings, "txt2 - Settings", "assets/logo.png", False, "500x400")
@@ -44,6 +73,8 @@ def build():
     btnappearence.pack(pady=10)
     btnexperimental = ttk.Button(frameleft, text="Experimental Features", width=20, command=experimental)
     btnexperimental.pack()
+
+    btnapply = ttk.Button(frameleft, text="Apply", style="Accent.TButton", width=20, command=exit_).pack(side=tkinter.BOTTOM, pady=10)
 
     getfonts()
     appearance()
