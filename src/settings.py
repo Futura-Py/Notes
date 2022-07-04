@@ -1,6 +1,5 @@
 import tkinter, ntkutils
-from tkinter import E, RIDGE, ttk 
-import matplotlib.font_manager as fm
+from tkinter import E, RIDGE, ttk, font
 
 def appearance():
     clearstates()
@@ -55,8 +54,5 @@ def clearstates():
 
 def getfonts():
     global fonts
-    fonts = []
-    for f in fm.fontManager.ttflist:
-        if not f.name in fonts:
-            fonts.append(f.name)
+    fonts=list(font.families())
     fonts.sort()
