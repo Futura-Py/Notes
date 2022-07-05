@@ -3,5 +3,5 @@ import ntkutils.cfgtools as cfgtools
 def get():
     return cfgtools.init({
     "theme": "Dark",
-    "font": "Courier New",
+    "font": "Helvetica",
     })
