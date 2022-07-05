@@ -6,17 +6,12 @@ try:
 except:
     import src.config as config
 
-cfg = config.cfg
-page = ""
-save = False
-
 def appearance():
     global box1, box2, page
 
-    if not page == "":
-        savechanges()
-
+    savechanges()
     clearstates()
+
     btnappearence.configure(style="Accent.TButton")
     ntkutils.clearwin(frameright)
 
@@ -53,7 +48,7 @@ def savechanges():
         pass
 
 def apply():
-    global page
+    global page, save
 
     savechanges()
 
@@ -61,10 +56,13 @@ def apply():
     save = True
     settings.destroy()
 
-def build():
-    global frameright, frameleft, btnappearence, btnexperimental, settings, page
 
+def build():
+    global frameright, frameleft, btnappearence, btnexperimental, settings, page, cfg, save
+
+    cfg = config.get()
     page = ""
+    save = False
 
     settings = tkinter.Toplevel()
     ntkutils.windowsetup(settings, "txt2 - Settings", "assets/logo.png", False, "500x400")

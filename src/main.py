@@ -15,7 +15,7 @@ except:
     import src.settings as settings
     import src.config as config
 
-cfg = config.cfg
+cfg = config.get()
 
 root = tkinter.Tk()
 sv_ttk.set_theme(cfg["theme"].lower())
@@ -67,9 +67,11 @@ def settings_():
 
     settings.build()
     root.wait_window(settings.settings)
-    cfg = settings.cfg
-    sv_ttk.set_theme(cfg["theme"].lower())
-    if cfg["theme"] == "Dark": ntkutils.dark_title_bar(root)
+    
+    if settings.save == True:
+        cfg = settings.cfg
+        sv_ttk.set_theme(cfg["theme"].lower())
+        if cfg["theme"] == "Dark": ntkutils.dark_title_bar(root)
     
 
 filename = tkinter.StringVar(value="unsaved")
