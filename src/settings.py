@@ -30,6 +30,11 @@ def appearance():
     box3.insert(0, cfg["font-size"])
     box3.place(x=260, y=63)
 
+    lbl3 = tkinter.Label(frameright, text="Font size:").place(x=10, y=122)
+    box3 = ttk.Combobox(frameright, state="readonly", values=["10", "12", "14", "16", "18", "20", "22", "24", "26", "28", "30", "32", "34", "36", "38", "40", "42", "44", "46", "48", "50", "52", "54", "56", "58", "60"])
+    box3.set(cfg["size"])
+    box3.pack(padx=10, pady=10, anchor=E)
+
 def experimental():
     global page
 
@@ -88,7 +93,8 @@ def build():
     btnexperimental = ttk.Button(frameleft, text="Experimental Features", width=20, command=experimental)
     btnexperimental.pack()
 
-    btnapply = ttk.Button(frameleft, text="Apply", style="Accent.TButton", width=20, command=apply).pack(side=tkinter.BOTTOM, pady=10)
+    btnapply = ttk.Button(frameleft, text="Apply", style="Accent.TButton", width=20, command=apply)
+    btnapply.pack(side=tkinter.BOTTOM, pady=10)
 
     getfonts()
     appearance()
