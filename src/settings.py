@@ -4,7 +4,7 @@ from tkinter import E, ttk, font
 import config
 
 def appearance():
-    global box1, box2, box3, page
+    global boxtheme, boxfont, boxsize, page
 
     savechanges()
     clearstates()
@@ -14,21 +14,21 @@ def appearance():
 
     page = "appearance"
 
-    lbl1 = tkinter.Label(frameright, text="Theme:").place(x=10, y=12)
-    box1 = ttk.Combobox(frameright, values=["Dark", "Light", "System"], state="readonly", width=25)
-    box1.set(cfg["theme"])
-    box1.pack(padx=10, pady=10, anchor=E)
+    lbltheme = tkinter.Label(frameright, text="Theme:").place(x=10, y=12)
+    boxtheme = ttk.Combobox(frameright, values=["Dark", "Light", "System"], state="readonly", width=25)
+    boxtheme.set(cfg["theme"])
+    boxtheme.pack(padx=10, pady=10, anchor=E)
 
-    lbl2 = tkinter.Label(frameright, text="Font:").place(x=10, y=67)
-    box2 = ttk.Combobox(frameright, state="readonly", values=fonts, width=15)
-    box2.set(cfg["font"])
-    box2.pack(padx=80, pady=10, anchor=E)
-    box3 = ttk.Entry(frameright, width=5)
-    box3.insert(0, cfg["font-size"])
-    box3.place(x=260, y=63)
+    lblfont = tkinter.Label(frameright, text="Font:").place(x=10, y=67)
+    boxfont = ttk.Combobox(frameright, state="readonly", values=fonts, width=15)
+    boxfont.set(cfg["font"])
+    boxfont.pack(padx=80, pady=10, anchor=E)
+    boxsize = ttk.Entry(frameright, width=5)
+    boxsize.insert(0, cfg["font-size"])
+    boxsize.place(x=260, y=63)
 
 def experimental():
-    global page
+    global page, btnmica
 
     savechanges()
 
@@ -38,15 +38,19 @@ def experimental():
 
     page = "experimental"
 
-    lbl1 = tkinter.Label(frameright, text="Experimental features go here").pack(pady=10)
+    lblmica = tkinter.Label(frameright, text="Mica Blur:").place(x=10, y=12)
+    btnmica = ttk.Checkbutton(frameright, style="Switch.TCheckbutton")
+    btnmica.pack(padx=10, pady=10, anchor=E)
+    btnmica.state(["!alternate"])
+    if cfg["mica"]: btnmica.state(["!alternate", "selected"])
 
 def savechanges():
     if page == "appearance":
-        cfg["theme"] = box1.get()
-        cfg["font"] = box2.get()
-        cfg["font-size"] = box3.get()
+        cfg["theme"] = boxtheme.get()
+        cfg["font"] = boxfont.get()
+        cfg["font-size"] = boxsize.get()
     elif page == "experimental":
-        pass
+        cfg["mica"] = btnmica.instate(["selected"])
 
 def apply():
     global page, save

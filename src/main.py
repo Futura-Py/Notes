@@ -16,10 +16,19 @@ ntkutils.windowsetup(root, title="txt2 - Untitled *", resizeable=False, size=siz
 ntkutils.placeappincenter(root)
 root.update()
 
+def mica():
+    if cfg["theme"] == "Dark":
+        ntkutils.blur_window_background(root, dark=True)
+        textwidget.configure(bg="#1b1c1b")
+    else:
+        ntkutils.blur_window_background(root)
+        textwidget.configure(bg="#fafbfa")
+
 def applysettings():
     sv_ttk.set_theme(cfg["theme"].lower())
     if cfg["theme"] == "Dark": ntkutils.dark_title_bar(root)
     textwidget.configure(font=(cfg["font"], int(cfg["font-size"])))
+    if cfg["mica"]: mica()
 
 def save(saveas=False):
     if filename.get() == "unsaved" or saveas:
