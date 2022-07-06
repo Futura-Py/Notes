@@ -25,7 +25,7 @@ root.update()
 def applysettings():
     sv_ttk.set_theme(cfg["theme"].lower())
     if cfg["theme"] == "Dark": ntkutils.dark_title_bar(root)
-    textwidget.configure(font=(cfg["font"], int(cfg["size"])))
+    textwidget.configure(font=(cfg["font"], int(cfg["font-size"])))
 
 def save(saveas=False):
     if filename.get() == "unsaved" or saveas:
