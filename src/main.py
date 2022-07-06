@@ -16,7 +16,6 @@ except:
     import src.config as config
 
 cfg = config.get()
-print(cfg)
 
 root = tkinter.Tk()
 ntkutils.windowsetup(root, title="txt2 - Untitled *", resizeable=False, size=size.get(), icon="assets/logo.png")
