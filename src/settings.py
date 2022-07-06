@@ -7,7 +7,7 @@ except:
     import src.config as config
 
 def appearance():
-    global box1, box2, page
+    global box1, box2, box3, page
 
     savechanges()
     clearstates()
@@ -23,9 +23,14 @@ def appearance():
     box1.pack(padx=10, pady=10, anchor=E)
 
     lbl2 = tkinter.Label(frameright, text="Font:").place(x=10, y=67)
-    box2 = ttk.Combobox(frameright, textvariable=font, state="readonly", values=fonts)
+    box2 = ttk.Combobox(frameright, state="readonly", values=fonts)
     box2.set(cfg["font"])
     box2.pack(padx=10, pady=10, anchor=E)
+
+    lbl3 = tkinter.Label(frameright, text="Font size:").place(x=10, y=122)
+    box3 = ttk.Combobox(frameright, state="readonly", values=["10", "12", "14", "16", "18", "20", "22", "24", "26", "28", "30", "32", "34", "36", "38", "40", "42", "44", "46", "48", "50", "52", "54", "56", "58", "60"])
+    box3.set(cfg["size"])
+    box3.pack(padx=10, pady=10, anchor=E)
 
 def experimental():
     global page
@@ -44,6 +49,7 @@ def savechanges():
     if page == "appearance":
         cfg["theme"] = box1.get()
         cfg["font"] = box2.get()
+        cfg["size"] = box3.get()
     elif page == "experimental":
         pass
 
@@ -84,7 +90,8 @@ def build():
     btnexperimental = ttk.Button(frameleft, text="Experimental Features", width=20, command=experimental)
     btnexperimental.pack()
 
-    btnapply = ttk.Button(frameleft, text="Apply", style="Accent.TButton", width=20, command=apply).pack(side=tkinter.BOTTOM, pady=10)
+    btnapply = ttk.Button(frameleft, text="Apply", style="Accent.TButton", width=20, command=apply)
+    btnapply.pack(side=tkinter.BOTTOM, pady=10)
 
     getfonts()
     appearance()

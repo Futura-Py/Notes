@@ -16,6 +16,7 @@ except:
     import src.config as config
 
 cfg = config.get()
+print(cfg)
 
 root = tkinter.Tk()
 ntkutils.windowsetup(root, title="txt2 - Untitled *", resizeable=False, size=size.get(), icon="assets/logo.png")
@@ -25,7 +26,7 @@ root.update()
 def applysettings():
     sv_ttk.set_theme(cfg["theme"].lower())
     if cfg["theme"] == "Dark": ntkutils.dark_title_bar(root)
-    textwidget.configure(font=(cfg["font"], 11))
+    textwidget.configure(font=(cfg["font"], int(cfg["size"])))
 
 def save(saveas=False):
     if filename.get() == "unsaved" or saveas:
@@ -147,6 +148,9 @@ def signal_release_to_hotkeys(key):
 l = keyboard.Listener(on_press=signal_press_to_hotkeys, on_release=signal_release_to_hotkeys)
 #l.start()
 
-applysettings()
+try:
+    applysettings()
+except:
+    config.get()
 
 root.mainloop()
