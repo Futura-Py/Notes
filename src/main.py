@@ -4,16 +4,10 @@ import tkinter, sv_ttk, ntkutils
 from tkinter import filedialog, ttk
 from pynput import keyboard
 
-try: 
-    import generatesize as size 
-    import filetype as f
-    import settings
-    import config
-except: 
-    import src.generatesize as size
-    import src.filetype as f
-    import src.settings as settings
-    import src.config as config
+import generatesize as size 
+import filetype as f
+import settings
+import config
 
 cfg = config.get()
 

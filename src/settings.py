@@ -1,10 +1,7 @@
 import tkinter, ntkutils
 from tkinter import E, ttk, font
 
-try:
-    import config
-except:
-    import src.config as config
+import config
 
 def appearance():
     global box1, box2, box3, page
