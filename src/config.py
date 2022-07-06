@@ -4,4 +4,5 @@ def get():
     return cfgtools.init({
     "theme": "Dark",
     "font": "Helvetica",
+    "font-size": 11,
     })

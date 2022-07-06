@@ -25,7 +25,7 @@ root.update()
 def applysettings():
     sv_ttk.set_theme(cfg["theme"].lower())
     if cfg["theme"] == "Dark": ntkutils.dark_title_bar(root)
-    textwidget.configure(font=(cfg["font"], 11))
+    textwidget.configure(font=(cfg["font"], cfg["font-size"]))
 
 def save(saveas=False):
     if filename.get() == "unsaved" or saveas:
@@ -75,7 +75,6 @@ def settings_():
         cfg = settings.cfg
         applysettings()
     
-
 filename = tkinter.StringVar(value="unsaved")
 
 header = tkinter.Frame(root, height="50")
