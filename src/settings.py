@@ -1,5 +1,5 @@
 import tkinter, ntkutils
-from tkinter import E, ttk, font
+from tkinter import E, N, W, ttk, font
 
 import config
 
@@ -28,7 +28,7 @@ def appearance():
     boxsize.place(x=260, y=63)
 
 def experimental():
-    global page, btnmica
+    global page, btnmica, btnhotkeys
 
     savechanges()
 
@@ -43,6 +43,13 @@ def experimental():
     btnmica.pack(padx=10, pady=10, anchor=E)
     btnmica.state(["!alternate"])
     if cfg["mica"]: btnmica.state(["!alternate", "selected"])
+    micainfo = tkinter.Label(frameright, text="When switching from dark to light theme with this\noption enabled, you have to perform a restart!", justify="left", fg="grey").place(x=10, y=42)
+
+    lblhotkeys = tkinter.Label(frameright, text="Enable Hotkeys: (Buggy) [needs restart]").place(x=10, y=112)
+    btnhotkeys = ttk.Checkbutton(frameright, style="Switch.TCheckbutton")
+    btnhotkeys.pack(padx=10, pady=65, anchor="e")
+    btnhotkeys.state(["!alternate"])
+    if cfg["hotkeys"]: btnhotkeys.state(["!alternate", "selected"])
 
 def savechanges():
     if page == "appearance":
@@ -51,6 +58,7 @@ def savechanges():
         cfg["font-size"] = boxsize.get()
     elif page == "experimental":
         cfg["mica"] = btnmica.instate(["selected"])
+        cfg["hotkeys"] = btnhotkeys.instate(["selected"])
 
 def apply():
     global page, save

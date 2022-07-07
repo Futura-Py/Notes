@@ -147,7 +147,7 @@ def signal_release_to_hotkeys(key):
     for hotkey in hotkeys: hotkey.release(l.canonical(key))
 
 l = keyboard.Listener(on_press=signal_press_to_hotkeys, on_release=signal_release_to_hotkeys)
-#l.start()
+if cfg["hotkeys"]: l.start()
 
 try:
     applysettings()

@@ -5,5 +5,6 @@ def get():
     "theme": "Dark",
     "font": "Helvetica",
     "font-size": 11,
-    "mica": False
+    "mica": False,
+    "hotkeys": False,
     })
