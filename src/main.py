@@ -1,18 +1,36 @@
-import tkinter, sv_ttk, ntkutils, os
+ver = "0.3"
+
+import tkinter, sv_ttk, ntkutils
 from tkinter import filedialog, ttk
 from pynput import keyboard
+import darkdetect
 
-try: import generatesize as size 
-except: import src.generatesize as size
-
+import generatesize as size 
 import filetype as f
+import settings
+import config
+
+cfg = config.get()
 
 root = tkinter.Tk()
-sv_ttk.set_theme("dark")
 ntkutils.windowsetup(root, title="txt2 - Untitled *", resizeable=False, size=size.get(), icon="assets/logo.png")
-ntkutils.dark_title_bar(root)
 ntkutils.placeappincenter(root)
 root.update()
+
+def mica():
+    if cfg["theme"] == "Dark":
+        ntkutils.blur_window_background(root, dark=True)
+        textwidget.configure(bg="#1b1c1b")
+    else:
+        ntkutils.blur_window_background(root)
+        textwidget.configure(bg="#fafbfa")
+
+def applysettings():
+    if cfg["theme"] == "System": sv_ttk.set_theme(darkdetect.theme().lower())
+    else: sv_ttk.set_theme(cfg["theme"].lower())
+    if cfg["theme"] == "Dark" or (cfg["theme"] == "System" and darkdetect.isDark()): ntkutils.dark_title_bar(root)
+    textwidget.configure(font=(cfg["font"], int(cfg["font-size"])))
+    if cfg["mica"]: mica()
 
 def save(saveas=False):
     if filename.get() == "unsaved" or saveas:
@@ -52,7 +70,16 @@ def changetype():
     else:
         f.changetype(filename, root)
 
+def settings_():
+    global cfg
 
+    settings.build()
+    root.wait_window(settings.settings)
+    
+    if settings.save == True:
+        cfg = settings.cfg
+        applysettings()
+    
 filename = tkinter.StringVar(value="unsaved")
 
 header = tkinter.Frame(root, height="50")
@@ -99,6 +126,8 @@ def fileboxaction(*args):
     
 fileboxstate.trace("w", fileboxaction)
 
+btnsettings = ttk.Button(header, text="Settings", command=settings_).pack(side=tkinter.LEFT)
+
 def refreshtitle(e):
     if not root.wm_title().endswith("*"):
         root.title(root.wm_title() + "*")
@@ -120,6 +149,11 @@ def signal_release_to_hotkeys(key):
     for hotkey in hotkeys: hotkey.release(l.canonical(key))
 
 l = keyboard.Listener(on_press=signal_press_to_hotkeys, on_release=signal_release_to_hotkeys)
-#l.start()
+if cfg["hotkeys"]: l.start()
+
+try:
+    applysettings()
+except:
+    config.get()
 
 root.mainloop()
