@@ -1,7 +1,8 @@
 ver = "0.3"
 
 import tkinter, sv_ttk, ntkutils
-from tkinter import filedialog, ttk
+from click import style
+from tkinter import LEFT, filedialog, ttk
 from pynput import keyboard
 import darkdetect
 
@@ -17,6 +18,7 @@ ntkutils.windowsetup(root, title="txt2 - Untitled *", resizeable=False, size=siz
 ntkutils.placeappincenter(root)
 root.update()
 
+#region funcs
 def mica():
     if cfg["theme"] == "Dark" or (cfg["theme"] == "System" and darkdetect.isDark()):
         ntkutils.blur_window_background(root, dark=True)
@@ -59,11 +61,6 @@ def openfile():
     except AttributeError:
         pass
 
-def new():
-    filename.set(value="unsaved")
-    root.title("txt2 - Untitled *")
-    textwidget.delete("1.0", "end")
-
 def changetype():
     if filename.get() == "unsaved":
         save()
@@ -79,12 +76,65 @@ def settings_():
     if settings.save == True:
         cfg = settings.cfg
         applysettings()
-    
+
+def new():
+    """
+    filename.set(value="unsaved")
+    root.title("txt2 - Untitled *")
+    textwidget.delete("1.0", "end")
+    """
+    global tabselected
+
+    tabs[tabselected][1] = textwidget.get("1.0", "end")
+    textwidget.delete("1.0", "end")
+    tabs.append(["Untitled", "", "unsaved"])
+    tabselected = len(tabbuttons)
+    buildtabs()
+
+def opentab(x):
+    global tabselected
+
+    tabs[tabselected][1] = textwidget.get("1.0", "end")
+    tabbuttons[tabselected].configure(style="TButton")
+    x.configure(style="Accent.TButton")
+    tabselected = tabbuttons.index(x)
+
+    textwidget.delete("1.0", "end")
+    textwidget.insert("1.0", tabs[tabselected][1])
+
+#endregion
+
+tabs = [
+    ["Untitled", "", "unsaved"]
+]
+
+tabbuttons = []
+tabselected = 0
+
 filename = tkinter.StringVar(value="unsaved")
 
 header = tkinter.Frame(root, height="50")
 header.pack(fill="both")
 header.pack_propagate(False)
+
+tabbar = tkinter.Frame(root, height="50", bg="#202020")
+tabbar.pack(fill="both")
+tabbar.pack_propagate(False)
+
+def buildtabs():
+
+    ntkutils.clearwin(tabbar)
+    tabbuttons.clear()
+
+    for i in tabs:
+        button = ttk.Button(tabbar, text=i[0])
+        button.pack(side=LEFT, padx=10)
+        button.configure(command=lambda x=button: opentab(x))
+        tabbuttons.append(button)
+
+    tabbuttons[tabselected].configure(style="Accent.TButton")
+
+buildtabs()
 
 textwidget = tkinter.Text(root, height=int((root.winfo_height() - 50) / 17.5))
 
