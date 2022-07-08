@@ -18,7 +18,7 @@ ntkutils.placeappincenter(root)
 root.update()
 
 def mica():
-    if cfg["theme"] == "Dark":
+    if cfg["theme"] == "Dark" or (cfg["theme"] == "System" and darkdetect.isDark()):
         ntkutils.blur_window_background(root, dark=True)
         textwidget.configure(bg="#1b1c1b")
     else:
