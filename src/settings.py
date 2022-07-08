@@ -1,5 +1,5 @@
-import tkinter, ntkutils
-from tkinter import E, N, W, ttk, font
+import tkinter, ntkutils, darkdetect
+from tkinter import ttk, font
 
 import config
 
@@ -17,12 +17,12 @@ def appearance():
     lbltheme = tkinter.Label(frameright, text="Theme:").place(x=10, y=12)
     boxtheme = ttk.Combobox(frameright, values=["Dark", "Light", "System"], state="readonly", width=25)
     boxtheme.set(cfg["theme"])
-    boxtheme.pack(padx=10, pady=10, anchor=E)
+    boxtheme.pack(padx=10, pady=10, anchor="e")
 
     lblfont = tkinter.Label(frameright, text="Font:").place(x=10, y=67)
     boxfont = ttk.Combobox(frameright, state="readonly", values=fonts, width=15)
     boxfont.set(cfg["font"])
-    boxfont.pack(padx=80, pady=10, anchor=E)
+    boxfont.pack(padx=80, pady=10, anchor="e")
     boxsize = ttk.Entry(frameright, width=5)
     boxsize.insert(0, cfg["font-size"])
     boxsize.place(x=260, y=63)
@@ -40,7 +40,7 @@ def experimental():
 
     lblmica = tkinter.Label(frameright, text="Mica Blur:").place(x=10, y=12)
     btnmica = ttk.Checkbutton(frameright, style="Switch.TCheckbutton")
-    btnmica.pack(padx=10, pady=10, anchor=E)
+    btnmica.pack(padx=10, pady=10, anchor="e")
     btnmica.state(["!alternate"])
     if cfg["mica"]: btnmica.state(["!alternate", "selected"])
     micainfo = tkinter.Label(frameright, text="When switching from dark to light theme with this\noption enabled, you have to perform a restart!", justify="left", fg="grey").place(x=10, y=42)
@@ -85,7 +85,7 @@ def build():
     frameleft.pack(side=tkinter.LEFT, fill="y")
     frameleft.pack_propagate(False)
 
-    if not cfg["theme"] == "Dark":
+    if cfg["theme"] == "Light" or (cfg["theme"] == "System" and darkdetect.isLight()):
         frameleft.configure(bg="#f3f3f3")
 
     frameright = tkinter.Frame(settings, width=325)

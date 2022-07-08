@@ -3,6 +3,7 @@ ver = "0.3"
 import tkinter, sv_ttk, ntkutils
 from tkinter import filedialog, ttk
 from pynput import keyboard
+import darkdetect
 
 import generatesize as size 
 import filetype as f
@@ -25,8 +26,9 @@ def mica():
         textwidget.configure(bg="#fafbfa")
 
 def applysettings():
-    sv_ttk.set_theme(cfg["theme"].lower())
-    if cfg["theme"] == "Dark": ntkutils.dark_title_bar(root)
+    if cfg["theme"] == "System": sv_ttk.set_theme(darkdetect.theme().lower())
+    else: sv_ttk.set_theme(cfg["theme"].lower())
+    if cfg["theme"] == "Dark" or (cfg["theme"] == "System" and darkdetect.isDark()): ntkutils.dark_title_bar(root)
     textwidget.configure(font=(cfg["font"], int(cfg["font-size"])))
     if cfg["mica"]: mica()
 
