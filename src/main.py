@@ -74,6 +74,7 @@ def openfile():
 
     textwidget.delete("1.0", "end")
     textwidget.insert("1.0", content)
+    filedir.configure(text=tabs[tabselected][2])
 
     buildtabs()
     updatetitle()
@@ -136,6 +137,8 @@ def opentab(x):
     textwidget.delete("1.0", "end")
     textwidget.insert("1.0", tabs[tabselected][1])
 
+    filedir.configure(text=tabs[tabselected][2])
+
     updatetitle()
 
 #endregion
@@ -172,7 +175,7 @@ def buildtabs():
 
 buildtabs()
 
-textwidget = tkinter.Text(root, height=int((root.winfo_height() - 50) / 17.5))
+textwidget = tkinter.Text(root, height=int((root.winfo_height() - 100) / 17.5))
 
 scrollbar = ttk.Scrollbar(root, command=textwidget.yview)
 textwidget.config(yscrollcommand=scrollbar.set)
@@ -184,7 +187,9 @@ footer = tkinter.Frame(root)
 footer.pack(fill="both", expand=True)
 footer.pack_propagate(False)
 
-filedir = tkinter.Label(footer, textvariable=filename).pack(side=tkinter.LEFT)
+filedir = tkinter.Label(footer)
+filedir.pack(side=tkinter.LEFT)
+filedir.configure(text="unsaved")
 
 fileboxstate = tkinter.StringVar(value="File")
 
