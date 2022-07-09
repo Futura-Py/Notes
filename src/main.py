@@ -34,33 +34,6 @@ def applysettings():
     textwidget.configure(font=(cfg["font"], int(cfg["font-size"])))
     if cfg["mica"]: mica()
 
-def save(saveas=False):
-    if filename.get() == "unsaved" or saveas:
-        file = filedialog.asksaveasfile()
-    else:
-        file = open(filename.get(), "w")
-    
-    try:
-        file.write(textwidget.get("1.0", "end"))
-        filename.set(file.name)
-        file.close()
-        root.title("txt2 - {}".format(filename.get().split("/")[-1]))
-    except AttributeError:
-        pass
-
-def openfile():
-    file = filedialog.askopenfile()
-    
-    try:
-        content = file.read()
-        filename.set(file.name)
-        file.close()
-        textwidget.delete("1.0", "end")
-        textwidget.insert("1.0", content)
-        root.title("txt2 - {}".format(filename.get().split("/")[-1]))
-    except AttributeError:
-        pass
-
 def changetype():
     if filename.get() == "unsaved":
         save()
@@ -76,6 +49,53 @@ def settings_():
     if settings.save == True:
         cfg = settings.cfg
         applysettings()
+
+def openfile():
+    global tabselected
+
+    file = filedialog.askopenfile()
+    content = file.read()
+
+    new()
+
+    tabs[tabselected][0] = file.name.split("/")[-1]
+    tabs[tabselected][2] = file.name
+
+    file.close()
+
+    textwidget.delete("1.0", "end")
+    textwidget.insert("1.0", content)
+
+    buildtabs()
+
+def save(saveas=False):
+    """
+    if filename.get() == "unsaved" or saveas:
+        file = filedialog.asksaveasfile()
+    else:
+        file = open(filename.get(), "w")
+    
+    try:
+        file.write(textwidget.get("1.0", "end"))
+        filename.set(file.name)
+        file.close()
+        root.title("txt2 - {}".format(filename.get().split("/")[-1]))
+    except AttributeError:
+        pass
+    """
+
+    global tabselected
+
+    if tabs[tabselected][2] == "unsaved" or saveas:
+        file = filedialog.asksaveasfile()
+    else:
+        file = open(tabs[tabselected][2], "w")
+
+    file.write(textwidget.get("1.0", "end"))
+    tabs[tabselected][0] = file.name.split("/")[-1]
+    tabs[tabselected][2] = file.name
+
+    buildtabs()
 
 def new():
     """
