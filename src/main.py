@@ -61,7 +61,10 @@ def openfile():
     file = filedialog.askopenfile()
     content = file.read()
 
-    new()
+    print(repr(textwidget.get("1.0", "end")))
+
+    if not textwidget.get("1.0", "end").replace("\n", "") == "": 
+        new()
 
     tabs[tabselected][0] = file.name.split("/")[-1]
     tabs[tabselected][2] = file.name
