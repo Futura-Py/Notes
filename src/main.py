@@ -50,6 +50,11 @@ def settings_():
         cfg = settings.cfg
         applysettings()
 
+def updatetitle():
+    global tabselected
+
+    root.title("txt2 - {}".format(tabs[tabselected][0]))
+
 def openfile():
     global tabselected
 
@@ -67,6 +72,7 @@ def openfile():
     textwidget.insert("1.0", content)
 
     buildtabs()
+    updatetitle()
 
 def save(saveas=False):
     """
@@ -96,6 +102,7 @@ def save(saveas=False):
     tabs[tabselected][2] = file.name
 
     buildtabs()
+    updatetitle()
 
 def new():
     """
@@ -109,7 +116,9 @@ def new():
     textwidget.delete("1.0", "end")
     tabs.append(["Untitled", "", "unsaved"])
     tabselected = len(tabbuttons)
+
     buildtabs()
+    updatetitle
 
 def opentab(x):
     global tabselected
@@ -121,6 +130,9 @@ def opentab(x):
 
     textwidget.delete("1.0", "end")
     textwidget.insert("1.0", tabs[tabselected][1])
+
+    updatetitle()
+    refreshtitle()
 
 #endregion
 
