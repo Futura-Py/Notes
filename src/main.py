@@ -35,10 +35,16 @@ def applysettings():
     if cfg["mica"]: mica()
 
 def changetype():
-    if filename.get() == "unsaved":
+    if tabs[tabselected][2] == "unsaved":
         save()
     else:
-        f.changetype(filename, root)
+        result = f.get(tabs[tabselected][2])
+        tabs[tabselected][2] = result
+        tabs[tabselected][0] = result.split("/")[-1]
+        filedir.configure(text=result)
+
+        buildtabs()
+        updatetitle()
 
 def settings_():
     global cfg
@@ -80,21 +86,6 @@ def openfile():
     updatetitle()
 
 def save(saveas=False):
-    """
-    if filename.get() == "unsaved" or saveas:
-        file = filedialog.asksaveasfile()
-    else:
-        file = open(filename.get(), "w")
-    
-    try:
-        file.write(textwidget.get("1.0", "end"))
-        filename.set(file.name)
-        file.close()
-        root.title("txt2 - {}".format(filename.get().split("/")[-1]))
-    except AttributeError:
-        pass
-    """
-
     global tabselected
 
     if tabs[tabselected][2] == "unsaved" or saveas:
@@ -111,11 +102,6 @@ def save(saveas=False):
     updatetitle()
 
 def new():
-    """
-    filename.set(value="unsaved")
-    root.title("txt2 - Untitled *")
-    textwidget.delete("1.0", "end")
-    """
     global tabselected
 
     tabs[tabselected][1] = textwidget.get("1.0", "end")
@@ -149,8 +135,6 @@ tabs = [
 
 tabbuttons = []
 tabselected = 0
-
-filename = tkinter.StringVar(value="unsaved")
 
 header = tkinter.Frame(root, height="50")
 header.pack(fill="both")
