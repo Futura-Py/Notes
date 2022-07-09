@@ -53,7 +53,7 @@ def settings_():
 def updatetitle():
     global tabselected
 
-    root.title("txt2 - {}".format(tabs[tabselected][0]))
+    root.title("txt2 - {} {}".format(tabs[tabselected][0], tabs[tabselected][3]))
 
 def openfile():
     global tabselected
@@ -65,6 +65,7 @@ def openfile():
 
     tabs[tabselected][0] = file.name.split("/")[-1]
     tabs[tabselected][2] = file.name
+    tabs[tabselected][3] = ""
 
     file.close()
 
@@ -100,6 +101,7 @@ def save(saveas=False):
     file.write(textwidget.get("1.0", "end"))
     tabs[tabselected][0] = file.name.split("/")[-1]
     tabs[tabselected][2] = file.name
+    tabs[tabselected][3] = ""
 
     buildtabs()
     updatetitle()
@@ -114,7 +116,7 @@ def new():
 
     tabs[tabselected][1] = textwidget.get("1.0", "end")
     textwidget.delete("1.0", "end")
-    tabs.append(["Untitled", "", "unsaved"])
+    tabs.append(["Untitled", "", "unsaved", "*"])
     tabselected = len(tabbuttons)
 
     buildtabs()
@@ -132,12 +134,11 @@ def opentab(x):
     textwidget.insert("1.0", tabs[tabselected][1])
 
     updatetitle()
-    refreshtitle()
 
 #endregion
 
 tabs = [
-    ["Untitled", "", "unsaved"]
+    ["Untitled", "", "unsaved", "*"]
 ]
 
 tabbuttons = []
@@ -213,6 +214,7 @@ btnsettings = ttk.Button(header, text="Settings", command=settings_).pack(side=t
 def refreshtitle(e):
     if not root.wm_title().endswith("*"):
         root.title(root.wm_title() + "*")
+    tabs[tabselected][3] = "*"
 
 textwidget.bind("<KeyPress>", refreshtitle)
 
