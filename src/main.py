@@ -126,6 +126,7 @@ def opentab(x):
 
     textwidget.delete("1.0", "end")
     textwidget.insert("1.0", tabs[tabselected][1])
+    textwidget.delete("end-1c", "end")
 
     filedir.configure(text=tabs[tabselected][2])
 
