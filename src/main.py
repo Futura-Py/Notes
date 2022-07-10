@@ -2,7 +2,7 @@ ver = "0.3"
 
 import tkinter, sv_ttk, ntkutils
 from click import style
-from tkinter import LEFT, filedialog, ttk
+from tkinter import FLAT, LEFT, filedialog, ttk
 from pynput import keyboard
 import darkdetect
 
@@ -121,8 +121,10 @@ def opentab(x):
 
     tabs[tabselected][1] = textwidget.get("1.0", "end")
     tabbuttons[tabselected].configure(style="TButton")
+    cbuttons[tabselected].configure(bg="#2a2a2a")
     x.configure(style="Accent.TButton")
     tabselected = tabbuttons.index(x)
+    cbuttons[tabselected].configure(bg="#57c8ff")
 
     textwidget.delete("1.0", "end")
     textwidget.insert("1.0", tabs[tabselected][1])
@@ -147,6 +149,20 @@ def closetab():
     updatetitle()
     filedir.configure(text=tabs[tabselected][2])
 
+def closetab2(e, x):
+    global tabselected
+    if not tabselected == cbuttons.index(x):
+        tabs.pop(cbuttons.index(x))
+            
+        buildtabs()
+
+        textwidget.delete("1.0", "end")
+        textwidget.insert("1.0", tabs[tabselected][1])
+        updatetitle()
+        filedir.configure(text=tabs[tabselected][2])
+    else:
+        closetab()
+
 #endregion
 
 tabs = [
@@ -154,6 +170,7 @@ tabs = [
 ]
 
 tabbuttons = []
+cbuttons = []
 tabselected = 0
 
 header = tkinter.Frame(root, height="50")
@@ -163,21 +180,35 @@ header.pack_propagate(False)
 tabbar = tkinter.Frame(root, height="50", bg="#202020")
 tabbar.pack(fill="both")
 tabbar.pack_propagate(False)
+tabbar.update()
 
 def buildtabs():
 
     ntkutils.clearwin(tabbar)
     tabbuttons.clear()
+    cbuttons.clear()
 
     for i in tabs:
-        button = ttk.Button(tabbar, text=i[0])
+        button = ttk.Button(tabbar, text=i[0] + "      ")
         button.pack(side=LEFT, padx=10)
         button.configure(command=lambda x=button: opentab(x))
+        button.update()
+
+        cbutton = tkinter.Label(tabbar, text=" X ", fg="grey", font=("", 15), bg="#2a2a2a")
+        cbutton.place(x=button.winfo_x() + button.winfo_width() - 32, y=10)
+        cbutton.bind("<1>", lambda event, x=cbutton:closetab2(event, x))
+
+        print(button.winfo_width())
+
         tabbuttons.append(button)
+        cbuttons.append(cbutton)
 
     tabbuttons[tabselected].configure(style="Accent.TButton")
+    cbuttons[tabselected].configure(bg="#57c8ff")
 
 buildtabs()
+
+cbuttons[0].place(x=71)
 
 textwidget = tkinter.Text(root, height=int((root.winfo_height() - 100) / 17.5))
 
