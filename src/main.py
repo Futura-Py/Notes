@@ -70,8 +70,6 @@ def openfile():
     file = filedialog.askopenfile()
     content = file.read()
 
-    print(repr(textwidget.get("1.0", "end")))
-
     if not textwidget.get("1.0", "end").replace("\n", "") == "": 
         new()
 
@@ -196,8 +194,6 @@ def buildtabs():
         cbutton = tkinter.Label(tabbar, text=" X ", fg="grey", font=("", 15), bg="#2a2a2a")
         cbutton.place(x=button.winfo_x() + button.winfo_width() - 32, y=10)
         cbutton.bind("<1>", lambda event, x=cbutton:closetab2(event, x))
-
-        print(button.winfo_width())
 
         tabbuttons.append(button)
         cbuttons.append(cbutton)
