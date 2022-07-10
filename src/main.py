@@ -163,7 +163,8 @@ def closetab2(e, x):
         updatetitle()
         filedir.configure(text=tabs[tabselected][2])
     else:
-        closetab()
+        if len(cbuttons) > 1:
+            closetab()
 
 #endregion
 
@@ -191,13 +192,13 @@ def buildtabs():
     cbuttons.clear()
 
     for i in tabs:
-        button = ttk.Button(tabbar, text=i[0] + "      ")
+        button = ttk.Button(tabbar, text=i[0] + "         ")
         button.pack(side=LEFT, padx=10)
         button.configure(command=lambda x=button: opentab(x))
         button.update()
 
         cbutton = tkinter.Label(tabbar, text=" X ", fg="grey", font=("", 15), bg="#2a2a2a")
-        cbutton.place(x=button.winfo_x() + button.winfo_width() - 32, y=10)
+        cbutton.place(x=button.winfo_x() + button.winfo_width() - 40, y=button.winfo_y()+2)
         cbutton.bind("<1>", lambda event, x=cbutton:closetab2(event, x)) # Execute closetab2 on click
 
         tabbuttons.append(button)

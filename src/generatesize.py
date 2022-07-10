@@ -14,4 +14,4 @@ else:
     WIDTH, HEIGHT = root.winfo_screenwidth(), root.winfo_screenheight()
     root.destroy()
     def get():
-        return "{}x{}".format(WIDTH, HEIGHT)
+        return "{}x{}".format(WIDTH, HEIGHT-100)
