@@ -155,16 +155,14 @@ def closetab2(e, x):
     global tabselected
     if not tabselected == cbuttons.index(x):
         tabs.pop(cbuttons.index(x))
+        if cbuttons.index(x) < tabselected: tabselected = tabselected - 1
             
         buildtabs()
-
-        textwidget.delete("1.0", "end")
-        textwidget.insert("1.0", tabs[tabselected][1])
-        updatetitle()
-        filedir.configure(text=tabs[tabselected][2])
     else:
         if len(cbuttons) > 1:
             closetab()
+        else:
+            root.destroy()
 
 #endregion
 
@@ -192,13 +190,13 @@ def buildtabs():
     cbuttons.clear()
 
     for i in tabs:
-        button = ttk.Button(tabbar, text=i[0] + "         ")
+        button = ttk.Button(tabbar, text=i[0] + "       ")
         button.pack(side=LEFT, padx=10)
         button.configure(command=lambda x=button: opentab(x))
         button.update()
 
         cbutton = tkinter.Label(tabbar, text=" X ", fg="grey", font=("", 15), bg="#2a2a2a")
-        cbutton.place(x=button.winfo_x() + button.winfo_width() - 40, y=button.winfo_y()+2)
+        cbutton.place(x=button.winfo_x() + button.winfo_width() - 40, y=10)
         cbutton.bind("<1>", lambda event, x=cbutton:closetab2(event, x)) # Execute closetab2 on click
 
         tabbuttons.append(button)
@@ -256,7 +254,7 @@ fileboxstate.trace("w", fileboxaction)
 btnctab = ttk.Button(header, text="Close Tab", command=closetab).pack(side="left")
 btnsettings = ttk.Button(header, text="Settings", command=settings_).pack(side=tkinter.LEFT, padx=10)
 
-def refreshtitle(e):
+def refreshtitle(event):
     if not root.wm_title().endswith("*"):
         root.title(root.wm_title() + "*")
     tabs[tabselected][3] = "*"
