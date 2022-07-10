@@ -19,20 +19,24 @@ ntkutils.placeappincenter(root)
 root.update()
 
 #region funcs
-def mica():
-    if cfg["theme"] == "Dark" or (cfg["theme"] == "System" and darkdetect.isDark()):
-        ntkutils.blur_window_background(root, dark=True)
-        textwidget.configure(bg="#1b1c1b")
-    else:
-        ntkutils.blur_window_background(root)
-        textwidget.configure(bg="#fafbfa")
-
 def applysettings():
     if cfg["theme"] == "System": sv_ttk.set_theme(darkdetect.theme().lower())
     else: sv_ttk.set_theme(cfg["theme"].lower())
-    if cfg["theme"] == "Dark" or (cfg["theme"] == "System" and darkdetect.isDark()): ntkutils.dark_title_bar(root)
+    if cfg["theme"] == "Dark" or (cfg["theme"] == "System" and darkdetect.isDark()): 
+        ntkutils.dark_title_bar(root)
+        tabbar.configure(bg="#202020")
+    else: 
+        tabbar.configure(bg="#f3f3f3")
+
     textwidget.configure(font=(cfg["font"], int(cfg["font-size"])))
-    if cfg["mica"]: mica()
+
+    if cfg["mica"]: 
+        if cfg["theme"] == "Dark" or (cfg["theme"] == "System" and darkdetect.isDark()):
+            ntkutils.blur_window_background(root, dark=True)
+            textwidget.configure(bg="#1b1c1b")
+        else:
+            ntkutils.blur_window_background(root)
+            textwidget.configure(bg="#fafbfa")
 
 def changetype():
     if tabs[tabselected][2] == "unsaved":
