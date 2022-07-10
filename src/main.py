@@ -1,8 +1,7 @@
 ver = "0.3"
 
 import tkinter, sv_ttk, ntkutils
-from click import style
-from tkinter import FLAT, LEFT, filedialog, ttk
+from tkinter import LEFT, filedialog, ttk
 from pynput import keyboard
 import darkdetect
 
