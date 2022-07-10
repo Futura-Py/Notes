@@ -7,6 +7,7 @@
 <a style="text-decoration:none" href="FEATURES.md">
     <img src="https://img.shields.io/badge/Features-0.2-blue" alt="Features" />
 </a>
+<br><br>
 
 A text editor in python!
 
