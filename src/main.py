@@ -6,6 +6,7 @@ from pynput import keyboard
 import darkdetect
 
 import generatesize as size 
+from generatesize import system
 import filetype as f
 import settings
 import config
@@ -22,7 +23,8 @@ def applysettings():
     if cfg["theme"] == "System": sv_ttk.set_theme(darkdetect.theme().lower())
     else: sv_ttk.set_theme(cfg["theme"].lower())
     if cfg["theme"] == "Dark" or (cfg["theme"] == "System" and darkdetect.isDark()): 
-        ntkutils.dark_title_bar(root)
+        if system != "Darwin":
+            ntkutils.dark_title_bar(root)
         tabbar.configure(bg="#202020")
     else: 
         tabbar.configure(bg="#f3f3f3")
@@ -91,16 +93,19 @@ def save(saveas=False):
 
     if tabs[tabselected][2] == "unsaved" or saveas:
         file = filedialog.asksaveasfile()
+        if file != None:
+            file = open(file, "w")
     else:
         file = open(tabs[tabselected][2], "w")
+    
+    if file != None:
+        file.write(textwidget.get("1.0", "end"))
+        tabs[tabselected][0] = file.name.split("/")[-1]
+        tabs[tabselected][2] = file.name
+        tabs[tabselected][3] = ""
 
-    file.write(textwidget.get("1.0", "end"))
-    tabs[tabselected][0] = file.name.split("/")[-1]
-    tabs[tabselected][2] = file.name
-    tabs[tabselected][3] = ""
-
-    buildtabs()
-    updatetitle()
+        buildtabs()
+        updatetitle()
 
 def new():
     global tabselected

@@ -1,5 +1,6 @@
 import os, tkinter, ntkutils
 from tkinter import ttk
+from generatesize import system
 
 def changetype(filename):
     global filetype
@@ -12,7 +13,8 @@ def changetype(filename):
         else:
             print("not an extension")
     filetype = tkinter.Toplevel()
-    ntkutils.dark_title_bar(filetype)
+    if system != "Darwin":
+        ntkutils.dark_title_bar(filetype)
     filetype.title("txt2 - Change file type")
     lbl = tkinter.Label(filetype, text="Change file extension:", font=("", 20)).pack(pady=5)
     entry = ttk.Entry(filetype)
