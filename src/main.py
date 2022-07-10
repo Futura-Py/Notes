@@ -127,6 +127,21 @@ def opentab(x):
 
     updatetitle()
 
+def closetab():
+    global tabselected
+    if not len(tabs) == 1:
+        tabs.pop(tabselected)
+        tabselected = tabselected - 1
+    else:
+        tabs[0] = ["Untitled", "", "unsaved", "*"]
+        
+    buildtabs()
+
+    textwidget.delete("1.0", "end")
+    textwidget.insert("1.0", tabs[tabselected][1])
+    updatetitle()
+    filedir.configure(text=tabs[tabselected][2])
+
 #endregion
 
 tabs = [
@@ -201,7 +216,8 @@ def fileboxaction(*args):
     
 fileboxstate.trace("w", fileboxaction)
 
-btnsettings = ttk.Button(header, text="Settings", command=settings_).pack(side=tkinter.LEFT)
+btnctab = ttk.Button(header, text="Close Tab", command=closetab).pack(side="left")
+btnsettings = ttk.Button(header, text="Settings", command=settings_).pack(side=tkinter.LEFT, padx=10)
 
 def refreshtitle(e):
     if not root.wm_title().endswith("*"):
