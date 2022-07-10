@@ -193,7 +193,7 @@ def buildtabs():
 
         cbutton = tkinter.Label(tabbar, text=" X ", fg="grey", font=("", 15), bg="#2a2a2a")
         cbutton.place(x=button.winfo_x() + button.winfo_width() - 32, y=10)
-        cbutton.bind("<1>", lambda event, x=cbutton:closetab2(event, x))
+        cbutton.bind("<1>", lambda event, x=cbutton:closetab2(event, x)) # Execute closetab2 on click
 
         tabbuttons.append(button)
         cbuttons.append(cbutton)
@@ -203,7 +203,7 @@ def buildtabs():
 
 buildtabs()
 
-cbuttons[0].place(x=71)
+cbuttons[0].place(x=71) # The first cbutton has to be placed like that because it seems like the winfo functions return wrong values the first time
 
 textwidget = tkinter.Text(root, height=int((root.winfo_height() - 100) / 17.5))
 
