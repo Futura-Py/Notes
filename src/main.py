@@ -249,13 +249,13 @@ def buildtabs():
     cbuttons.clear()
 
     for i in tabs:
-        button = ttk.Button(tabbar, text=i[0] + "       ")
+        button = ttk.Button(tabbar, text=i[0] + "       ", image=closeimg, compound="right")
         button.pack(side=LEFT, padx=10)
         button.configure(command=lambda x=button: opentab(x))
         button.update()
 
         cbutton = tkinter.Label(tabbar, font=("", 15), image=closeimg, bg=normal)
-        cbutton.place(x=button.winfo_x() + button.winfo_width() - 35, y=10)
+        cbutton.place(x=button.winfo_x() + button.winfo_width() - 37, y=10)
         cbutton.bind("<1>", lambda event, x=cbutton:closetab2(event, x)) # Execute closetab2 on click
 
         # This makes the background change to the hover color when hovering over the button
@@ -345,5 +345,5 @@ except:
     config.get()
 
 cbuttons[0].place(x=71) # The first cbutton has to be placed like that because it seems like the winfo functions return wrong values the first time
-
+buildtabs()
 root.mainloop()
