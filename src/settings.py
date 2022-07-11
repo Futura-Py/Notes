@@ -1,5 +1,6 @@
 import tkinter, ntkutils, darkdetect
 from tkinter import ttk, font
+from generatesize import system
 
 import config
 
@@ -79,7 +80,8 @@ def build():
 
     settings = tkinter.Toplevel()
     ntkutils.windowsetup(settings, "txt2 - Settings", "assets/logo.png", False, "500x400")
-    ntkutils.dark_title_bar(settings)
+    if system != "Darwin":
+        ntkutils.dark_title_bar(settings)
 
     frameleft = tkinter.Frame(settings, width=175, bg="#202020")
     frameleft.pack(side=tkinter.LEFT, fill="y")
