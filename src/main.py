@@ -301,8 +301,7 @@ def fileboxaction(*args):
     
 fileboxstate.trace("w", fileboxaction)
 
-btnctab = ttk.Button(header, text="Close Tab", command=closetab).pack(side="left")
-btnsettings = ttk.Button(header, text="Settings", command=settings_).pack(side=tkinter.LEFT, padx=10)
+btnsettings = ttk.Button(header, text="Settings", command=settings_).pack(side=tkinter.LEFT)
 
 def refreshtitle(event):
     if not root.wm_title().endswith("*"):
