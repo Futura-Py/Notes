@@ -18,16 +18,41 @@ ntkutils.windowsetup(root, title="txt2 - Untitled *", resizeable=False, size=siz
 ntkutils.placeappincenter(root)
 root.update()
 
+closeimgdark = tkinter.PhotoImage(file="assets/close_dark.png")
+closeimglight = tkinter.PhotoImage(file="assets/close_light.png")
+closeimg = closeimglight
+closeimg2 = closeimgdark
+
+theme = "dark"
+
 #region funcs
 def applysettings():
+    global normal, normal_hover, selected, selected_hover, closeimg, closeimg2
+
     if cfg["theme"] == "System": sv_ttk.set_theme(darkdetect.theme().lower())
     else: sv_ttk.set_theme(cfg["theme"].lower())
     if cfg["theme"] == "Dark" or (cfg["theme"] == "System" and darkdetect.isDark()): 
         if system != "Darwin":
             ntkutils.dark_title_bar(root)
         tabbar.configure(bg="#202020")
+
+        closeimg = closeimglight
+        closeimg2 = closeimgdark
+
+        selected_hover = "#51b7eb"
+        selected = "#57c8ff"
+        normal = "#2a2a2a"
+        normal_hover = "#2f2f2f"
     else: 
         tabbar.configure(bg="#f3f3f3")
+
+        closeimg = closeimgdark
+        closeimg2 = closeimglight
+
+        normal = "#fdfdfd"
+        normal_hover = "#f9f9f9"
+        selected = "#0560b6"
+        selected_hover = "#1e6fbc"
 
     textwidget.configure(font=(cfg["font"], int(cfg["font-size"])))
 
@@ -38,6 +63,8 @@ def applysettings():
         else:
             ntkutils.blur_window_background(root)
             textwidget.configure(bg="#fafbfa")
+
+    buildtabs()
 
 def changetype():
     if tabs[tabselected][2] == "unsaved":
@@ -134,6 +161,7 @@ def opentab(x):
 
     filedir.configure(text=tabs[tabselected][2])
 
+    buildtabs()
     updatetitle()
 
 def closetab():
@@ -174,6 +202,11 @@ tabbuttons = []
 cbuttons = []
 tabselected = 0
 
+selected_hover = "#51b7eb"
+selected = "#57c8ff"
+normal = "#2a2a2a"
+normal_hover = "#2f2f2f"
+
 header = tkinter.Frame(root, height="50")
 header.pack(fill="both")
 header.pack_propagate(False)
@@ -182,6 +215,20 @@ tabbar = tkinter.Frame(root, height="50", bg="#202020")
 tabbar.pack(fill="both")
 tabbar.pack_propagate(False)
 tabbar.update()
+
+def on_enters(e, x): x.configure(bg=selected_hover)
+def on_leaves(e, x): x.configure(bg=selected)
+def on_enter(e, x): x.configure(bg=normal_hover)
+def on_leave(e, x): x.configure(bg=normal)
+
+def refreshbindings():
+    for i in tabbuttons:
+        if tabbuttons.index(i) == tabselected:
+            i.bind("<Enter>", lambda event, x=cbuttons[tabselected]: on_enters(event, x))
+            i.bind("<Leave>", lambda event, x=cbuttons[tabselected]: on_leaves(event, x))
+        else:
+            i.bind("<Enter>", lambda event, x=cbuttons[tabbuttons.index(i)]: on_enter(event, x))
+            i.bind("<Leave>", lambda event, x=cbuttons[tabbuttons.index(i)]: on_leave(event, x))
 
 def buildtabs():
 
@@ -195,19 +242,22 @@ def buildtabs():
         button.configure(command=lambda x=button: opentab(x))
         button.update()
 
-        cbutton = tkinter.Label(tabbar, text=" X ", fg="grey", font=("", 15), bg="#2a2a2a")
-        cbutton.place(x=button.winfo_x() + button.winfo_width() - 40, y=10)
+        cbutton = tkinter.Label(tabbar, font=("", 15), image=closeimg, bg=normal)
+        cbutton.place(x=button.winfo_x() + button.winfo_width() - 35, y=10)
         cbutton.bind("<1>", lambda event, x=cbutton:closetab2(event, x)) # Execute closetab2 on click
+
+        # This makes the background change to the hover color when hovering over the button
+        button.bind("<Enter>", lambda event, x=cbutton: on_enter(event, x))
+        button.bind("<Leave>", lambda event, x=cbutton: on_leave(event, x))
 
         tabbuttons.append(button)
         cbuttons.append(cbutton)
 
     tabbuttons[tabselected].configure(style="Accent.TButton")
-    cbuttons[tabselected].configure(bg="#57c8ff")
 
-buildtabs()
+    refreshbindings()
 
-cbuttons[0].place(x=71) # The first cbutton has to be placed like that because it seems like the winfo functions return wrong values the first time
+    cbuttons[tabselected].configure(bg=selected, image=closeimg2)
 
 textwidget = tkinter.Text(root, height=int((root.winfo_height() - 100) / 17.5))
 
@@ -282,5 +332,7 @@ try:
     applysettings()
 except:
     config.get()
+
+cbuttons[0].place(x=71) # The first cbutton has to be placed like that because it seems like the winfo functions return wrong values the first time
 
 root.mainloop()
