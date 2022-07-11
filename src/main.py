@@ -145,6 +145,18 @@ def new():
     buildtabs()
     updatetitle
 
+def _openfile():
+    if not len(tabs) == 10:
+        openfile()
+    else:
+        print("Tab limit reached")
+
+def _new():
+    if not len(tabs) == 10:
+        new()
+    else:
+        print("Tab limit reached")
+
 def opentab(x):
     global tabselected
 
@@ -294,9 +306,9 @@ def fileboxaction(*args):
     filemenu.set("File")
 
     if action == "Save": save()
-    elif action == "Open": openfile()
+    elif action == "Open": _openfile()
     elif action == "Save As": save(True)
-    elif action == "New": new()
+    elif action == "New": _new()
     elif action == "File Type": changetype()
     
 fileboxstate.trace("w", fileboxaction)
