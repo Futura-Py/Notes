@@ -4,9 +4,6 @@
 <a style="text-decoration:none" href="https://github.com/not-nef/txt2/releases">
     <img src="https://img.shields.io/github/v/release/not-nef/txt2?display_name=release&include_prereleases" alt="Releases" />
 </a>
-<a style="text-decoration:none" href="FEATURES.md">
-    <img src="https://img.shields.io/badge/Features-0.2-blue" alt="Features" />
-</a>
 <br><br>
 
 A text editor in python!
