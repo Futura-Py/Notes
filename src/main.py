@@ -2,7 +2,6 @@ ver = "0.4"
 
 import tkinter, sv_ttk, ntkutils, darkdetect
 from tkinter import filedialog, ttk
-from pynput import keyboard
 
 import generatesize as size 
 import filetype as f

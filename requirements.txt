@@ -1,5 +1,4 @@
 sv-ttk
 ntkutils
-pynput
 darkdetect
 pywin32
