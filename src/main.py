@@ -89,7 +89,7 @@ def updatetab(file):
     tabs[tabselected][2] = file.name
     tabs[tabselected][3] = ""   
 
-def save(saveas=False):
+def save(e, saveas=False):
     if tabs[tabselected][2] == "unsaved" or saveas:
         file = filedialog.asksaveasfile()
         if file != None: file = open(file, "w")
@@ -103,7 +103,7 @@ def save(saveas=False):
         buildtabs()
         updatetitle()
 
-def openfile():
+def openfile(e):
     if not len(tabs) == 10: 
         file = filedialog.askopenfile()
         content = file.read()
@@ -258,7 +258,7 @@ def fileboxaction(*args):
 
     if action == "Save": save()
     elif action == "Open": openfile()
-    elif action == "Save As": save(True)
+    elif action == "Save As": save(saveas=True)
     elif action == "New": new()
     elif action == "File Type": changetype()
     
@@ -272,22 +272,11 @@ def refreshtitle(event):
 
 textwidget.bind("<KeyPress>", refreshtitle)
 
-hotkeys = [
-    keyboard.HotKey(
-        [keyboard.Key.ctrl, keyboard.KeyCode(char="s")], save
-    ),
-    keyboard.HotKey(
-        [keyboard.Key.ctrl, keyboard.KeyCode(char="o")], openfile
-    ),
-]
+root.event_add("<<Open>>", "<{}>".format(cfg["hkey-open"]))
+root.event_add("<<Save>>", "<{}>".format(cfg["hkey-save"]))
 
-def signal_press_to_hotkeys(key): 
-    for hotkey in hotkeys: hotkey.press(l.canonical(key))
-def signal_release_to_hotkeys(key):
-    for hotkey in hotkeys: hotkey.release(l.canonical(key))
-
-l = keyboard.Listener(on_press=signal_press_to_hotkeys, on_release=signal_release_to_hotkeys)
-if cfg["hotkeys"]: l.start()
+root.bind("<<Open>>", openfile)
+root.bind("<<Save>>", save)
 
 applysettings()
 

@@ -32,9 +32,9 @@ def experimental():
     global page, btnmica, btnhotkeys
 
     savechanges()
-
     clearstates()
     btnexperimental.configure(style="Accent.TButton")
+
     ntkutils.clearwin(frameright)
 
     page = "experimental"
@@ -46,11 +46,28 @@ def experimental():
     if cfg["mica"]: btnmica.state(["!alternate", "selected"])
     micainfo = tkinter.Label(frameright, text="When switching from dark to light theme with this\noption enabled, you have to perform a restart!", justify="left", fg="grey").place(x=10, y=42)
 
-    lblhotkeys = tkinter.Label(frameright, text="Enable Hotkeys: (Buggy) [needs restart]").place(x=10, y=112)
-    btnhotkeys = ttk.Checkbutton(frameright, style="Switch.TCheckbutton")
-    btnhotkeys.pack(padx=10, pady=65, anchor="e")
-    btnhotkeys.state(["!alternate"])
-    if cfg["hotkeys"]: btnhotkeys.state(["!alternate", "selected"])
+def hotkeys():
+    global page, entryopen, entrysave
+
+    savechanges()
+    clearstates()
+    btnhotkeys.configure(style="Accent.TButton")
+
+    ntkutils.clearwin(frameright)
+
+    page = "hotkeys"
+
+    lblopen = tkinter.Label(frameright, text="Open:").place(x=10, y=12)
+    entryopen = ttk.Entry(frameright, width=25)
+    entryopen.insert(0, cfg["hkey-open"])
+    entryopen.pack(padx=10, pady=10, anchor="e")
+
+    lblsave = tkinter.Label(frameright, text="Save:").place(x=10, y=67)
+    entrysave = ttk.Entry(frameright, width=25)
+    entrysave.insert(0, cfg["hkey-save"])
+    entrysave.pack(padx=10, pady=10, anchor="e")
+
+    lblrestart = tkinter.Label(frameright, text="These will take effect after a restart", fg="grey").pack(pady=5, anchor="w", padx=10)
 
 def savechanges():
     if page == "appearance":
@@ -59,7 +76,9 @@ def savechanges():
         cfg["font-size"] = boxsize.get()
     elif page == "experimental":
         cfg["mica"] = btnmica.instate(["selected"])
-        cfg["hotkeys"] = btnhotkeys.instate(["selected"])
+    elif page == "hotkeys":
+        cfg["hkey-open"] = entryopen.get()
+        cfg["hkey-save"] = entrysave.get()
 
 def apply():
     global page, save
@@ -72,7 +91,7 @@ def apply():
 
 
 def build():
-    global frameright, frameleft, btnappearence, btnexperimental, settings, page, cfg, save
+    global frameright, frameleft, btnappearence, btnexperimental, btnhotkeys, settings, page, cfg, save
 
     cfg = config.get()
     page = ""
@@ -96,8 +115,10 @@ def build():
 
     btnappearence = ttk.Button(frameleft, text="Appearence", style="Accent.TButton", width=20, command=appearance)
     btnappearence.pack(pady=10)
+    btnhotkeys = ttk.Button(frameleft, text="Hotkeys", width=20, command=hotkeys)
+    btnhotkeys.pack()
     btnexperimental = ttk.Button(frameleft, text="Experimental Features", width=20, command=experimental)
-    btnexperimental.pack()
+    btnexperimental.pack(pady=10)
 
     btnapply = ttk.Button(frameleft, text="Apply", style="Accent.TButton", width=20, command=apply)
     btnapply.pack(side=tkinter.BOTTOM, pady=10)
