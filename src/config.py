@@ -6,5 +6,6 @@ def get():
     "font": "Helvetica",
     "font-size": 11,
     "mica": False,
-    "hotkeys": False,
+    "hkey-open": "Control-o",
+    "hkey-save": "Control-s",
     })
