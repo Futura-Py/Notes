@@ -28,7 +28,10 @@ def applysettings():
     if cfg["theme"] == "Dark" or (cfg["theme"] == "System" and darkdetect.isDark()): 
         if size.system != "Darwin":
             ntkutils.dark_title_bar(root)
+
+        header.configure(bg="#202020")
         tabbar.configure(bg="#202020")
+        footer.configure(bg="#202020")
 
         closeimg.configure(file="assets/close_light.png")
         closeimg2.configure(file="assets/close_dark.png")
@@ -38,7 +41,9 @@ def applysettings():
         normal = "#2a2a2a"
         normal_hover = "#2f2f2f"
     else: 
+        header.configure(bg="#f3f3f3")
         tabbar.configure(bg="#f3f3f3")
+        footer.configure(bg="#f3f3f3")
 
         closeimg.configure(file="assets/close_dark.png")
         closeimg2.configure(file="assets/close_light.png")
@@ -177,7 +182,7 @@ tabbuttons = []
 cbuttons = []
 tabselected = 0
 
-header = tkinter.Frame(root, height="50")
+header = tkinter.Frame(root, height="50", bg="#202020")
 header.pack(fill="both")
 header.pack_propagate(False)
 
@@ -222,7 +227,7 @@ def buildtabs():
 
     cbuttons[tabselected].configure(bg=selected, image=closeimg2)
 
-textwidget = tkinter.Text(root, height=int((root.winfo_height() - 100) / 17.5))
+textwidget = tkinter.Text(root, height=int((root.winfo_height() - 100) / 17.5), borderwidth=0)
 
 scrollbar = ttk.Scrollbar(root, command=textwidget.yview)
 textwidget.config(yscrollcommand=scrollbar.set)
@@ -265,7 +270,7 @@ fileboxstate.trace("w", fileboxaction)
 
 btnsettings = ttk.Button(header, text="Settings", command=settings_).pack(side="left")
 
-def refreshtitle(event):
+def refreshtitle(e):
     if not root.wm_title().endswith("*"): root.title(root.wm_title() + "*")
     tabs[tabselected][3] = "*"
 
