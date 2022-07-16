@@ -229,11 +229,34 @@ def buildtabs():
 
 textwidget = tkinter.Text(root, height=int((root.winfo_height() - 100) / 17.5), borderwidth=0)
 
-scrollbar = ttk.Scrollbar(root, command=textwidget.yview)
-textwidget.config(yscrollcommand=scrollbar.set)
-scrollbar.pack(side="right", fill="y", expand=False, pady=(0, 25))
+#scrollbar = ttk.Scrollbar(root, command=textwidget.yview)
+#textwidget.config(yscrollcommand=scrollbar.set)
+#scrollbar.pack(side="right", fill="y", expand=False, pady=(0, 25))
 
-textwidget.pack(fill="x")
+textwidget.pack()
+
+linenumbers = tkinter.Canvas(root, width=30, height=1200)
+linenumbers.place(x=10, y=100)
+
+def redrawnumbers(e):
+    linenumbers.delete("all")
+    i = textwidget.index("@0,0")
+    while True:
+        dline = textwidget.dlineinfo(i)
+        if dline is None:
+            break
+        y = dline[1]
+        linenum = str(i).split(".")[0]
+        linenumbers.create_text(2, y, anchor="nw", text=linenum, fill="white")
+        i = textwidget.index("%s+1line" % i)
+
+redrawnumbers("e")
+
+textwidget.event_generate("<<Change>>", when="tail")
+textwidget.bind("<<Change>>", redrawnumbers)
+textwidget.bind("<Return>", redrawnumbers)
+textwidget.bind("<BackSpace>", redrawnumbers)
+textwidget.bind("<Configure>", redrawnumbers)
 
 footer = tkinter.Frame(root)
 footer.pack(fill="both", expand=True)
