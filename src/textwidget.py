@@ -1,6 +1,4 @@
 import tkinter as tk
-from tkinterpp import utils
-
 
 class Text(tk.Text):
     def __init__(self, *args, **kwargs):
@@ -77,21 +75,13 @@ class TextWithLineNumbers(tk.Frame):
         self.mode = mode
         self.line_numbers_callbacks = line_numbers_callbacks
         self.text = Text(self, **text_kwargs)
-        self.vsb = tk.Scrollbar(self, orient="vertical", command=self.text.yview)
-        self.hsb = tk.Scrollbar(self, orient="horizontal",
-                                command=self.text.xview)
-        self.text.configure(yscrollcommand=lambda f, l: utils.auto_scroll(self.vsb, f, l),
-                            xscrollcommand=lambda f, l: utils.auto_scroll(self.hsb, f, l),
-                            wrap=tk.NONE,
-                            undo=True)
+        self.text.configure(wrap=tk.NONE, undo=True)
         self.linenumbers = TextLineNumbers(self, width=30, callbacks=self.line_numbers_callbacks)
         self.linenumbers.attach(self.text)
 
         if mode == "dark": self.linenumbers.redraw()
         else: self.linenumbers.redraw("light")
 
-        self.vsb.pack(side="right", fill="y")
-        #self.hsb.pack(side="bottom", fill="x")
         self.linenumbers.pack(side="left", fill="y")
         self.text.pack(side="right", fill="both", expand=True)
 
