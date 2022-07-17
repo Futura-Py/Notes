@@ -7,6 +7,7 @@ import generatesize as size
 import filetype as f
 import settings
 import config
+import textwidget as t
 
 cfg = config.get()
 
@@ -19,49 +20,72 @@ closeimg = tkinter.PhotoImage(file="assets/close_light.png")
 closeimg2 = tkinter.PhotoImage(file="assets/close_dark.png")
 
 #region funcs
-def applysettings():
+def applysettings(ignoretheme=False, first=False):
     global normal, normal_hover, selected, selected_hover
 
-    if cfg["theme"] == "System": sv_ttk.set_theme(darkdetect.theme().lower())
-    else: sv_ttk.set_theme(cfg["theme"].lower())
+    if not ignoretheme:
+        if cfg["theme"] == "System": sv_ttk.set_theme(darkdetect.theme().lower())
+        else: sv_ttk.set_theme(cfg["theme"].lower()) 
 
-    if cfg["theme"] == "Dark" or (cfg["theme"] == "System" and darkdetect.isDark()): 
-        if size.system != "Darwin":
-            ntkutils.dark_title_bar(root)
+        if cfg["theme"] == "Dark" or (cfg["theme"] == "System" and darkdetect.isDark()): 
+            if size.system != "Darwin":
+                ntkutils.dark_title_bar(root)
 
-        header.configure(bg="#202020")
-        tabbar.configure(bg="#202020")
-        footer.configure(bg="#202020")
+            header.configure(bg="#202020")
+            tabbar.configure(bg="#202020")
+            footer.configure(bg="#202020")
 
-        closeimg.configure(file="assets/close_light.png")
-        closeimg2.configure(file="assets/close_dark.png")
+            closeimg.configure(file="assets/close_light.png")
+            closeimg2.configure(file="assets/close_dark.png")
 
-        selected_hover = "#51b7eb"
-        selected = "#57c8ff"
-        normal = "#2a2a2a"
-        normal_hover = "#2f2f2f"
-    else: 
-        header.configure(bg="#f3f3f3")
-        tabbar.configure(bg="#f3f3f3")
-        footer.configure(bg="#f3f3f3")
+            selected_hover = "#51b7eb"
+            selected = "#57c8ff"
+            normal = "#2a2a2a"
+            normal_hover = "#2f2f2f"
+        else: 
+            header.configure(bg="#f3f3f3")
+            tabbar.configure(bg="#f3f3f3")
+            footer.configure(bg="#f3f3f3")
 
-        closeimg.configure(file="assets/close_dark.png")
-        closeimg2.configure(file="assets/close_light.png")
+            closeimg.configure(file="assets/close_dark.png")
+            closeimg2.configure(file="assets/close_light.png")
 
-        normal = "#fdfdfd"
-        normal_hover = "#f9f9f9"
-        selected = "#0560b6"
-        selected_hover = "#1e6fbc"
+            normal = "#fdfdfd"
+            normal_hover = "#f9f9f9"
+            selected = "#0560b6"
+            selected_hover = "#1e6fbc"
 
-    textwidget.configure(font=(cfg["font"], int(cfg["font-size"])))
+    if first:
+        if cfg["theme"] == "Dark" or (cfg["theme"] == "System" and darkdetect.isDark()):
+            if size.system != "Darwin":
+                ntkutils.dark_title_bar(root)
+            
+            selected_hover = "#51b7eb"
+            selected = "#57c8ff"
+            normal = "#2a2a2a"
+            normal_hover = "#2f2f2f"
+        else:
+            header.configure(bg="#f3f3f3")
+            tabbar.configure(bg="#f3f3f3")
+            footer.configure(bg="#f3f3f3")
+            
+            normal = "#fdfdfd"
+            normal_hover = "#f9f9f9"
+            selected = "#0560b6"
+            selected_hover = "#1e6fbc"
+
+            closeimg.configure(file="assets/close_dark.png")
+            closeimg2.configure(file="assets/close_light.png")
+
+    textwidget.text.configure(font=(cfg["font"], int(cfg["font-size"])))
 
     if cfg["mica"]: 
         if cfg["theme"] == "Dark" or (cfg["theme"] == "System" and darkdetect.isDark()):
             ntkutils.blur_window_background(root, dark=True)
-            textwidget.configure(bg="#1b1c1b")
+            textwidget.text.configure(bg="#1b1c1b")
         else:
             ntkutils.blur_window_background(root)
-            textwidget.configure(bg="#fafbfa")
+            textwidget.text.configure(bg="#fafbfa")
 
     buildtabs()
 
@@ -83,8 +107,10 @@ def settings_():
     root.wait_window(settings.settings)
     
     if settings.save == True:
+        oldcfg = cfg
         cfg = settings.cfg
-        applysettings()
+        if oldcfg["linenumbers"] or cfg["linenumbers"]: applysettings(True)
+        else: applysettings()
 
 def updatetitle(): root.title("txt2 - {} {}".format(tabs[tabselected][0], tabs[tabselected][3]))
 
@@ -100,7 +126,7 @@ def save(e, saveas=False):
     else: file = open(tabs[tabselected][2], "w")
     
     if file != None:
-        file.write(textwidget.get("1.0", "end"))
+        file.write(textwidget.text.get("1.0", "end"))
 
         updatetab(file)
 
@@ -112,13 +138,13 @@ def openfile(e):
         file = filedialog.askopenfile()
         content = file.read()
 
-        if not textwidget.get("1.0", "end").replace("\n", "") == "": new()
+        if not textwidget.text.get("1.0", "end").replace("\n", "") == "": new()
 
         updatetab(file)
 
         file.close()
 
-        textwidget.insert("1.0", content)
+        textwidget.text.insert("1.0", content)
         filedir.configure(text=tabs[tabselected][2])
 
         buildtabs()
@@ -130,8 +156,8 @@ def new():
     if not len(tabs) == 10:
         global tabselected
 
-        tabs[tabselected][1] = textwidget.get("1.0", "end")
-        textwidget.delete("1.0", "end")
+        tabs[tabselected][1] = textwidget.text.get("1.0", "end")
+        textwidget.text.delete("1.0", "end")
         tabs.append(["Untitled", "", "unsaved", "*"])
         tabselected = len(tabbuttons)
 
@@ -141,12 +167,12 @@ def new():
 def opentab(x):
     global tabselected
 
-    tabs[tabselected][1] = textwidget.get("1.0", "end")
+    tabs[tabselected][1] = textwidget.text.get("1.0", "end")
     tabselected = tabbuttons.index(x)
 
-    textwidget.delete("1.0", "end")
-    textwidget.insert("1.0", tabs[tabselected][1])
-    textwidget.delete("end-1c", "end")
+    textwidget.text.delete("1.0", "end")
+    textwidget.text.insert("1.0", tabs[tabselected][1])
+    textwidget.text.delete("end-1c", "end")
 
     filedir.configure(text=tabs[tabselected][2])
 
@@ -167,8 +193,8 @@ def closetab(e, x):
 
             buildtabs()
 
-            textwidget.delete("1.0", "end")
-            textwidget.insert("1.0", tabs[tabselected][1])
+            textwidget.text.delete("1.0", "end")
+            textwidget.text.insert("1.0", tabs[tabselected][1])
             updatetitle()
             filedir.configure(text=tabs[tabselected][2])
         else:
@@ -227,20 +253,30 @@ def buildtabs():
 
     cbuttons[tabselected].configure(bg=selected, image=closeimg2)
 
-textwidget = tkinter.Text(root, height=int((root.winfo_height() - 100) / 17.5), borderwidth=0)
-
-scrollbar = ttk.Scrollbar(root, command=textwidget.yview)
-textwidget.config(yscrollcommand=scrollbar.set)
-scrollbar.pack(side="right", fill="y", expand=False, pady=(0, 25))
-
-textwidget.pack(fill="x")
-
-footer = tkinter.Frame(root)
-footer.pack(fill="both", expand=True)
+footer = tkinter.Frame(root, width=root.winfo_width(), height=25)
+footer.update()
+footer.place(y=root.winfo_height() - 25)
 footer.pack_propagate(False)
 
 filedir = tkinter.Label(footer, text="unsaved")
 filedir.pack(side="left")
+
+if cfg["linenumbers"]:
+    if cfg["theme"] == "System": sv_ttk.set_theme(darkdetect.theme().lower())
+    else: sv_ttk.set_theme(cfg["theme"].lower()) 
+
+    textwidget = t.TextWithLineNumbers(root, height=int((root.winfo_height() - 100) / 17.5), borderwidth=0)
+    textwidget.pack(fill="both")
+else:
+    textwidget = tkinter.Text(root, height=int((root.winfo_height() - 100) / 17.5), borderwidth=0)
+    textwidget.text = textwidget
+    textwidget.pack(fill="both")
+
+"""
+scrollbar = ttk.Scrollbar(root, command=textwidget.text.yview)
+textwidget.text.config(yscrollcommand=scrollbar.set)
+scrollbar.pack(side="right", fill="y", expand=False, pady=(0, 25))
+"""
 
 fileboxstate = tkinter.StringVar(value="File")
 
@@ -260,8 +296,8 @@ def fileboxaction(*args):
     action = fileboxstate.get()
     filemenu.set("File")
 
-    if action == "Save": save()
-    elif action == "Open": openfile()
+    if action == "Save": save("e")
+    elif action == "Open": openfile("e")
     elif action == "Save As": save(saveas=True)
     elif action == "New": new()
     elif action == "File Type": changetype()
@@ -274,7 +310,7 @@ def refreshtitle(e):
     if not root.wm_title().endswith("*"): root.title(root.wm_title() + "*")
     tabs[tabselected][3] = "*"
 
-textwidget.bind("<KeyPress>", refreshtitle)
+textwidget.text.bind("<KeyPress>", refreshtitle)
 
 root.event_add("<<Open>>", "<{}>".format(cfg["hkey-open"]))
 root.event_add("<<Save>>", "<{}>".format(cfg["hkey-save"]))
@@ -282,7 +318,8 @@ root.event_add("<<Save>>", "<{}>".format(cfg["hkey-save"]))
 root.bind("<<Open>>", openfile)
 root.bind("<<Save>>", save)
 
-applysettings()
+if cfg["linenumbers"]: applysettings(True, True)
+else: applysettings(first=True)
 
 cbuttons[0].place(x=71) # The first cbutton has to be placed like that because it seems like the winfo functions return wrong values the first time
 buildtabs()

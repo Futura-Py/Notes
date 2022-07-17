@@ -5,7 +5,7 @@ from generatesize import system
 import config
 
 def appearance():
-    global boxtheme, boxfont, boxsize, page
+    global boxtheme, boxfont, boxsize, btnnumbers, page
 
     savechanges()
     clearstates()
@@ -15,7 +15,7 @@ def appearance():
 
     page = "appearance"
 
-    lbltheme = tkinter.Label(frameright, text="Theme:").place(x=10, y=12)
+    lbltheme = tkinter.Label(frameright, text="Theme:").place(x=10, y=15)
     boxtheme = ttk.Combobox(frameright, values=["Dark", "Light", "System"], state="readonly", width=25)
     boxtheme.set(cfg["theme"])
     boxtheme.pack(padx=10, pady=10, anchor="e")
@@ -27,6 +27,13 @@ def appearance():
     boxsize = ttk.Entry(frameright, width=5)
     boxsize.insert(0, cfg["font-size"])
     boxsize.place(x=260, y=63)
+
+    lblnumbers = tkinter.Label(frameright, text="Display line numbers:").place(x=10, y=118)
+    btnnumbers = ttk.Checkbutton(frameright, style="Switch.TCheckbutton")
+    btnnumbers.pack(padx=10, pady=10, anchor="e")
+    btnnumbers.state(["!alternate"])
+    if cfg["linenumbers"]: btnnumbers.state(["!alternate", "selected"])
+    numbersinfo = tkinter.Label(frameright, text="When switching themes with this setting enabled,\nyou have to perform a restart.\n\n(Changing this setting also does.)", justify="left", fg="grey").place(x=10, y=148)
 
 def experimental():
     global page, btnmica, btnhotkeys
@@ -42,9 +49,9 @@ def experimental():
     lblmica = tkinter.Label(frameright, text="Mica Blur:").place(x=10, y=12)
     btnmica = ttk.Checkbutton(frameright, style="Switch.TCheckbutton")
     btnmica.pack(padx=10, pady=10, anchor="e")
-    btnmica.state(["!alternate"])
+    btnmica.state(["!alternate", "disabled"])
     if cfg["mica"]: btnmica.state(["!alternate", "selected"])
-    micainfo = tkinter.Label(frameright, text="When switching from dark to light theme with this\noption enabled, you have to perform a restart!", justify="left", fg="grey").place(x=10, y=42)
+    micainfo = tkinter.Label(frameright, text="When switching from dark to light theme with this\noption enabled, you have to perform a restart!\n\nCurrently unavailable because of a bug.", justify="left", fg="grey").place(x=10, y=42)
 
 def hotkeys():
     global page, entryopen, entrysave
@@ -74,6 +81,7 @@ def savechanges():
         cfg["theme"] = boxtheme.get()
         cfg["font"] = boxfont.get()
         cfg["font-size"] = boxsize.get()
+        cfg["linenumbers"] = btnnumbers.instate(["selected"])
     elif page == "experimental":
         cfg["mica"] = btnmica.instate(["selected"])
     elif page == "hotkeys":
