@@ -8,4 +8,5 @@ def get():
     "mica": False,
     "hkey-open": "Control-o",
     "hkey-save": "Control-s",
+    "linenumbers": False,
     })
