@@ -119,7 +119,7 @@ def updatetab(file):
     tabs[tabselected][2] = file.name
     tabs[tabselected][3] = ""   
 
-def save(e, saveas=False):
+def save(e="", saveas=False):
     if tabs[tabselected][2] == "unsaved" or saveas:
         file = filedialog.asksaveasfile()
         if file != None: file = open(file, "w")
@@ -159,9 +159,11 @@ def new():
         tabs[tabselected][1] = textwidget.text.get("1.0", "end")
         textwidget.text.delete("1.0", "end")
         tabs.append(["Untitled", "", "unsaved", "*"])
+        filedir.configure(text="unsaved")
         tabselected = len(tabbuttons)
 
         buildtabs()
+        updatetitle()
     else: print("Tab limit reached")
 
 def opentab(x):
@@ -296,7 +298,7 @@ def fileboxaction(*args):
     action = fileboxstate.get()
     filemenu.set("File")
 
-    if action == "Save": save("e")
+    if action == "Save": save()
     elif action == "Open": openfile("e")
     elif action == "Save As": save(saveas=True)
     elif action == "New": new()
