@@ -1,5 +1,7 @@
 <div align="center">
 
+<img alt="Logo" src="../assets/logo.png" width="100px" />
+
 # txt2
 <a style="text-decoration:none" href="https://github.com/not-nef/txt2/releases">
     <img src="https://img.shields.io/github/v/release/not-nef/txt2?display_name=release&include_prereleases" alt="Releases" />
@@ -10,4 +12,8 @@ A text editor in python!
 
 Modern and native look thanks to rdbendes [Sun Valley ttk theme](https://github.com/rdbende/Sun-Valley-ttk-theme)
 
-![Screenshot 2022-07-08 201927](https://user-images.githubusercontent.com/83908932/178049426-550f9414-8f25-489c-a37f-8c4d9aae6aa5.png)
+![image](https://user-images.githubusercontent.com/83908932/179550991-50887e07-4e35-4250-9667-560d275455bc.png)
+
+### Supported systems:
+
+txt2 is currently windows 11 only. sorry :(
