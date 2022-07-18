@@ -122,13 +122,16 @@ def updatetab(file):
 def save(e="", saveas=False):
     if tabs[tabselected][2] == "unsaved" or saveas:
         file = filedialog.asksaveasfile()
-        if file != None: file = open(file, "w")
+        if file == None: return
     else: file = open(tabs[tabselected][2], "w")
     
     if file != None:
         file.write(textwidget.text.get("1.0", "end"))
 
         updatetab(file)
+        filedir.configure(text=file.name)
+
+        file.close()
 
         buildtabs()
         updatetitle()
