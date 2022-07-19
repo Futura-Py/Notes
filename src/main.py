@@ -40,14 +40,6 @@ tabbar.pack(fill="both")
 tabbar.pack_propagate(False)
 tabbar.update()
 
-footer = tkinter.Frame(root, width=root.winfo_width(), height=25)
-footer.update()
-footer.place(y=root.winfo_height() - 25)
-footer.pack_propagate(False)
-
-filedir = tkinter.Label(footer, text="unsaved")
-filedir.pack(side="left")
-
 if cfg["linenumbers"]:
     if cfg["theme"] == "System": sv_ttk.set_theme(darkdetect.theme().lower())
     else: sv_ttk.set_theme(cfg["theme"].lower()) 
@@ -58,6 +50,14 @@ else:
     textwidget = tkinter.Text(root, height=int((root.winfo_height() - 100) / 17.5), borderwidth=0)
     textwidget.text = textwidget
     textwidget.pack(fill="both")
+
+footer = tkinter.Frame(root, width=root.winfo_width(), height=25)
+footer.update()
+footer.place(y=root.winfo_height() - 25)
+footer.pack_propagate(False)
+
+filedir = tkinter.Label(footer, text="unsaved")
+filedir.pack(side="left")
 
 """
 scrollbar = ttk.Scrollbar(root, command=textwidget.text.yview)
