@@ -35,17 +35,17 @@ header.pack_propagate(False)
 
 tabbar = tkinter.Frame(root, height="50", bg="#202020")
 tabbar.pack(fill="both")
-tabbar.pack_propagate(False)
+tabbar.pack_propagate(False) 
 
 if cfg["linenumbers"]:
     if cfg["theme"] == "System": sv_ttk.set_theme(darkdetect.theme().lower())
     else: sv_ttk.set_theme(cfg["theme"].lower()) 
 
-    textwidget = t.ScrollText(root, height=int((root.winfo_height() - 100) / 17.5), borderwidth=0)
+    textwidget = t.ScrollText(root, width=100, borderwidth=0)
     textwidget.pack(fill="both")
     textwidget.redraw()
 else:
-    textwidget = tkinter.Text(root, height=int(root.winfo_height() / 17.5), borderwidth=0)
+    textwidget = tkinter.Text(root, width=100, borderwidth=0)
     textwidget.text = textwidget
     textwidget.pack(fill="both")
 
