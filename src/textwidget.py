@@ -91,3 +91,5 @@ class TextWithLineNumbers(tk.Frame):
     def _on_change(self, event):
         if self.mode == "dark": self.linenumbers.redraw()
         else: self.linenumbers.redraw("light")
+        if int(self.linenumbers.text_widget.index('end-1c').split('.')[0]) > 2000:
+            self.linenumbers.configure(width=40)
