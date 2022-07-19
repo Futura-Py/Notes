@@ -1,33 +1,42 @@
 import tkinter as tk
 
-class Text(tk.Text):
-    def __init__(self, *args, **kwargs):
-        tk.Text.__init__(self, *args, **kwargs)
+class ScrollText(tk.Frame):
+    def __init__(self, master=None, mode="dark", line_numbers_callbacks=None, **text_kwargs):
+        tk.Frame.__init__(self, master)
+        self.text = tk.Text(self, **text_kwargs)
 
-        # create a proxy for the underlying widget
-        self._orig = self._w + "_orig"
-        self.tk.call("rename", self._w, self._orig)
-        self.tk.createcommand(self._w, self._proxy)
+        if line_numbers_callbacks is None:
+            line_numbers_callbacks = []
+        self.line_numbers_callbacks = line_numbers_callbacks
+        self.numberLines = TextLineNumbers(self, width=30, callbacks=self.line_numbers_callbacks)
+        self.numberLines.attach(self.text)
 
-    def _proxy(self, *args):
-        # let the actual widget perform the requested action
-        cmd = (self._orig,) + args
-        result = self.tk.call(cmd)
+        self.numberLines.pack(side=tk.LEFT, fill=tk.Y, padx=(5, 0))
+        self.text.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
 
-        # generate an event if something was added or deleted,
-        # or the cursor position changed
-        if (args[0] in ("insert", "replace", "delete") or
-            args[0:3] == ("mark", "set", "insert") or
-            args[0:2] == ("xview", "moveto") or
-            args[0:2] == ("xview", "scroll") or
-            args[0:2] == ("yview", "moveto") or
-            args[0:2] == ("yview", "scroll")
-        ):
-            self.event_generate("<<Change>>", when="tail")
+        self.text.bind("<Key>", self.onPressDelay)
+        self.text.bind("<Return>", self.onPressDelay)
+        self.text.bind("<BackSpace>", self.onPressDelay)
+        self.text.bind("<Button-1>", self.redraw)
+        self.text.bind("<MouseWheel>", self.onPressDelay)
 
-        # return what the actual widget returned
-        return result
+    def onPressDelay(self, *args):
+        self.after(2, self.numberLines.redraw)
 
+    def get(self, *args, **kwargs):
+        return self.text.get(*args, **kwargs)
+
+    def insert(self, *args, **kwargs):
+        return self.text.insert(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        return self.text.delete(*args, **kwargs)
+
+    def index(self, *args, **kwargs):
+        return self.text.index(*args, **kwargs)
+
+    def redraw(self, *args):
+        self.numberLines.redraw()
 
 class TextLineNumbers(tk.Canvas):
     def __init__(self, *args, **kwargs):
@@ -58,38 +67,14 @@ class TextLineNumbers(tk.Canvas):
                 self.create_text(2, y, anchor="nw", text=linenum)
             i = self.text_widget.index("%s+1line" % i)
 
+'''THIS CODE IS CREDIT OF Bryan Oakley (With minor visual modifications on my side): 
+https://stackoverflow.com/questions/16369470/tkinter-adding-line-number-to-text-widget'''
 
-class TextWithLineNumbers(tk.Frame):
-    def __init__(self, master=None, mode="dark", line_numbers_callbacks=None, **text_kwargs):
-        """
-        Text widget with line numbers attached to it.
-        :param master: Parent widget.
-        :param line_numbers_callbacks: A list of callbacks that are triggered on every line number redraw.
-                                       Redraws happen every time the widget is changed or configured.
-                                       callbacks take an argument, which is the current line number being redrawn.
-        :param text_kwargs: keyword arguments that are passed straight to the underlying tkinter.Text widget.
-        """
-        super().__init__(master)
-        if line_numbers_callbacks is None:
-            line_numbers_callbacks = []
-        self.mode = mode
-        self.line_numbers_callbacks = line_numbers_callbacks
-        self.text = Text(self, **text_kwargs)
-        self.text.configure(wrap=tk.NONE, undo=True)
-        self.linenumbers = TextLineNumbers(self, width=30, callbacks=self.line_numbers_callbacks)
-        self.linenumbers.attach(self.text)
 
-        if mode == "dark": self.linenumbers.redraw()
-        else: self.linenumbers.redraw("light")
-
-        self.linenumbers.pack(side="left", fill="y")
-        self.text.pack(side="right", fill="both", expand=True)
-
-        self.text.bind("<<Change>>", self._on_change)
-        self.text.bind("<Configure>", self._on_change)
-
-    def _on_change(self, event):
-        if self.mode == "dark": self.linenumbers.redraw()
-        else: self.linenumbers.redraw("light")
-        if int(self.linenumbers.text_widget.index('end-1c').split('.')[0]) > 2000:
-            self.linenumbers.configure(width=40)
+if __name__ == '__main__':
+    root = tk.Tk()
+    scroll = ScrollText(root, mode="light")
+    scroll.insert(tk.END, "HEY" + 20*'\n')
+    root.after(10, scroll.redraw())
+    scroll.pack()
+    root.mainloop()

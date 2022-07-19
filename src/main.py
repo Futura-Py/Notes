@@ -41,8 +41,9 @@ if cfg["linenumbers"]:
     if cfg["theme"] == "System": sv_ttk.set_theme(darkdetect.theme().lower())
     else: sv_ttk.set_theme(cfg["theme"].lower()) 
 
-    textwidget = t.TextWithLineNumbers(root, height=int((root.winfo_height() - 100) / 17.5), borderwidth=0)
+    textwidget = t.ScrollText(root, height=int((root.winfo_height() - 100) / 17.5), borderwidth=0)
     textwidget.pack(fill="both")
+    textwidget.redraw()
 else:
     textwidget = tkinter.Text(root, height=int(root.winfo_height() / 17.5), borderwidth=0)
     textwidget.text = textwidget
@@ -55,12 +56,6 @@ footer.pack_propagate(False)
 
 filedir = tkinter.Label(footer, text="unsaved")
 filedir.pack(side="left")
-
-"""
-scrollbar = ttk.Scrollbar(root, command=textwidget.text.yview)
-textwidget.text.config(yscrollcommand=scrollbar.set)
-scrollbar.pack(side="right", fill="y", expand=False, pady=(0, 25))
-"""
 
 fileboxstate = tkinter.StringVar(value="File")
 
