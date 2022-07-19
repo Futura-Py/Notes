@@ -14,9 +14,7 @@ import applysettings as a
 cfg = config.get()
 
 root = tkinter.Tk()
-ntkutils.windowsetup(root, title="txt2 - Untitled *", resizeable=False, size=size.get(), icon="assets/logo.png")
-ntkutils.placeappincenter(root)
-root.update()
+root.withdraw()
 
 closeimg = tkinter.PhotoImage(file="assets/close_light.png")
 closeimg2 = tkinter.PhotoImage(file="assets/close_dark.png")
@@ -38,7 +36,6 @@ header.pack_propagate(False)
 tabbar = tkinter.Frame(root, height="50", bg="#202020")
 tabbar.pack(fill="both")
 tabbar.pack_propagate(False)
-tabbar.update()
 
 if cfg["linenumbers"]:
     if cfg["theme"] == "System": sv_ttk.set_theme(darkdetect.theme().lower())
@@ -121,5 +118,14 @@ else: a.applysettings(first=True)
 
 tabmanager.cbuttons[0].place(x=71) # The first cbutton has to be placed like that because it seems like the winfo functions return wrong values the first time
 tabmanager.buildtabs()
+
+root.update_idletasks()
+win_size = "{}x{}".format(root.winfo_reqwidth(), root.winfo_reqheight())
+root.minsize(root.winfo_reqwidth(), root.winfo_reqheight())
+root.maxsize(root.winfo_reqwidth(), root.winfo_reqheight())
+ntkutils.windowsetup(root, title="txt2 - Untitled.*", resizeable=True, size=win_size, icon="assets/logo.png")
+ntkutils.placeappincenter(root)
+root.update_idletasks()
+root.deiconify()
 
 root.mainloop()
