@@ -49,9 +49,9 @@ def experimental():
     lblmica = tkinter.Label(frameright, text="Mica Blur:").place(x=10, y=12)
     btnmica = ttk.Checkbutton(frameright, style="Switch.TCheckbutton")
     btnmica.pack(padx=10, pady=10, anchor="e")
-    btnmica.state(["!alternate", "disabled"])
+    btnmica.state(["!alternate"])
     if cfg["mica"]: btnmica.state(["!alternate", "selected"])
-    micainfo = tkinter.Label(frameright, text="When switching from dark to light theme with this\noption enabled, you have to perform a restart!\n\nCurrently unavailable because of a bug.", justify="left", fg="grey").place(x=10, y=42)
+    micainfo = tkinter.Label(frameright, text="When switching from dark to light theme with this\noption enabled, you have to perform a restart!", justify="left", fg="grey").place(x=10, y=42)
 
 def hotkeys():
     global page, entryopen, entrysave

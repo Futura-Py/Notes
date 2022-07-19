@@ -63,6 +63,8 @@ def applysettings(ignoretheme=False, first=False):
 
     if v.cfg["mica"]: 
         if v.cfg["theme"] == "Dark" or (v.cfg["theme"] == "System" and darkdetect.isDark()):
+            v.header.configure(bg="#1c1c1c")
+            v.tabbar.configure(bg="#1c1c1c")
             ntkutils.blur_window_background(v.root, dark=True)
             v.textwidget.text.configure(bg="#1b1c1b")
         else:

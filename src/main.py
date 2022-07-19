@@ -47,7 +47,7 @@ if cfg["linenumbers"]:
     textwidget = t.TextWithLineNumbers(root, height=int((root.winfo_height() - 100) / 17.5), borderwidth=0)
     textwidget.pack(fill="both")
 else:
-    textwidget = tkinter.Text(root, height=int((root.winfo_height() - 100) / 17.5), borderwidth=0)
+    textwidget = tkinter.Text(root, height=int(root.winfo_height() / 17.5), borderwidth=0)
     textwidget.text = textwidget
     textwidget.pack(fill="both")
 
