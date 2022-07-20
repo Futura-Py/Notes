@@ -10,6 +10,7 @@ import textwidget as t
 import tabmanager
 import vars as v
 import applysettings as a
+import mdpreview as md
 
 cfg = config.get()
 
@@ -90,6 +91,7 @@ def fileboxaction(*args):
 fileboxstate.trace("w", fileboxaction)
 
 btnsettings = ttk.Button(header, text="Settings", command=settings_).pack(side="left")
+btnpreview = ttk.Button(header, text="Preview Markdown", command=md.build).pack(side="left", padx=10)
 
 def refreshtitle(e):
     if not root.wm_title().endswith("*"): root.title(root.wm_title() + "*")
