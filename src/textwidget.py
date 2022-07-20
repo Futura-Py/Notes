@@ -8,7 +8,7 @@ class ScrollText(tk.Frame):
         if line_numbers_callbacks is None:
             line_numbers_callbacks = []
         self.line_numbers_callbacks = line_numbers_callbacks
-        self.numberLines = TextLineNumbers(self, width=40, callbacks=self.line_numbers_callbacks)
+        self.numberLines = TextLineNumbers(self, width=30, callbacks=self.line_numbers_callbacks)
         self.numberLines.attach(self.text)
 
         self.numberLines.pack(side=tk.LEFT, fill=tk.Y)
