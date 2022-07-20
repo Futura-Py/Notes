@@ -22,8 +22,6 @@ ntkutils.placeappincenter(root)
 
 root.update()
 
-print(root.winfo_height())
-
 closeimg = tkinter.PhotoImage(file="assets/close_light.png")
 closeimg2 = tkinter.PhotoImage(file="assets/close_dark.png")
 

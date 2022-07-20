@@ -20,6 +20,8 @@ class ScrollText(tk.Frame):
         self.text.bind("<Button-1>", self.redraw)
         self.text.bind("<MouseWheel>", self.onPressDelay)
 
+        self.text.bind("<Control-v>", self.onPressDelay, add="+")
+
     def onPressDelay(self, *args):
         self.after(2, self.numberLines.redraw)
 
