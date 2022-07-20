@@ -47,11 +47,11 @@ if cfg["linenumbers"]:
     if cfg["theme"] == "System": sv_ttk.set_theme(darkdetect.theme().lower())
     else: sv_ttk.set_theme(cfg["theme"].lower()) 
 
-    textwidget = t.ScrollText(root, width=100, borderwidth=0)
+    textwidget = t.ScrollText(root, width=100, borderwidth=0, height=root.winfo_height() - 125)
     textwidget.pack(fill="both")
     textwidget.redraw()
 else:
-    textwidget = tkinter.Text(root, width=100, borderwidth=0)
+    textwidget = tkinter.Text(root, width=100, borderwidth=0, height=root.winfo_height() - 125)
     textwidget.text = textwidget
     textwidget.pack(fill="both")
 

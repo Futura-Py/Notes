@@ -67,6 +67,8 @@ def applysettings(ignoretheme=False, first=False):
             v.tabbar.configure(bg="#1c1c1c")
             ntkutils.blur_window_background(v.root, dark=True)
             v.textwidget.text.configure(bg="#1b1c1b")
+            try: v.textwidget.numberLines.configure(bg="#1b1c1b") 
+            except: pass
         else:
             ntkutils.blur_window_background(v.root)
             v.textwidget.text.configure(bg="#fafbfa")
