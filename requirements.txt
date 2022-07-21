@@ -2,3 +2,5 @@ sv-ttk
 ntkutils
 darkdetect
 pywin32
+markdown
+tkinterweb

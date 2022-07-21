@@ -1,14 +1,11 @@
 ver = "0.4.1"
 
-import tkinter, sv_ttk, ntkutils, darkdetect
-from tkinter import ttk
+import tkinter, ntkutils
 from pathlib import Path
 
+import settings, config, tabmanager
 import generatesize as size 
-import settings
-import config
 import textwidget as t
-import tabmanager
 import vars as v
 import applysettings as a
 import mdpreview as md

@@ -1,6 +1,5 @@
 import markdown
 from tkinterweb.htmlwidgets import HtmlFrame
-from tkinter import ttk
 
 import vars as v
 
