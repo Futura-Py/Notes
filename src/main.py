@@ -2,6 +2,7 @@ ver = "0.4.1"
 
 import tkinter, sv_ttk, ntkutils, darkdetect
 from tkinter import ttk
+from pathlib import Path
 
 import generatesize as size 
 import settings
@@ -22,8 +23,8 @@ ntkutils.placeappincenter(root)
 
 root.update()
 
-closeimg = tkinter.PhotoImage(file="assets/close_light.png")
-closeimg2 = tkinter.PhotoImage(file="assets/close_dark.png")
+closeimg = tkinter.PhotoImage(file=Path("../assets/close_light.png"))
+closeimg2 = tkinter.PhotoImage(file=Path("../assets/close_dark.png"))
 
 def settings_():
     settings.build()
