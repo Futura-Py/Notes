@@ -34,8 +34,7 @@ def settings_():
     if settings.save == True:
         oldcfg = cfg
         v.cfg = settings.cfg
-        if oldcfg["linenumbers"] or cfg["linenumbers"]: a.applysettings(True)
-        else: a.applysettings()
+        a.applysettings()
 
 def closepreview():
     md.close()
@@ -50,9 +49,6 @@ tabbar.pack(fill="both")
 tabbar.pack_propagate(False) 
 
 if cfg["linenumbers"]:
-    if cfg["theme"] == "System": sv_ttk.set_theme(darkdetect.theme().lower())
-    else: sv_ttk.set_theme(cfg["theme"].lower()) 
-
     textwidget = t.ScrollText(root, width=100, borderwidth=0, height=root.winfo_height() - 125)
     textwidget.pack(fill="both")
     textwidget.redraw()
@@ -122,8 +118,7 @@ v.footer = footer
 v.closeimg = closeimg
 v.closeimg2 = closeimg2
 
-if cfg["linenumbers"]: a.applysettings(True, True)
-else: a.applysettings(first=True)
+a.applysettings()
 
 tabmanager.cbuttons[0].place(x=71) # The first cbutton has to be placed like that because it seems like the winfo functions return wrong values the first time
 tabmanager.buildtabs()

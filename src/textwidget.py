@@ -1,7 +1,7 @@
 import tkinter as tk
 
 class ScrollText(tk.Frame):
-    def __init__(self, master=None, mode="dark", line_numbers_callbacks=None, **text_kwargs):
+    def __init__(self, master=None, line_numbers_callbacks=None, **text_kwargs):
         tk.Frame.__init__(self, master)
         self.text = tk.Text(self, **text_kwargs)
 
@@ -46,11 +46,12 @@ class TextLineNumbers(tk.Canvas):
         del kwargs["callbacks"]
         tk.Canvas.__init__(self, *args, **kwargs)
         self.text_widget = None
+        self.mode = "dark"
 
     def attach(self, text_widget):
         self.text_widget = text_widget
 
-    def redraw(self, mode="dark", *args):
+    def redraw(self, *args):
         '''redraw line numbers'''
         self.delete("all")
 
@@ -63,10 +64,10 @@ class TextLineNumbers(tk.Canvas):
             for callback in self.callbacks:
                 callback(i)
             linenum = str(i).split(".")[0]
-            if mode == "dark":
+            if self.mode == "dark":
                 self.create_text(2, y, anchor="nw", text=linenum, fill="white")
             else:
-                self.create_text(2, y, anchor="nw", text=linenum)
+                self.create_text(2, y, anchor="nw", text=linenum, fill="black")
             i = self.text_widget.index("%s+1line" % i)
 
 '''THIS CODE IS CREDIT OF Bryan Oakley (With minor visual modifications on my side): 
