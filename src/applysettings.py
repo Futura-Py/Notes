@@ -24,7 +24,8 @@ def applysettings():
         normal = "#2a2a2a"
         normal_hover = "#2f2f2f"
 
-        v.textwidget.numberLines.mode = "dark"
+        try: v.textwidget.numberLines.mode = "dark"
+        except AttributeError: pass
     else: 
         v.header.configure(bg="#f3f3f3")
         v.tabbar.configure(bg="#f3f3f3")
@@ -38,7 +39,8 @@ def applysettings():
         selected = "#0560b6"
         selected_hover = "#1e6fbc"
 
-        v.textwidget.numberLines.mode = "light"
+        try: v.textwidget.numberLines.mode = "light"
+        except AttributeError: pass
 
     v.textwidget.text.configure(font=(v.cfg["font"], int(v.cfg["font-size"])))
 
