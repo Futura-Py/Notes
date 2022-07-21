@@ -11,6 +11,7 @@ import textwidget as t
 import tabmanager
 import vars as v
 import applysettings as a
+import mdpreview as md
 
 cfg = config.get()
 
@@ -35,6 +36,10 @@ def settings_():
         v.cfg = settings.cfg
         if oldcfg["linenumbers"] or cfg["linenumbers"]: a.applysettings(True)
         else: a.applysettings()
+
+def closepreview():
+    md.close()
+    textwidget.text.bind("<KeyPress>", refreshtitle)
 
 header = tkinter.Frame(root, height="50", bg="#202020")
 header.pack(fill="both")
@@ -91,6 +96,8 @@ def fileboxaction(*args):
 fileboxstate.trace("w", fileboxaction)
 
 btnsettings = ttk.Button(header, text="Settings", command=settings_).pack(side="left")
+btnpreview = ttk.Button(header, text="Preview Markdown", command=md.build).pack(side="left", padx=10)
+btnclosepreview = ttk.Button(header, text="Close Preview", command=closepreview).pack(side="left")
 
 def refreshtitle(e):
     if not root.wm_title().endswith("*"): root.title(root.wm_title() + "*")
