@@ -92,6 +92,7 @@ fileboxstate.trace("w", fileboxaction)
 
 btnsettings = ttk.Button(header, text="Settings", command=settings_).pack(side="left")
 btnpreview = ttk.Button(header, text="Preview Markdown", command=md.build).pack(side="left", padx=10)
+btnclosepreview = ttk.Button(header, text="Close Preview", command=md.close).pack(side="left")
 
 def refreshtitle(e):
     if not root.wm_title().endswith("*"): root.title(root.wm_title() + "*")
