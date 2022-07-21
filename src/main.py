@@ -40,11 +40,7 @@ def closepreview():
     md.close()
     textwidget.text.bind("<KeyPress>", refreshtitle)
 
-header = tkinter.Frame(root, height="50", bg="#202020")
-header.pack(fill="both")
-header.pack_propagate(False)
-
-tabbar = tkinter.Frame(root, height="50", bg="#202020")
+tabbar = tkinter.Frame(root, height="75", bg="#202020")
 tabbar.pack(fill="both")
 tabbar.pack_propagate(False) 
 
@@ -65,35 +61,27 @@ footer.pack_propagate(False)
 filedir = tkinter.Label(footer, text="unsaved")
 filedir.pack(side="left")
 
-fileboxstate = tkinter.StringVar(value="File")
+menubar = tkinter.Menu(root)
+root.config(menu=menubar)
 
-filemenu = ttk.Combobox(
-    header, textvariable=fileboxstate, state="readonly", width=3, 
-    values=[
-        "Save",
-        "Save As",
-        "Open",
-        "New",
-        "File Type"
-    ]
-)
-filemenu.pack(side="left", padx=10)
+filemenu = tkinter.Menu(menubar, tearoff=False, bg="white")
+settingsmenu = tkinter.Menu(menubar, tearoff=False, bg="white")
 
-def fileboxaction(*args):
-    action = fileboxstate.get()
-    filemenu.set("File")
+menubar.add_cascade(label="File", menu=filemenu)
+menubar.add_cascade(label="Settings", menu=settingsmenu)
 
-    if action == "Save": tabmanager.save()
-    elif action == "Open": tabmanager.openfile("e")
-    elif action == "Save As": tabmanager.save(saveas=True)
-    elif action == "New": tabmanager.new()
-    elif action == "File Type": tabmanager.changetype()
-    
-fileboxstate.trace("w", fileboxaction)
+filemenu.add_command(label="Save", command=tabmanager.save, foreground="black")
+filemenu.add_command(label="Save As", command=lambda:tabmanager.save(saveas=True), foreground="black")
+filemenu.add_command(label="Open", command=tabmanager.openfile, foreground="black")
+filemenu.add_command(label="New", command=tabmanager.new, foreground="black")
+filemenu.add_separator()
+filemenu.add_command(label="Change file extension", command=tabmanager.changetype, foreground="black")
+filemenu.add_separator()
+filemenu.add_command(label="Preview Markdown", command=md.build, foreground="black")
+filemenu.add_command(label="Close Preview", command=closepreview, foreground="black")
 
-btnsettings = ttk.Button(header, text="Settings", command=settings_).pack(side="left")
-btnpreview = ttk.Button(header, text="Preview Markdown", command=md.build).pack(side="left", padx=10)
-btnclosepreview = ttk.Button(header, text="Close Preview", command=closepreview).pack(side="left")
+settingsmenu.add_command(label="Open Settings", command=settings_, foreground="black")
+settingsmenu.add_command(label="About", state="disabled")
 
 def refreshtitle(e):
     if not root.wm_title().endswith("*"): root.title(root.wm_title() + "*")
@@ -112,7 +100,6 @@ v.cfg = cfg
 v.root = root
 v.textwidget = textwidget
 v.filedir = filedir
-v.header = header
 v.tabbar = tabbar
 v.footer = footer
 v.closeimg = closeimg

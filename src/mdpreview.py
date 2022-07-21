@@ -15,7 +15,7 @@ def build():
     global display, binding
 
     display = HtmlFrame(v.root, messages_enabled=False)
-    display.place(x=v.root.winfo_width() / 2, y=100, width=v.root.winfo_width() / 2, height=v.root.winfo_height() - 125)
+    display.place(x=v.root.winfo_width() / 2, y=75, width=v.root.winfo_width() / 2, height=v.root.winfo_height() - 100)
     display.on_link_click(reload) # This line blocks clicking on links
 
     v.textwidget.text.bind("<KeyPress>", reload, add="+")

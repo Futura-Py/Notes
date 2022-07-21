@@ -78,7 +78,7 @@ def save(e="", saveas=False):
         buildtabs()
         updatetitle()
 
-def openfile(e):
+def openfile(e=""):
     if not len(tabs) == 10: 
         file = filedialog.askopenfile()
         content = file.read()
@@ -125,7 +125,7 @@ def buildtabs():
         button.update()
 
         cbutton = tkinter.Label(v.tabbar, font=("", 15), image=v.closeimg, bg=v.normal)
-        cbutton.place(x=button.winfo_x() + button.winfo_width() - 37, y=10)
+        cbutton.place(x=button.winfo_x() + button.winfo_width() - 37, y=23)
         cbutton.bind("<1>", lambda event, x=cbutton:close(event, x)) # Execute closetab on click
 
         tabbuttons.append(button)

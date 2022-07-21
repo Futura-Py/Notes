@@ -9,10 +9,6 @@ def applysettings():
     else: sv_ttk.set_theme(v.cfg["theme"].lower()) 
 
     if v.cfg["theme"] == "Dark" or (v.cfg["theme"] == "System" and darkdetect.isDark()): 
-        if size.system != "Darwin":
-            ntkutils.dark_title_bar(v.root)
-
-        v.header.configure(bg="#202020")
         v.tabbar.configure(bg="#202020")
         v.footer.configure(bg="#202020")
 
@@ -27,7 +23,6 @@ def applysettings():
         try: v.textwidget.numberLines.mode = "dark"
         except AttributeError: pass
     else: 
-        v.header.configure(bg="#f3f3f3")
         v.tabbar.configure(bg="#f3f3f3")
 
         v.footer.configure(bg="#f3f3f3")
@@ -46,7 +41,6 @@ def applysettings():
 
     if v.cfg["mica"]: 
         if v.cfg["theme"] == "Dark" or (v.cfg["theme"] == "System" and darkdetect.isDark()):
-            v.header.configure(bg="#1c1c1c")
             v.tabbar.configure(bg="#1c1c1c")
             ntkutils.blur_window_background(v.root, dark=True)
             v.textwidget.text.configure(bg="#1b1c1b")
@@ -61,5 +55,6 @@ def applysettings():
     v.normal_hover = normal_hover
     v.selected_hover = selected_hover
 
-    v.textwidget.numberLines.redraw()
+    try: v.textwidget.numberLines.redraw()
+    except AttributeError: pass
     tabmanager.buildtabs()
