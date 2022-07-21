@@ -1,13 +1,14 @@
-ver = "0.4.1"
+ver = "0.5"
 
 import tkinter, ntkutils
 from pathlib import Path
 
-import settings, config, tabmanager
+import config, tabmanager
+import settings.applysettings as a
+import settings.UI as settingsui
 import generatesize as size 
 import textwidget as t
 import vars as v
-import applysettings as a
 import mdpreview as md
 
 cfg = config.get()
@@ -25,12 +26,12 @@ closeimg = tkinter.PhotoImage(file=Path("assets/close_light.png"))
 closeimg2 = tkinter.PhotoImage(file=Path("assets/close_dark.png"))
 
 def settings_():
-    settings.build()
-    root.wait_window(settings.settings)
+    settingsui.build()
+    root.wait_window(settingsui.settings)
     
-    if settings.save == True:
+    if settingsui.save == True:
         oldcfg = cfg
-        v.cfg = settings.cfg
+        v.cfg = settingsui.cfg
         a.applysettings()
 
 def closepreview():
