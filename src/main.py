@@ -18,14 +18,14 @@ cfg = config.get()
 root = tkinter.Tk()
 root.geometry(size.get())
 root.withdraw()
-ntkutils.windowsetup(root, title="txt2 - Untitled *", resizeable=False, size=size.get(), icon=Path("../assets/logo.png"))
+ntkutils.windowsetup(root, title="txt2 - Untitled *", resizeable=False, size=size.get(), icon=Path("assets/logo.png"))
 root.update_idletasks()
 ntkutils.placeappincenter(root)
 
 root.update()
 
-closeimg = tkinter.PhotoImage(file=Path("../assets/close_light.png"))
-closeimg2 = tkinter.PhotoImage(file=Path("../assets/close_dark.png"))
+closeimg = tkinter.PhotoImage(file=Path("assets/close_light.png"))
+closeimg2 = tkinter.PhotoImage(file=Path("assets/close_dark.png"))
 
 def settings_():
     settings.build()
