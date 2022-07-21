@@ -12,14 +12,15 @@ def reload(e):
     v.root.after(2, update)
 
 def build():
-    global display
+    global display, binding
 
-    display = HtmlFrame(v.root, width=200, messages_enabled=False)
-    display.place(x=v.root.winfo_width() / 2, y=100, width=v.root.winfo_width() / 2)
+    display = HtmlFrame(v.root, messages_enabled=False)
+    display.place(x=v.root.winfo_width() / 2, y=100, width=v.root.winfo_width() / 2, height=v.root.winfo_height() - 125)
     display.on_link_click(reload) # This line blocks clicking on links
 
-    v.textwidget.text.bind("<KeyPress>", reload)
+    v.textwidget.text.bind("<KeyPress>", reload, add="+")
     reload("")
 
 def close():
+    v.textwidget.text.unbind("<KeyPress>")
     display.destroy()
