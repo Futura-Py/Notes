@@ -155,4 +155,6 @@ def setlexer():
     if v.cfg["syntax-highlighting"]:
         lexer = get_lexer_for_filename(tabs[v.tabselected][0])
         lexer = "pygments.lexers." + str(lexer).split(".")[-1].removesuffix(">")
-        v.textwidget._set_lexer(eval(lexer))
+        v.textwidget.text._set_lexer(eval(lexer))
+        try: v.textwidget.redraw()
+        except: pass
