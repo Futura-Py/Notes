@@ -1,7 +1,8 @@
 ver = "0.5"
 
-import tkinter, ntkutils
+import tkinter, ntkutils, pygments
 from pathlib import Path
+from codeview import CodeView
 
 import config, tabmanager
 import settings.applysettings as a
@@ -46,10 +47,16 @@ if cfg["linenumbers"]:
     textwidget = t.ScrollText(root, width=100, borderwidth=0, height=root.winfo_height() - 125)
     textwidget.pack(fill="both")
     textwidget.redraw()
-else:
+elif not cfg["syntax-highlighting"]:
     textwidget = tkinter.Text(root, width=100, borderwidth=0, height=root.winfo_height() - 125)
     textwidget.text = textwidget
     textwidget.pack(fill="both")
+else:
+    textwidget = CodeView(root, height=800, bg="#1c1c1c", lexer=pygments.lexers.TextLexer)
+    textwidget.pack(fill="both")
+    textwidget.text = textwidget
+
+    textwidget._set_lexer(pygments.lexers.CppLexer)
 
 footer = tkinter.Frame(root, width=root.winfo_width(), height=25)
 footer.update()

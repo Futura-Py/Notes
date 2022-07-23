@@ -11,6 +11,7 @@ def get():
         "hkey-open": "Control-o",
         "hkey-save": "Control-s",
         "linenumbers": True,
+        "syntax-highlighting": False,
         })
     else:
         return cfgtools.init({
@@ -21,4 +22,5 @@ def get():
         "hkey-open": "Command-o",
         "hkey-save": "Command-s",
         "linenumbers": True,
+        "syntax-highlighting": False,
         })
