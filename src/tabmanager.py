@@ -62,7 +62,7 @@ def new():
 
         buildtabs()
         updatetitle()
-        if v.cfg["syntax-highlighting"]: v.textwidget._set_lexer(pygments.lexers.TextLexer)
+        if v.cfg["syntax-highlighting"]: v.textwidget.text._set_lexer(pygments.lexers.TextLexer)
     else: print("Tab limit reached")
 
 def save(e="", saveas=False):
