@@ -1,15 +1,16 @@
 ver = "0.5"
 
-import tkinter, ntkutils
+import tkinter, ntkutils, pygments
 from pathlib import Path
 
 import config, tabmanager
 import settings.applysettings as a
 import settings.UI as settingsui
 import generatesize as size 
-import textwidget as t
 import vars as v
 import mdpreview as md
+from widgets.textwidget import ScrollText, ScrollCode
+from widgets.codeview import CodeView
 
 cfg = config.get()
 
@@ -30,7 +31,6 @@ def settings_():
     root.wait_window(settingsui.settings)
     
     if settingsui.save == True:
-        oldcfg = cfg
         v.cfg = settingsui.cfg
         a.applysettings()
 
@@ -42,14 +42,23 @@ tabbar = tkinter.Frame(root, height="75", bg="#202020")
 tabbar.pack(fill="both")
 tabbar.pack_propagate(False) 
 
-if cfg["linenumbers"]:
-    textwidget = t.ScrollText(root, width=100, borderwidth=0, height=root.winfo_height() - 125)
+if cfg["linenumbers"] and not cfg["syntax-highlighting"]:
+    textwidget = ScrollText(root, width=100, borderwidth=0, height=root.winfo_height() - 125)
+    textwidget.pack(fill="both")
+    textwidget.redraw()
+elif cfg["syntax-highlighting"] and not cfg["linenumbers"]:
+    textwidget = CodeView(root, height=800, bg="#1c1c1c", lexer=pygments.lexers.TextLexer)
+    textwidget.pack(fill="both")
+    textwidget.text = textwidget
+elif cfg["syntax-highlighting"] and cfg["linenumbers"]:
+    textwidget = ScrollCode(root, height=800, bg="#1c1c1c", lexer=pygments.lexers.TextLexer)
     textwidget.pack(fill="both")
     textwidget.redraw()
 else:
     textwidget = tkinter.Text(root, width=100, borderwidth=0, height=root.winfo_height() - 125)
     textwidget.text = textwidget
     textwidget.pack(fill="both")
+
 
 footer = tkinter.Frame(root, width=root.winfo_width(), height=25)
 footer.update()

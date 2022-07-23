@@ -1,4 +1,45 @@
 import tkinter as tk
+from widgets.codeview import CodeView
+
+class ScrollCode(tk.Frame):
+    def __init__(self, master=None, line_numbers_callbacks=None, **text_kwargs):
+        tk.Frame.__init__(self, master)
+        self.text = CodeView(self, **text_kwargs)
+
+        if line_numbers_callbacks is None:
+            line_numbers_callbacks = []
+        self.line_numbers_callbacks = line_numbers_callbacks
+        self.numberLines = TextLineNumbers(self, width=30, callbacks=self.line_numbers_callbacks)
+        self.numberLines.attach(self.text)
+
+        self.numberLines.pack(side=tk.LEFT, fill=tk.Y)
+        self.text.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
+
+        self.text.bind("<Key>", self.onPressDelay)
+        self.text.bind("<Return>", self.onPressDelay)
+        self.text.bind("<BackSpace>", self.onPressDelay)
+        self.text.bind("<Button-1>", self.redraw)
+        self.text.bind("<MouseWheel>", self.onPressDelay)
+
+        self.text.bind("<Control-v>", self.onPressDelay, add="+")
+
+    def onPressDelay(self, *args):
+        self.after(2, self.numberLines.redraw)
+
+    def get(self, *args, **kwargs):
+        return self.text.get(*args, **kwargs)
+
+    def insert(self, *args, **kwargs):
+        return self.text.insert(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        return self.text.delete(*args, **kwargs)
+
+    def index(self, *args, **kwargs):
+        return self.text.index(*args, **kwargs)
+
+    def redraw(self, *args):
+        self.numberLines.redraw()
 
 class ScrollText(tk.Frame):
     def __init__(self, master=None, line_numbers_callbacks=None, **text_kwargs):

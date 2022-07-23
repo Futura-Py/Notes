@@ -1,5 +1,7 @@
 import ntkutils, tkinter
 from tkinter import ttk, filedialog
+from pygments.lexers import get_lexer_for_filename
+import pygments.lexers
 
 import vars as v
 import filetype as f
@@ -28,6 +30,7 @@ def _open(x):
 
     buildtabs()
     updatetitle()
+    setlexer()
 
 def close(e, x):
     if not v.tabselected == cbuttons.index(x):
@@ -59,6 +62,7 @@ def new():
 
         buildtabs()
         updatetitle()
+        if v.cfg["syntax-highlighting"]: v.textwidget.text._set_lexer(pygments.lexers.TextLexer)
     else: print("Tab limit reached")
 
 def save(e="", saveas=False):
@@ -77,6 +81,7 @@ def save(e="", saveas=False):
 
         buildtabs()
         updatetitle()
+        setlexer()
 
 def openfile(e=""):
     if not len(tabs) == 10: 
@@ -94,6 +99,7 @@ def openfile(e=""):
 
         buildtabs()
         updatetitle()
+        setlexer()
     else:
         print("Tab limit reached")
 
@@ -107,6 +113,7 @@ def changetype():
 
         buildtabs()
         updatetitle()
+        setlexer()
 
 def on_enters(e, x): x.configure(bg=v.selected_hover)
 def on_leaves(e, x): x.configure(bg=v.selected)
@@ -143,3 +150,11 @@ def buildtabs():
             i.bind("<Leave>", lambda event, x=cbuttons[tabbuttons.index(i)]: on_leave(event, x))
 
     cbuttons[v.tabselected].configure(bg=v.selected, image=v.closeimg2)
+
+def setlexer():
+    if v.cfg["syntax-highlighting"]:
+        lexer = get_lexer_for_filename(tabs[v.tabselected][0])
+        lexer = "pygments.lexers." + str(lexer).split(".")[-1].removesuffix(">")
+        v.textwidget.text._set_lexer(eval(lexer))
+        try: v.textwidget.redraw()
+        except: pass

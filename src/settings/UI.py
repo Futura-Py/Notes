@@ -5,7 +5,7 @@ from generatesize import system
 import config
 
 def appearance():
-    global boxtheme, boxfont, boxsize, btnnumbers, page
+    global boxtheme, boxfont, boxsize, btnnumbers, btnhighlight, page
 
     savechanges()
     clearstates()
@@ -33,7 +33,14 @@ def appearance():
     btnnumbers.pack(padx=10, pady=10, anchor="e")
     btnnumbers.state(["!alternate"])
     if cfg["linenumbers"]: btnnumbers.state(["!alternate", "selected"])
-    numbersinfo = tkinter.Label(frameright, text="When switching themes with this setting enabled,\nyou have to perform a restart.\n\n(Changing this setting also does.)", justify="left", fg="grey").place(x=10, y=148)
+    numbersinfo = tkinter.Label(frameright, text="Requires restart", justify="left", fg="grey").place(x=10, y=148)
+
+    lblhighlight = tkinter.Label(frameright, text="Syntax Highlighting:").place(x=10, y=200)
+    btnhighlight = ttk.Checkbutton(frameright, style="Switch.TCheckbutton")
+    btnhighlight.pack(padx=10, pady=40, anchor="e")
+    btnhighlight.state(["!alternate"])
+    if cfg["syntax-highlighting"]: btnhighlight.state(["!alternate", "selected"])
+
 
 def experimental():
     global page, btnmica, btnhotkeys
@@ -82,6 +89,7 @@ def savechanges():
         cfg["font"] = boxfont.get()
         cfg["font-size"] = boxsize.get()
         cfg["linenumbers"] = btnnumbers.instate(["selected"])
+        cfg["syntax-highlighting"] = btnhighlight.instate(["selected"])
     elif page == "experimental":
         cfg["mica"] = btnmica.instate(["selected"])
     elif page == "hotkeys":
