@@ -1,10 +1,10 @@
 import tkinter as tk
-import codeview
+from widgets.codeview import CodeView
 
 class ScrollCode(tk.Frame):
     def __init__(self, master=None, line_numbers_callbacks=None, **text_kwargs):
         tk.Frame.__init__(self, master)
-        self.text = codeview.CodeView(self, **text_kwargs)
+        self.text = CodeView(self, **text_kwargs)
 
         if line_numbers_callbacks is None:
             line_numbers_callbacks = []
