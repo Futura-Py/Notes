@@ -153,7 +153,8 @@ def buildtabs():
 
 def setlexer():
     if v.cfg["syntax-highlighting"]:
-        lexer = get_lexer_for_filename(tabs[v.tabselected][0])
+        try: lexer = get_lexer_for_filename(tabs[v.tabselected][0])
+        except pygments.util.ClassNotFound: lexer = pygments.lexers.TextLexer
         lexer = "pygments.lexers." + str(lexer).split(".")[-1].removesuffix(">")
         v.textwidget.text._set_lexer(eval(lexer))
         try: v.textwidget.redraw()
