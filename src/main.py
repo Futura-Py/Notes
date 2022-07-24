@@ -2,6 +2,7 @@ ver = "0.5"
 
 import tkinter, ntkutils, pygments
 from pathlib import Path
+from tkinter import ttk
 
 import config, tabmanager
 import settings.applysettings as a
@@ -38,9 +39,8 @@ def closepreview():
     md.close()
     textwidget.text.bind("<KeyPress>", refreshtitle)
 
-tabbar = tkinter.Frame(root, height="75", bg="#202020")
-tabbar.pack(fill="both")
-tabbar.pack_propagate(False) 
+notebook = ttk.Notebook(root)
+notebook.pack(fill="both", expand=True)
 
 if cfg["linenumbers"] and not cfg["syntax-highlighting"]:
     textwidget = ScrollText(root, width=100, borderwidth=0, height=root.winfo_height() - 125)
@@ -107,17 +107,18 @@ v.cfg = cfg
 v.root = root
 v.textwidget = textwidget
 v.filedir = filedir
-v.tabbar = tabbar
+v.tabbar = notebook
 v.footer = footer
 v.closeimg = closeimg
 v.closeimg2 = closeimg2
 
 a.applysettings()
 
-tabmanager.cbuttons[0].place(x=71) # The first cbutton has to be placed like that because it seems like the winfo functions return wrong values the first time
+#tabmanager.cbuttons[0].place(x=71) # The first cbutton has to be placed like that because it seems like the winfo functions return wrong values the first time
 tabmanager.buildtabs()
+
+notebook.bind('<ButtonRelease-1>', tabmanager._open)
 
 root.update_idletasks()
 root.deiconify()
-
 root.mainloop()

@@ -18,15 +18,17 @@ def update(file):
 
 def updatetitle(): v.root.title("txt2 - {} {}".format(tabs[v.tabselected][0], tabs[v.tabselected][3]))
 
-def _open(x):
-    tabs[v.tabselected][1] = v.textwidget.text.get("1.0", "end")
-    v.tabselected = tabbuttons.index(x)
+def _open(e):
+    v.tabselected = v.tabbar.index(v.tabbar.select())
 
     v.textwidget.text.delete("1.0", "end")
     v.textwidget.text.insert("1.0", tabs[v.tabselected][1])
     v.textwidget.text.delete("end-1c", "end")
 
     v.filedir.configure(text=tabs[v.tabselected][2])
+
+    try: v.textwidget.redraw()
+    except: pass
 
     buildtabs()
     updatetitle()
@@ -58,7 +60,10 @@ def new():
         v.textwidget.text.delete("1.0", "end")
         tabs.append(["Untitled", "", "unsaved", "*"])
         v.filedir.configure(text="unsaved")
-        v.tabselected = len(tabbuttons)
+        v.tabselected = v.tabselected + 1
+
+        try: v.textwidget.redraw()
+        except: pass
 
         buildtabs()
         updatetitle()
@@ -121,35 +126,17 @@ def on_enter(e, x): x.configure(bg=v.normal_hover)
 def on_leave(e, x): x.configure(bg=v.normal)
 
 def buildtabs():
-    ntkutils.clearwin(v.tabbar)
-    tabbuttons.clear()
-    cbuttons.clear()
+    while True:
+        try:
+            v.tabbar.forget(0)
+        except:
+            break
 
     for i in tabs:
-        button = ttk.Button(v.tabbar, text=i[0] + "       ", image=v.closeimg, compound="right")
-        button.pack(side="left", padx=10)
-        button.configure(command=lambda x=button: _open(x))
-        button.update()
-
-        cbutton = tkinter.Label(v.tabbar, font=("", 15), image=v.closeimg, bg=v.normal)
-        cbutton.place(x=button.winfo_x() + button.winfo_width() - 37, y=23)
-        cbutton.bind("<1>", lambda event, x=cbutton:close(event, x)) # Execute closetab on click
-
-        tabbuttons.append(button)
-        cbuttons.append(cbutton)
-
-    tabbuttons[v.tabselected].configure(style="Accent.TButton")
-
-    # This makes the background change to the hover color when hovering over the button
-    for i in tabbuttons:
-        if tabbuttons.index(i) == v.tabselected:
-            i.bind("<Enter>", lambda event, x=cbuttons[v.tabselected]: on_enters(event, x))
-            i.bind("<Leave>", lambda event, x=cbuttons[v.tabselected]: on_leaves(event, x))
-        else:
-            i.bind("<Enter>", lambda event, x=cbuttons[tabbuttons.index(i)]: on_enter(event, x))
-            i.bind("<Leave>", lambda event, x=cbuttons[tabbuttons.index(i)]: on_leave(event, x))
-
-    cbuttons[v.tabselected].configure(bg=v.selected, image=v.closeimg2)
+        f = tkinter.Frame(v.root)
+        v.tabbar.add(f, text=i[0])
+    
+    v.tabbar.select(v.tabselected)
 
 def setlexer():
     if v.cfg["syntax-highlighting"]:
