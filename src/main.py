@@ -114,10 +114,9 @@ v.closeimg2 = closeimg2
 
 a.applysettings()
 
-#tabmanager.cbuttons[0].place(x=71) # The first cbutton has to be placed like that because it seems like the winfo functions return wrong values the first time
 tabmanager.buildtabs()
 
-notebook.bind('<ButtonRelease-1>', tabmanager._open)
+notebook.bind('<ButtonRelease-1>', tabmanager.opentab) # Bind Left mouse button to write content of selected tab into the text widget
 
 root.update_idletasks()
 root.deiconify()
