@@ -8,7 +8,7 @@ import filetype as f
 
 tabs = [["Untitled", "", "unsaved", "*"]]
 
-def updatetabcontent(file):
+def updatetab(file):
     tabs[v.tabselected][0] = file.name.split("/")[-1]
     tabs[v.tabselected][2] = file.name
     tabs[v.tabselected][3] = ""   
@@ -16,20 +16,20 @@ def updatetabcontent(file):
 def updatetitle(): v.root.title("txt2 - {} {}".format(tabs[v.tabselected][0], tabs[v.tabselected][3]))
 
 def new():
-    if not len(tabs) == 10:
-        tabs[v.tabselected][1] = v.textwidget.text.get("1.0", "end")
-        v.textwidget.text.delete("1.0", "end")
-        tabs.append(["Untitled", "", "unsaved", "*"])
-        v.filedir.configure(text="unsaved")
-        v.tabselected = v.tabselected + 1
+    tabs[v.tabselected][1] = v.textwidget.text.get("1.0", "end")
+    v.textwidget.text.delete("1.0", "end")
+    tabs.append(["Untitled", "", "unsaved", "*"])
+    v.filedir.configure(text="unsaved")
+    v.tabselected = v.tabselected + 1
 
-        try: v.textwidget.redraw()
-        except: pass
+    try: v.textwidget.redraw()
+    except: pass
 
-        buildtabs()
-        updatetitle()
-        if v.cfg["syntax-highlighting"]: v.textwidget.text._set_lexer(pygments.lexers.TextLexer)
-    else: print("Tab limit reached")
+    v.tabbar.add(tkinter.Frame(), text=tabs[v.tabselected][0])
+    v.tabbar.select(v.tabselected)
+
+    updatetitle()
+    if v.cfg["syntax-highlighting"]: v.textwidget.text._set_lexer(pygments.lexers.TextLexer)
 
 def save(e="", saveas=False):
     if tabs[v.tabselected][2] == "unsaved" or saveas:
@@ -40,36 +40,33 @@ def save(e="", saveas=False):
     if file != None:
         file.write(v.textwidget.text.get("1.0", "end"))
 
-        updatetabcontent(file)
+        updatetab(file)
         v.filedir.configure(text=file.name)
 
         file.close()
 
-        buildtabs()
         updatetitle()
         setlexer()
 
 def openfile(e=""):
-    if not len(tabs) == 10: 
-        file = filedialog.askopenfile()
-        content = file.read()
+    file = filedialog.askopenfile()
+    content = file.read()
 
-        if not v.textwidget.text.get("1.0", "end").replace("\n", "") == "": new()
+    if not v.textwidget.text.get("1.0", "end").replace("\n", "") == "": new()
 
-        updatetabcontent(file)
+    updatetab(file)
 
-        file.close()
+    file.close()
 
-        v.textwidget.text.insert("1.0", content)
-        v.filedir.configure(text=tabs[v.tabselected][2])
+    v.tabbar.tab(v.tabselected, text=tabs[v.tabselected][0])
+    v.textwidget.text.insert("1.0", content)
+    v.filedir.configure(text=tabs[v.tabselected][2])
 
-        buildtabs()
-        updatetitle()
-        setlexer()
-    else:
-        print("Tab limit reached")
+    updatetitle()
+    setlexer()
 
 def opentab(e):
+    tabs[v.tabselected][1] = v.textwidget.text.get("1.0", "end")
     v.tabselected = v.tabbar.index(v.tabbar.select())
 
     v.textwidget.text.delete("1.0", "end")
@@ -81,22 +78,8 @@ def opentab(e):
     try: v.textwidget.redraw()
     except: pass
 
-    buildtabs()
     updatetitle()
     setlexer()
-
-def buildtabs():
-    while True:
-        try:
-            v.tabbar.forget(0)
-        except:
-            break
-
-    for i in tabs:
-        f = tkinter.Frame(v.root)
-        v.tabbar.add(f, text=i[0])
-    
-    v.tabbar.select(v.tabselected)
 
 def setlexer():
     if v.cfg["syntax-highlighting"]:
@@ -115,6 +98,5 @@ def changetype():
         tabs[v.tabselected][0] = result.split("/")[-1]
         v.filedir.configure(text=result)
 
-        buildtabs()
         updatetitle()
         setlexer()

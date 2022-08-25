@@ -114,7 +114,7 @@ v.closeimg2 = closeimg2
 
 a.applysettings()
 
-tabmanager.buildtabs()
+notebook.add(tkinter.Frame(), text=tabmanager.tabs[0][0])
 
 notebook.bind('<ButtonRelease-1>', tabmanager.opentab) # Bind Left mouse button to write content of selected tab into the text widget
 

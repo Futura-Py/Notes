@@ -53,4 +53,4 @@ def applysettings():
 
     try: v.textwidget.numberLines.redraw()
     except AttributeError: pass
-    tabmanager.buildtabs()
+    #tabmanager.buildtabs()
