@@ -15,7 +15,6 @@ def updatetab(file):
 
 def updatetitle(): v.root.title("txt2 - {} {}".format(tabs[v.tabselected][0], tabs[v.tabselected][3]))
 
-
 def new(first=False):
     tabs[v.tabselected][1] = v.textwidget.text.get("1.0", "end")
     v.textwidget.text.delete("1.0", "end")

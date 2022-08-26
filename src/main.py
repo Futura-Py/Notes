@@ -1,6 +1,6 @@
 ver = "0.5"
 
-import tkinter, ntkutils, pygments, os
+import tkinter, ntkutils, pygments
 from pathlib import Path
 from tkinter import ttk
 
