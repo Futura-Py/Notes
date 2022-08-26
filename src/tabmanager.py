@@ -1,5 +1,5 @@
 import ntkutils, tkinter
-from tkinter import ttk, filedialog
+from tkinter import PhotoImage, ttk, filedialog
 from pygments.lexers import get_lexer_for_filename
 import pygments.lexers
 
@@ -15,17 +15,18 @@ def updatetab(file):
 
 def updatetitle(): v.root.title("txt2 - {} {}".format(tabs[v.tabselected][0], tabs[v.tabselected][3]))
 
-def new():
+def new(first=False):
     tabs[v.tabselected][1] = v.textwidget.text.get("1.0", "end")
     v.textwidget.text.delete("1.0", "end")
     tabs.append(["Untitled", "", "unsaved", "*"])
     v.filedir.configure(text="unsaved")
-    v.tabselected = v.tabselected + 1
+    v.tabselected = v.tabselected + 1 if not first else 0
 
     try: v.textwidget.redraw()
     except: pass
 
-    v.tabbar.add(tkinter.Frame(), text=tabs[v.tabselected][0])
+    image = PhotoImage(file="./assets/close_dark.png")
+    v.tabbar.add(tkinter.Frame(), text=tabs[v.tabselected][0], image=image, compound="right")
     v.tabbar.select(v.tabselected)
 
     updatetitle()
@@ -58,7 +59,8 @@ def openfile(e=""):
 
     file.close()
 
-    v.tabbar.tab(v.tabselected, text=tabs[v.tabselected][0])
+    image = PhotoImage(file="./assets/close_dark.png")
+    v.tabbar.tab(v.tabselected, text=tabs[v.tabselected][0], image=image, compound="right")
     v.textwidget.text.insert("1.0", content)
     v.filedir.configure(text=tabs[v.tabselected][2])
 
@@ -85,7 +87,7 @@ def setlexer():
     if v.cfg["syntax-highlighting"]:
         try: lexer = get_lexer_for_filename(tabs[v.tabselected][0])
         except pygments.util.ClassNotFound: lexer = pygments.lexers.TextLexer
-        lexer = "pygments.lexers." + str(lexer).split(".")[-1].removesuffix(">")
+        lexer = "pygments.lexers." + str(lexer).split(".")[-1].removesuffix(">").removesuffix("'")
         v.textwidget.text._set_lexer(eval(lexer))
         try: v.textwidget.redraw()
         except: pass

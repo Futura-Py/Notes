@@ -22,7 +22,7 @@ ntkutils.windowsetup(root, title="txt2 - Untitled *", resizeable=False, size=siz
 root.update_idletasks()
 ntkutils.placeappincenter(root)
 
-root.update()
+root.update_idletasks()
 
 closeimg = tkinter.PhotoImage(file=Path("assets/close_light.png"))
 closeimg2 = tkinter.PhotoImage(file=Path("assets/close_dark.png"))
@@ -61,7 +61,7 @@ else:
 
 
 footer = tkinter.Frame(root, width=root.winfo_width(), height=25)
-footer.update()
+footer.update_idletasks()
 footer.place(y=root.winfo_height() - 25)
 footer.pack_propagate(False)
 
@@ -114,7 +114,11 @@ v.closeimg2 = closeimg2
 
 a.applysettings()
 
-notebook.add(tkinter.Frame(), text=tabmanager.tabs[0][0])
+image = tkinter.PhotoImage(file=Path("./assets/close_dark.png"))
+# notebook.add(tkinter.Frame(), text=tabmanager.tabs[0][0], image=image, compound="right")
+tabmanager.new(first=True)
+# notebook.bind("<Button-1>", tabmanager.check_destroy)
+
 
 notebook.bind('<ButtonRelease-1>', tabmanager.opentab) # Bind Left mouse button to write content of selected tab into the text widget
 
