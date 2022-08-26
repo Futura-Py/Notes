@@ -1,6 +1,6 @@
 ver = "0.5"
 
-import tkinter, ntkutils, pygments
+import tkinter, ntkutils, pygments, os
 from pathlib import Path
 from tkinter import ttk
 
@@ -115,10 +115,8 @@ v.closeimg2 = closeimg2
 a.applysettings()
 
 image = tkinter.PhotoImage(file=Path("./assets/close_dark.png"))
-# notebook.add(tkinter.Frame(), text=tabmanager.tabs[0][0], image=image, compound="right")
-tabmanager.new(first=True)
+notebook.add(tkinter.Frame(), text=tabmanager.tabs[0][0], image=image, compound="right")
 # notebook.bind("<Button-1>", tabmanager.check_destroy)
-
 
 notebook.bind('<ButtonRelease-1>', tabmanager.opentab) # Bind Left mouse button to write content of selected tab into the text widget
 

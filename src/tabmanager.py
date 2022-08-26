@@ -15,6 +15,7 @@ def updatetab(file):
 
 def updatetitle(): v.root.title("txt2 - {} {}".format(tabs[v.tabselected][0], tabs[v.tabselected][3]))
 
+
 def new(first=False):
     tabs[v.tabselected][1] = v.textwidget.text.get("1.0", "end")
     v.textwidget.text.delete("1.0", "end")
@@ -25,8 +26,7 @@ def new(first=False):
     try: v.textwidget.redraw()
     except: pass
 
-    image = PhotoImage(file="./assets/close_dark.png")
-    v.tabbar.add(tkinter.Frame(), text=tabs[v.tabselected][0], image=image, compound="right")
+    v.tabbar.add(tkinter.Frame(), text=tabs[v.tabselected][0], image=v.closeimg, compound="right")
     v.tabbar.select(v.tabselected)
 
     updatetitle()
@@ -60,7 +60,7 @@ def openfile(e=""):
     file.close()
 
     image = PhotoImage(file="./assets/close_dark.png")
-    v.tabbar.tab(v.tabselected, text=tabs[v.tabselected][0], image=image, compound="right")
+    v.tabbar.tab(v.tabselected, text=tabs[v.tabselected][0], image=v.closeimg, compound="right")
     v.textwidget.text.insert("1.0", content)
     v.filedir.configure(text=tabs[v.tabselected][2])
 
