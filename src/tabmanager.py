@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 import ntkutils, tkinter
-from tkinter import PhotoImage, ttk, filedialog
+from tkinter import PhotoImage, ttk, filedialog, Event
 from pygments.lexers import get_lexer_for_filename
 import pygments.lexers
 
@@ -20,7 +22,7 @@ def new(first=False):
     v.textwidget.text.delete("1.0", "end")
     tabs.append(["Untitled", "", "unsaved", "*"])
     v.filedir.configure(text="unsaved")
-    v.tabselected = v.tabselected + 1 if not first else 0
+    v.tabselected = v.tabselected + 1 if not first else v.tabselected
 
     try: v.textwidget.redraw()
     except: pass
@@ -81,6 +83,9 @@ def opentab(e):
 
     updatetitle()
     setlexer()
+
+def closetab(event: Event | None = None):
+    v.tabbar.forget(v.tabselected)
 
 def setlexer():
     if v.cfg["syntax-highlighting"]:
