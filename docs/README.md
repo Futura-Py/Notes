@@ -16,5 +16,5 @@ Modern and native look thanks to rdbendes [Sun Valley ttk theme](https://github.
 
 ### Supported systems:
 
-txt2 is currently windows 11 only.
-But running the program from the source code should work on other operating systems.
+We only provide executables for windows 11.
+But running the program from the source code should work on other operating systems. (Requires Python 3.9 or newer)
