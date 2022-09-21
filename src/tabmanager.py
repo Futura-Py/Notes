@@ -95,7 +95,7 @@ def setlexer():
         try: v.textwidget.redraw()
         except: pass
 
-# The following two functions are property of Akuli
+# The following two functions contain code copied from https://github.com/Akuli/porcupine
 
 def closetab(event):
     before = v.tabbar.index(f"@{event.x},{event.y}")
