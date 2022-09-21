@@ -9,9 +9,7 @@ def applysettings():
     else: sv_ttk.set_theme(v.cfg["theme"].lower()) 
 
     if v.cfg["theme"] == "Dark" or (v.cfg["theme"] == "System" and darkdetect.isDark()): 
-        v.tabbar.configure(bg="#202020")
         v.footer.configure(bg="#202020")
-
         v.closeimg.configure(file="assets/close_light.png")
         v.closeimg2.configure(file="assets/close_dark.png")
 
@@ -23,8 +21,6 @@ def applysettings():
         try: v.textwidget.numberLines.mode = "dark"
         except AttributeError: pass
     else: 
-        v.tabbar.configure(bg="#f3f3f3")
-
         v.footer.configure(bg="#f3f3f3")
         v.closeimg.configure(file="assets/close_dark.png")
         v.closeimg2.configure(file="assets/close_light.png")
@@ -57,4 +53,4 @@ def applysettings():
 
     try: v.textwidget.numberLines.redraw()
     except AttributeError: pass
-    tabmanager.buildtabs()
+    #tabmanager.buildtabs()

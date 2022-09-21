@@ -2,11 +2,12 @@ ver = "0.5"
 
 import tkinter, ntkutils, pygments
 from pathlib import Path
+from tkinter import ttk
 
 import config, tabmanager
 import settings.applysettings as a
 import settings.UI as settingsui
-import generatesize as size 
+import generatesize as size
 import vars as v
 import mdpreview as md
 from widgets.textwidget import ScrollText, ScrollCode
@@ -21,7 +22,7 @@ ntkutils.windowsetup(root, title="txt2 - Untitled *", resizeable=False, size=siz
 root.update_idletasks()
 ntkutils.placeappincenter(root)
 
-root.update()
+root.update_idletasks()
 
 closeimg = tkinter.PhotoImage(file=Path("assets/close_light.png"))
 closeimg2 = tkinter.PhotoImage(file=Path("assets/close_dark.png"))
@@ -29,7 +30,7 @@ closeimg2 = tkinter.PhotoImage(file=Path("assets/close_dark.png"))
 def settings_():
     settingsui.build()
     root.wait_window(settingsui.settings)
-    
+
     if settingsui.save == True:
         v.cfg = settingsui.cfg
         a.applysettings()
@@ -38,9 +39,8 @@ def closepreview():
     md.close()
     textwidget.text.bind("<KeyPress>", refreshtitle)
 
-tabbar = tkinter.Frame(root, height="75", bg="#202020")
-tabbar.pack(fill="both")
-tabbar.pack_propagate(False) 
+notebook = ttk.Notebook(root)
+notebook.pack(fill="both", expand=True)
 
 if cfg["linenumbers"] and not cfg["syntax-highlighting"]:
     textwidget = ScrollText(root, width=100, borderwidth=0, height=root.winfo_height() - 125)
@@ -61,7 +61,7 @@ else:
 
 
 footer = tkinter.Frame(root, width=root.winfo_width(), height=25)
-footer.update()
+footer.update_idletasks()
 footer.place(y=root.winfo_height() - 25)
 footer.pack_propagate(False)
 
@@ -107,17 +107,19 @@ v.cfg = cfg
 v.root = root
 v.textwidget = textwidget
 v.filedir = filedir
-v.tabbar = tabbar
+v.tabbar = notebook
 v.footer = footer
 v.closeimg = closeimg
 v.closeimg2 = closeimg2
 
 a.applysettings()
 
-tabmanager.cbuttons[0].place(x=71) # The first cbutton has to be placed like that because it seems like the winfo functions return wrong values the first time
-tabmanager.buildtabs()
+notebook.add(tkinter.Frame(), text=tabmanager.tabs[0][0], image=closeimg, compound="right")
+
+
+
+notebook.bind('<ButtonRelease-1>', tabmanager.click, add="+") # Bind Left mouse button to write content of selected tab into the text widget
 
 root.update_idletasks()
 root.deiconify()
-
 root.mainloop()
