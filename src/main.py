@@ -7,7 +7,7 @@ from tkinter import ttk
 import config, tabmanager
 import settings.applysettings as a
 import settings.UI as settingsui
-import generatesize as size 
+import generatesize as size
 import vars as v
 import mdpreview as md
 from widgets.textwidget import ScrollText, ScrollCode
@@ -30,7 +30,7 @@ closeimg2 = tkinter.PhotoImage(file=Path("assets/close_dark.png"))
 def settings_():
     settingsui.build()
     root.wait_window(settingsui.settings)
-    
+
     if settingsui.save == True:
         v.cfg = settingsui.cfg
         a.applysettings()
@@ -114,12 +114,11 @@ v.closeimg2 = closeimg2
 
 a.applysettings()
 
-image = tkinter.PhotoImage(file=Path("./assets/close_dark.png"))
-notebook.add(tkinter.Frame(), text=tabmanager.tabs[0][0], image=image, compound="right")
-notebook.bind("<Button-1>", tabmanager.closetab)
-# v.tabbar.forget(v.tabbar.index(v.tabselected))
+notebook.add(tkinter.Frame(), text=tabmanager.tabs[0][0], image=closeimg, compound="right")
 
-notebook.bind('<ButtonRelease-1>', tabmanager.opentab) # Bind Left mouse button to write content of selected tab into the text widget
+
+
+notebook.bind('<ButtonRelease-1>', tabmanager.click, add="+") # Bind Left mouse button to write content of selected tab into the text widget
 
 root.update_idletasks()
 root.deiconify()

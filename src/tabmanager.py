@@ -4,6 +4,7 @@ import ntkutils, tkinter
 from tkinter import PhotoImage, ttk, filedialog, Event
 from pygments.lexers import get_lexer_for_filename
 import pygments.lexers
+import pyautogui
 
 import vars as v
 import filetype as f
@@ -13,16 +14,16 @@ tabs = [["Untitled", "", "unsaved", "*"]]
 def updatetab(file):
     tabs[v.tabselected][0] = file.name.split("/")[-1]
     tabs[v.tabselected][2] = file.name
-    tabs[v.tabselected][3] = ""   
+    tabs[v.tabselected][3] = ""
 
 def updatetitle(): v.root.title("txt2 - {} {}".format(tabs[v.tabselected][0], tabs[v.tabselected][3]))
 
-def new(first=False):
+def new():
     tabs[v.tabselected][1] = v.textwidget.text.get("1.0", "end")
     v.textwidget.text.delete("1.0", "end")
     tabs.append(["Untitled", "", "unsaved", "*"])
     v.filedir.configure(text="unsaved")
-    v.tabselected = v.tabselected + 1 if not first else v.tabselected
+    v.tabselected = v.tabselected + 1
 
     try: v.textwidget.redraw()
     except: pass
@@ -38,7 +39,7 @@ def save(e="", saveas=False):
         file = filedialog.asksaveasfile()
         if file == None: return
     else: file = open(tabs[v.tabselected][2], "w")
-    
+
     if file != None:
         file.write(v.textwidget.text.get("1.0", "end"))
 
@@ -54,13 +55,13 @@ def openfile(e=""):
     file = filedialog.askopenfile()
     content = file.read()
 
-    if not v.textwidget.text.get("1.0", "end").replace("\n", "") == "": new()
+    if v.textwidget.text.get("1.0", "end").replace("\n", "") != "": 
+        new()
 
     updatetab(file)
 
     file.close()
 
-    image = PhotoImage(file="./assets/close_dark.png")
     v.tabbar.tab(v.tabselected, text=tabs[v.tabselected][0], image=v.closeimg, compound="right")
     v.textwidget.text.insert("1.0", content)
     v.filedir.configure(text=tabs[v.tabselected][2])
@@ -68,8 +69,9 @@ def openfile(e=""):
     updatetitle()
     setlexer()
 
-def opentab(e):
-    tabs[v.tabselected][1] = v.textwidget.text.get("1.0", "end")
+def opentab(event, tabdeleted=False):
+    if not tabdeleted: tabs[v.tabselected][1] = v.textwidget.text.get("1.0", "end")
+
     v.tabselected = v.tabbar.index(v.tabbar.select())
 
     v.textwidget.text.delete("1.0", "end")
@@ -84,9 +86,6 @@ def opentab(e):
     updatetitle()
     setlexer()
 
-def closetab(event: Event | None = None):
-    v.tabbar.forget(v.tabselected)
-
 def setlexer():
     if v.cfg["syntax-highlighting"]:
         try: lexer = get_lexer_for_filename(tabs[v.tabselected][0])
@@ -95,6 +94,36 @@ def setlexer():
         v.textwidget.text._set_lexer(eval(lexer))
         try: v.textwidget.redraw()
         except: pass
+
+# The following two functions are property of Akuli
+
+def closetab(event):
+    before = v.tabbar.index(f"@{event.x},{event.y}")
+    after = before + 1
+
+    if v.tabbar.index(v.tabbar.tabs()[before:after][0]) < v.tabselected:
+        v.tabselected = v.tabselected - 1
+
+    tabs.pop(v.tabbar.index(v.tabbar.tabs()[before:after][0]))
+    v.tabbar.forget(v.tabbar.tabs()[before:after][0])
+    opentab(event, True)
+
+def click(event) -> None:
+    if event.widget.identify(event.x, event.y) == "label":
+        # find the right edge of the top label (including close button)
+        right = event.x
+        while event.widget.identify(right, event.y) == "label":
+            right += 1
+
+        if event.x >= right - v.closeimg.width():
+            if event.widget.index("end") != 1:
+                closetab(event)
+            else:
+                v.root.destroy()
+        else:
+            opentab(event)
+    else:
+        opentab(event)
 
 def changetype():
     if tabs[v.tabselected][2] == "unsaved": save()
