@@ -1,15 +1,17 @@
-from __future__ import annotations
-
-import ntkutils, tkinter
-from tkinter import PhotoImage, ttk, filedialog, Event
+import tkinter
+from tkinter import filedialog
 from pygments.lexers import get_lexer_for_filename
 import pygments.lexers
-import pyautogui
 
 import vars as v
 import filetype as f
 
 tabs = [["Untitled", "", "unsaved", "*"]]
+
+# Item 0: Name
+# Item 1: Content
+# Item 2: Storage Path
+# Item 3: Save Status ("*" or "")
 
 def updatetab(file):
     tabs[v.tabselected][0] = file.name.split("/")[-1]
@@ -19,14 +21,13 @@ def updatetab(file):
 def updatetitle(): v.root.title("txt2 - {} {}".format(tabs[v.tabselected][0], tabs[v.tabselected][3]))
 
 def new():
-    tabs[v.tabselected][1] = v.textwidget.text.get("1.0", "end")
+    tabs[v.tabselected][1] = v.textwidget.text.get("1.0", "end") # Save edits
     v.textwidget.text.delete("1.0", "end")
     tabs.append(["Untitled", "", "unsaved", "*"])
     v.filedir.configure(text="unsaved")
-    v.tabselected = v.tabselected + 1
+    v.tabselected += 1
 
-    try: v.textwidget.redraw()
-    except: pass
+    if v.cfg["linenumbers"]: v.textwidget.redraw() # Redraw linenumbers if enabled
 
     v.tabbar.add(tkinter.Frame(), text=tabs[v.tabselected][0], image=v.closeimg, compound="right")
     v.tabbar.select(v.tabselected)
@@ -55,8 +56,7 @@ def openfile(e=""):
     file = filedialog.askopenfile()
     content = file.read()
 
-    if v.textwidget.text.get("1.0", "end").replace("\n", "") != "": 
-        new()
+    if v.textwidget.text.get("1.0", "end").replace("\n", "") != "": new()
 
     updatetab(file)
 
@@ -102,7 +102,7 @@ def closetab(event):
     after = before + 1
 
     if v.tabbar.index(v.tabbar.tabs()[before:after][0]) < v.tabselected:
-        v.tabselected = v.tabselected - 1
+        v.tabselected -= 1
 
     tabs.pop(v.tabbar.index(v.tabbar.tabs()[before:after][0]))
     v.tabbar.forget(v.tabbar.tabs()[before:after][0])
