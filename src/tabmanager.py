@@ -52,9 +52,13 @@ def save(e="", saveas=False):
         updatetitle()
         setlexer()
 
-def openfile(e=""):
-    file = filedialog.askopenfile()
-    content = file.read()
+def openfile(e="", path=""):
+    if path == "":
+        file = filedialog.askopenfile()
+        content = file.read()
+    else:
+        file = open(path, "r")
+        content = file.read()
 
     if v.textwidget.text.get("1.0", "end").replace("\n", "") != "": new()
 

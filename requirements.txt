@@ -4,3 +4,4 @@ darkdetect
 pywin32
 markdown
 tkinterweb
+tkinterdnd2

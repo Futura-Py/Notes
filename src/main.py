@@ -3,6 +3,7 @@ ver = "0.5"
 import tkinter, ntkutils, pygments
 from pathlib import Path
 from tkinter import ttk
+from tkinterdnd2 import *
 
 import config, tabmanager
 import settings.applysettings as a
@@ -15,7 +16,7 @@ from widgets.codeview import CodeView
 
 cfg = config.get()
 
-root = tkinter.Tk()
+root = TkinterDnD.Tk()
 root.geometry(size.get())
 root.withdraw()
 ntkutils.windowsetup(root, title="txt2 - Untitled *", resizeable=False, size=size.get(), icon=Path("assets/logo.png"))
@@ -101,6 +102,14 @@ root.event_add("<<Save>>", "<{}>".format(cfg["hkey-save"]))
 
 root.bind("<<Open>>", tabmanager.openfile)
 root.bind("<<Save>>", tabmanager.save)
+
+
+def filedrop(event):
+    tabmanager.openfile(path=event.data)
+
+root.drop_target_register(DND_FILES)
+root.dnd_bind("<<Drop>>", filedrop)
+
 
 # Set global variables
 v.cfg = cfg
