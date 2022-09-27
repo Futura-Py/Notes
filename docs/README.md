@@ -12,7 +12,7 @@ A text editor in python!
 
 Modern and native look thanks to rdbendes [Sun Valley ttk theme](https://github.com/rdbende/Sun-Valley-ttk-theme)
 
-![image](https://user-images.githubusercontent.com/83908932/179550991-50887e07-4e35-4250-9667-560d275455bc.png)
+![image](https://user-images.githubusercontent.com/83908932/191803676-c33c2bdb-572b-41a6-b63f-c8b5291d4992.png)
 
 ### Supported systems:
 
