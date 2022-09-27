@@ -8,6 +8,7 @@ from tkinterdnd2 import *
 import config, tabmanager
 import settings.applysettings as a
 import settings.UI as settingsui
+from settings.images import setimages
 import generatesize as size
 import vars as v
 import mdpreview as md
@@ -120,6 +121,8 @@ v.tabbar = notebook
 v.footer = footer
 v.closeimg = closeimg
 v.closeimg2 = closeimg2
+
+setimages()
 
 a.applysettings()
 
