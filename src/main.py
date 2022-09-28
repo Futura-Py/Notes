@@ -60,8 +60,8 @@ if cfg["linenumbers"] and not cfg["syntax-highlighting"]:
     linenums.pack(fill="y", side="left", expand=True)
     linenums.reload(font)
 
-    textwidget.bind("<<ContentChanged>>", lambda event: root.after_idle(linenums.redraw()))
-    textwidget["yscrollcommand"] = linenums.redraw()
+    textwidget.bind("<Key>", lambda event: root.after_idle(linenums.redraw))
+    textwidget.bind("<ButtonRelease-1>", lambda event: root.after_idle(linenums.redraw))
 elif cfg["syntax-highlighting"] and not cfg["linenumbers"]:
     textwidget = CodeView(root, height=800, bg="#1c1c1c", lexer=pygments.lexers.TextLexer)
     textwidget.pack(fill="both")
