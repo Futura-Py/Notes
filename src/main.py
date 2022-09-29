@@ -58,6 +58,7 @@ if cfg["linenumbers"] and not cfg["syntax-highlighting"]:
 
     linenums = TkLineNumbers(root, textwidget, font)
     linenums.pack(side="left", fill="y")
+    linenums.configure(borderwidth=0)
     linenums.reload(font)
 
     textwidget.bind("<Return>", lambda event: root.after_idle(linenums.redraw), add=True)
