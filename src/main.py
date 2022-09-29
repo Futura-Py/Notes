@@ -57,7 +57,7 @@ if cfg["linenumbers"] and not cfg["syntax-highlighting"]:
     font = Font(family="Courier New bold", size=15, name="TkLineNumsFont")
 
     linenums = TkLineNumbers(root, textwidget, font)
-    linenums.pack(fill="y", side="left", expand=True)
+    linenums.pack(side="left", fill="y")
     linenums.reload(font)
 
     textwidget.bind("<Return>", lambda event: root.after_idle(linenums.redraw), add=True)
