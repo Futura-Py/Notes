@@ -14,7 +14,4 @@ Modern and native look thanks to rdbendes [Sun Valley ttk theme](https://github.
 
 ![image](https://user-images.githubusercontent.com/83908932/191803676-c33c2bdb-572b-41a6-b63f-c8b5291d4992.png)
 
-### Supported systems:
-
-We only provide executables for windows 11.
-But running the program from the source code should work on other operating systems. (Requires Python 3.9 or newer)
+You can find more information in the [wiki](https://github.com/not-nef/txt2/wiki)
