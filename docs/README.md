@@ -1,6 +1,6 @@
 <div align="center">
 
-<img alt="Logo" src="../assets/logo.png" width="100px" />
+<img alt="Logo" src="../assets/logo.png" />
 
 # txt2
 <a style="text-decoration:none" href="https://github.com/not-nef/txt2/releases">
