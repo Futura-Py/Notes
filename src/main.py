@@ -54,9 +54,9 @@ if cfg["linenumbers"] and not cfg["syntax-highlighting"]:
     style = ttk.Style()
     style.configure("TLineNumbers", background="#ffffff", foreground="#2197db")
 
-    font = Font(family="Courier New bold", size=15, name="TkLineNumsFont")
+    font = Font(family="Courier New bold", size=10, name="TkLineNumsFont")
 
-    linenums = TkLineNumbers(root, textwidget, font)
+    linenums = TkLineNumbers(root, textwidget, font, "right")
     linenums.pack(side="left", fill="y")
     linenums.configure(borderwidth=0)
     linenums.reload(font)
