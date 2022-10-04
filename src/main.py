@@ -56,9 +56,9 @@ else:
 
 if cfg["linenumbers"]:
     style = ttk.Style()
-    style.configure("TLineNumbers", background="#ffffff", foreground="#2197db")
+    style.configure("TLineNumbers", background="#ffffff", foreground="gray")
 
-    font = Font(family="Courier New bold", size=10, name="TkLineNumsFont")
+    font = Font(family="Courier New bold", size=cfg["font-size"], name="TkLineNumsFont")
 
     linenums = TkLineNumbers(root, textwidget, font, "right")
     linenums.pack(side="left", fill="y")
