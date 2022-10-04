@@ -1,9 +1,11 @@
 ver = "0.5"
 
 import tkinter, ntkutils, pygments
+from tkinter.font import Font
 from pathlib import Path
 from tkinter import ttk
 from tkinterdnd2 import *
+from tklinenums import TkLineNumbers
 
 import config, tabmanager
 import settings.applysettings as a
@@ -12,7 +14,6 @@ from settings.images import setimages
 import generatesize as size
 import vars as v
 import mdpreview as md
-from widgets.textwidget import ScrollText, ScrollCode
 from widgets.codeview import CodeView
 
 cfg = config.get()
@@ -44,22 +45,30 @@ def closepreview():
 notebook = ttk.Notebook(root)
 notebook.pack(fill="both", expand=True)
 
-if cfg["linenumbers"] and not cfg["syntax-highlighting"]:
-    textwidget = ScrollText(root, width=100, borderwidth=0, height=root.winfo_height() - 125)
-    textwidget.pack(fill="both")
-    textwidget.redraw()
-elif cfg["syntax-highlighting"] and not cfg["linenumbers"]:
-    textwidget = CodeView(root, height=800, bg="#1c1c1c", lexer=pygments.lexers.TextLexer)
-    textwidget.pack(fill="both")
-    textwidget.text = textwidget
-elif cfg["syntax-highlighting"] and cfg["linenumbers"]:
-    textwidget = ScrollCode(root, height=800, bg="#1c1c1c", lexer=pygments.lexers.TextLexer)
-    textwidget.pack(fill="both")
-    textwidget.redraw()
-else:
+if not cfg["syntax-highlighting"]:
     textwidget = tkinter.Text(root, width=100, borderwidth=0, height=root.winfo_height() - 125)
     textwidget.text = textwidget
-    textwidget.pack(fill="both")
+    textwidget.pack(side="right", fill="both", expand=True)
+else:
+    textwidget = CodeView(root, height=800, bg="#1c1c1c", lexer=pygments.lexers.TextLexer)
+    textwidget.pack(side="right", fill="both", expand=True)
+    textwidget.text = textwidget
+
+if cfg["linenumbers"]:
+    style = ttk.Style()
+    style.configure("TLineNumbers", background="#ffffff", foreground="gray")
+
+    font = Font(family="Courier New bold", size=cfg["font-size"], name="TkLineNumsFont")
+
+    linenums = TkLineNumbers(root, textwidget, font, "right")
+    linenums.pack(side="left", fill="y")
+    linenums.configure(borderwidth=0)
+    linenums.reload(font)
+
+    textwidget.bind("<Return>", lambda event: root.after_idle(linenums.redraw), add=True)
+    textwidget.bind(f"<BackSpace>", lambda event: root.after_idle(linenums.redraw), add=True)
+    textwidget.bind(f"<Control-v>", lambda event: root.after_idle(linenums.redraw), add=True)
+    textwidget["yscrollcommand"] = linenums.redraw
 
 
 footer = tkinter.Frame(root, width=root.winfo_width(), height=25)
@@ -127,9 +136,6 @@ setimages()
 a.applysettings()
 
 notebook.add(tkinter.Frame(), text=tabmanager.tabs[0][0], image=closeimg, compound="right")
-
-
-
 notebook.bind('<ButtonRelease-1>', tabmanager.click, add="+") # Bind Left mouse button to write content of selected tab into the text widget
 
 root.update_idletasks()
