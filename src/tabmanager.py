@@ -20,20 +20,21 @@ def updatetab(file):
 
 def updatetitle(): v.root.title("txt2 - {} {}".format(tabs[v.tabselected][0], tabs[v.tabselected][3]))
 
+def redrawlinenums(): 
+    if v.cfg["linenumbers"]: v.textwidget.linenums.redraw()
+
 def new():
-    tabs[v.tabselected][1] = v.textwidget.text.get("1.0", "end") # Save edits
-    v.textwidget.text.delete("1.0", "end")
+    tabs[v.tabselected][1] = v.textwidget.get("1.0", "end") # Save edits
+    v.textwidget.delete("1.0", "end")
     tabs.append(["Untitled", "", "unsaved", "*"])
     v.filedir.configure(text="unsaved")
     v.tabselected += 1
-
-    if v.cfg["linenumbers"]: v.textwidget.redraw() # Redraw linenumbers if enabled
 
     v.tabbar.add(tkinter.Frame(), text=tabs[v.tabselected][0], image=v.closeimg, compound="right")
     v.tabbar.select(v.tabselected)
 
     updatetitle()
-    if v.cfg["syntax-highlighting"]: v.textwidget.text._set_lexer(pygments.lexers.TextLexer)
+    if v.cfg["syntax-highlighting"]: v.textwidget._set_lexer(pygments.lexers.TextLexer)
 
 def save(e="", saveas=False):
     if tabs[v.tabselected][2] == "unsaved" or saveas:
@@ -42,7 +43,7 @@ def save(e="", saveas=False):
     else: file = open(tabs[v.tabselected][2], "w")
 
     if file != None:
-        file.write(v.textwidget.text.get("1.0", "end"))
+        file.write(v.textwidget.get("1.0", "end"))
 
         updatetab(file)
         v.filedir.configure(text=file.name)
@@ -60,44 +61,41 @@ def openfile(e="", path=""):
         file = open(path, "r")
         content = file.read()
 
-    if v.textwidget.text.get("1.0", "end").replace("\n", "") != "": new()
+    if v.textwidget.get("1.0", "end").replace("\n", "") != "": new()
 
     updatetab(file)
 
     file.close()
 
     v.tabbar.tab(v.tabselected, text=tabs[v.tabselected][0], image=v.closeimg, compound="right")
-    v.textwidget.text.insert("1.0", content)
+    v.textwidget.insert("1.0", content)
     v.filedir.configure(text=tabs[v.tabselected][2])
 
     updatetitle()
     setlexer()
+    redrawlinenums()
 
 def opentab(event, tabdeleted=False):
-    if not tabdeleted: tabs[v.tabselected][1] = v.textwidget.text.get("1.0", "end")
+    if not tabdeleted: tabs[v.tabselected][1] = v.textwidget.get("1.0", "end")
 
     v.tabselected = v.tabbar.index(v.tabbar.select())
 
-    v.textwidget.text.delete("1.0", "end")
-    v.textwidget.text.insert("1.0", tabs[v.tabselected][1])
-    v.textwidget.text.delete("end-1c", "end")
+    v.textwidget.delete("1.0", "end")
+    v.textwidget.insert("1.0", tabs[v.tabselected][1])
+    v.textwidget.delete("end-1c", "end")
 
     v.filedir.configure(text=tabs[v.tabselected][2])
 
-    try: v.textwidget.redraw()
-    except: pass
-
     updatetitle()
     setlexer()
+    redrawlinenums()
 
 def setlexer():
     if v.cfg["syntax-highlighting"]:
         try: lexer = get_lexer_for_filename(tabs[v.tabselected][0])
         except pygments.util.ClassNotFound: lexer = pygments.lexers.TextLexer
         lexer = "pygments.lexers." + str(lexer).split(".")[-1].removesuffix(">").removesuffix("'")
-        v.textwidget.text._set_lexer(eval(lexer))
-        try: v.textwidget.redraw()
-        except: pass
+        v.textwidget._set_lexer(eval(lexer))
 
 # The following two functions contain code copied from https://github.com/Akuli/porcupine
 

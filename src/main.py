@@ -1,6 +1,6 @@
 ver = "0.5"
 
-import tkinter, ntkutils, pygments
+import tkinter, ntkutils, pygments, darkdetect, sv_ttk
 from tkinter.font import Font
 from pathlib import Path
 from tkinter import ttk
@@ -8,35 +8,30 @@ from tkinterdnd2 import *
 from tklinenums import TkLineNumbers
 
 import config, tabmanager
-import settings.applysettings as a
 import settings.UI as settingsui
 from settings.images import setimages
 import generatesize as size
 import vars as v
 import mdpreview as md
 from widgets.codeview import CodeView
+from themes import light, dark
 
 cfg = config.get()
+
+if cfg["theme"] == "Dark" or (cfg["theme"] == "System" and darkdetect.isDark()): theme = dark.get()
+else: theme = light.get()
 
 root = TkinterDnD.Tk()
 root.geometry(size.get())
 root.withdraw()
 ntkutils.windowsetup(root, title="txt2 - Untitled *", resizeable=False, size=size.get(), icon=Path("assets/logo.png"))
+sv_ttk.set_theme(cfg["theme"].lower())
 root.update_idletasks()
 ntkutils.placeappincenter(root)
 
 root.update_idletasks()
 
-closeimg = tkinter.PhotoImage(file=Path("assets/close_light.png"))
-closeimg2 = tkinter.PhotoImage(file=Path("assets/close_dark.png"))
-
-def settings_():
-    settingsui.build()
-    root.wait_window(settingsui.settings)
-
-    if settingsui.save == True:
-        v.cfg = settingsui.cfg
-        a.applysettings()
+closeimg = tkinter.PhotoImage(file=Path(theme["closeimg"]))
 
 def closepreview():
     md.close()
@@ -46,17 +41,16 @@ notebook = ttk.Notebook(root)
 notebook.pack(fill="both", expand=True)
 
 if not cfg["syntax-highlighting"]:
-    textwidget = tkinter.Text(root, width=100, borderwidth=0, height=root.winfo_height() - 125)
-    textwidget.text = textwidget
+    textwidget = tkinter.Text(root, width=100, borderwidth=0, height=root.winfo_height() - 125, font=(cfg["font"], int(cfg["font-size"])))
     textwidget.pack(side="right", fill="both", expand=True)
 else:
-    textwidget = CodeView(root, height=800, bg="#1c1c1c", lexer=pygments.lexers.TextLexer)
+    textwidget = CodeView(root, height=800, bg=theme["primary"], lexer=pygments.lexers.TextLexer, font=(cfg["font"], int(cfg["font-size"])))
+    textwidget._set_color_scheme(theme["color_scheme"])
     textwidget.pack(side="right", fill="both", expand=True)
-    textwidget.text = textwidget
 
 if cfg["linenumbers"]:
     style = ttk.Style()
-    style.configure("TLineNumbers", background="#ffffff", foreground="gray")
+    style.configure("TLineNumbers", background=theme["primary"], foreground=theme["opposite_secondary"])
 
     font = Font(family="Courier New bold", size=cfg["font-size"], name="TkLineNumsFont")
 
@@ -69,6 +63,8 @@ if cfg["linenumbers"]:
     textwidget.bind(f"<BackSpace>", lambda event: root.after_idle(linenums.redraw), add=True)
     textwidget.bind(f"<Control-v>", lambda event: root.after_idle(linenums.redraw), add=True)
     textwidget["yscrollcommand"] = linenums.redraw
+
+    textwidget.linenums = linenums
 
 
 footer = tkinter.Frame(root, width=root.winfo_width(), height=25)
@@ -98,14 +94,25 @@ filemenu.add_separator()
 filemenu.add_command(label="Preview Markdown", command=md.build, foreground="black")
 filemenu.add_command(label="Close Preview", command=closepreview, foreground="black")
 
-settingsmenu.add_command(label="Open Settings", command=settings_, foreground="black")
+settingsmenu.add_command(label="Open Settings", command=settingsui.build, foreground="black")
 settingsmenu.add_command(label="About", state="disabled")
+
+if cfg["mica"]: 
+    if cfg["theme"] == "Dark" or (cfg["theme"] == "System" and darkdetect.isDark()):
+        notebook.configure(bg="#1c1c1c")
+        ntkutils.blur_window_background(root, dark=True)
+        textwidget.text.configure(bg="#1b1c1b")
+        try: textwidget.numberLines.configure(bg="#1b1c1b") 
+        except: pass
+    else:
+            ntkutils.blur_window_background(root)
+            textwidget.text.configure(bg="#fafbfa")
 
 def refreshtitle(e):
     if not root.wm_title().endswith("*"): root.title(root.wm_title() + "*")
     tabmanager.tabs[v.tabselected][3] = "*"
 
-textwidget.text.bind("<KeyPress>", refreshtitle)
+textwidget.bind("<KeyPress>", refreshtitle)
 
 root.event_add("<<Open>>", "<{}>".format(cfg["hkey-open"]))
 root.event_add("<<Save>>", "<{}>".format(cfg["hkey-save"]))
@@ -129,11 +136,9 @@ v.filedir = filedir
 v.tabbar = notebook
 v.footer = footer
 v.closeimg = closeimg
-v.closeimg2 = closeimg2
+v.theme = theme
 
 setimages()
-
-a.applysettings()
 
 notebook.add(tkinter.Frame(), text=tabmanager.tabs[0][0], image=closeimg, compound="right")
 notebook.bind('<ButtonRelease-1>', tabmanager.click, add="+") # Bind Left mouse button to write content of selected tab into the text widget

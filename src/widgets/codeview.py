@@ -162,7 +162,7 @@ class CodeView(tkinter.Text):
         self, color_scheme: dict[str, dict[str, str | int]] | str | None
     ) -> None:
         if color_scheme in self._builtin_color_schemes:
-            color_scheme = toml.load(color_schemes_dir / f"{color_scheme}.toml")
+            color_scheme = toml.load(color_schemes_dir + f"/{color_scheme}.toml")
         elif color_scheme is None:
             color_scheme = toml.load(color_schemes_dir + "/dracula.toml")
 

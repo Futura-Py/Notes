@@ -6,11 +6,8 @@ import config
 import vars as v
 
 def dark():
-    if cfg["theme"] == "Dark" or (cfg["theme"] == "System" and darkdetect.isDark()):
-        return True
-    else:
-        return False
-
+    if v.cfg["theme"] == "Dark" or (v.cfg["theme"] == "System" and darkdetect.isDark()): return True
+    else: return False
 
 def appearance():
     global boxtheme, boxfont, boxsize, btnnumbers, btnhighlight, page
@@ -44,11 +41,10 @@ def appearance():
     btnnumbers.pack(padx=10, pady=10, anchor="e")
     btnnumbers.state(["!alternate"])
     if cfg["linenumbers"]: btnnumbers.state(["!alternate", "selected"])
-    numbersinfo = tkinter.Label(frameright, text="Requires restart", justify="left", fg="grey").place(x=10, y=148)
 
-    lblhighlight = tkinter.Label(frameright, text="Syntax Highlighting:").place(x=10, y=200)
+    lblhighlight = tkinter.Label(frameright, text="Syntax Highlighting:").place(x=10, y=168)
     btnhighlight = ttk.Checkbutton(frameright, style="Switch.TCheckbutton")
-    btnhighlight.pack(padx=10, pady=40, anchor="e")
+    btnhighlight.pack(padx=10, pady=15, anchor="e")
     btnhighlight.state(["!alternate"])
     if cfg["syntax-highlighting"]: btnhighlight.state(["!alternate", "selected"])
 
@@ -72,7 +68,6 @@ def experimental():
     btnmica.pack(padx=10, pady=10, anchor="e")
     btnmica.state(["!alternate"])
     if cfg["mica"]: btnmica.state(["!alternate", "selected"])
-    micainfo = tkinter.Label(frameright, text="When switching from dark to light theme with this\noption enabled, you have to perform a restart!", justify="left", fg="grey").place(x=10, y=42)
 
 def hotkeys():
     global page, entryopen, entrysave
@@ -98,8 +93,6 @@ def hotkeys():
     entrysave = ttk.Entry(frameright, width=25)
     entrysave.insert(0, cfg["hkey-save"])
     entrysave.pack(padx=10, pady=10, anchor="e")
-
-    lblrestart = tkinter.Label(frameright, text="These will take effect after a restart", fg="grey").pack(pady=5, anchor="w", padx=10)
 
 def savechanges():
     if page == "appearance":
@@ -129,7 +122,7 @@ def apply():
     savechanges()
 
     ntkutils.cfgtools.SaveCFG(cfg)
-    save = True
+    v.cfg = cfg
     settings.destroy()
 
 
@@ -142,10 +135,10 @@ def build():
 
     settings = tkinter.Toplevel()
     ntkutils.windowsetup(settings, "txt2 - Settings", "assets/logo.png", False, "500x400")
-    if system != "Darwin":
+    if system != "Darwin" and dark():
         ntkutils.dark_title_bar(settings)
 
-    frameleft = tkinter.Frame(settings, width=175, bg="#f3f3f3")
+    frameleft = tkinter.Frame(settings, width=175, bg=v.theme["secondary"])
     frameleft.pack(side=tkinter.LEFT, fill="y")
     frameleft.pack_propagate(False)
 
@@ -163,11 +156,11 @@ def build():
     btnexperimental.pack(pady=10)
 
     btnapply = ttk.Button(frameleft, text="Apply", style="Accent.TButton", width=20, command=apply)
-    btnapply.pack(side=tkinter.BOTTOM, pady=10)
+    btnapply.pack(side="bottom", pady=10)
+
+    lblrestart = tkinter.Label(frameleft, text="Restart required!", wraplength=170, fg="grey", bg=v.theme["secondary"]).pack(side="bottom")
 
     if dark():
-        frameleft.configure(bg="#202020")
-
         btnappearence.configure(image=v.brush_light)
         btnexperimental.configure(image=v.warn_dark)
         btnhotkeys.configure(image=v.keyboard_dark)
@@ -177,7 +170,8 @@ def build():
 
 def clearstates():
     for i in frameleft.pack_slaves():
-        i.configure(style="TButton")
+        try: i.configure(style="TButton")
+        except: pass
 
 def getfonts():
     global fonts
