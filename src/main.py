@@ -40,6 +40,11 @@ def closepreview():
 notebook = ttk.Notebook(root)
 notebook.pack(fill="both", expand=True)
 
+footer = tkinter.Frame(root, width=root.winfo_width(), height=25)
+footer.update_idletasks()
+footer.pack(side="bottom", fill="x")
+footer.pack_propagate(False)
+
 if not cfg["syntax-highlighting"]:
     textwidget = tkinter.Text(root, width=100, borderwidth=0, height=root.winfo_height() - 125, font=(cfg["font"], int(cfg["font-size"])))
     textwidget.pack(side="right", fill="both", expand=True)
@@ -76,12 +81,6 @@ if cfg["linenumbers"]:
     textwidget["yscrollcommand"] = onscroll
 
     textwidget.linenums = linenums
-
-
-footer = tkinter.Frame(root, width=root.winfo_width(), height=25)
-footer.update_idletasks()
-footer.place(y=root.winfo_height() - 25)
-footer.pack_propagate(False)
 
 filedir = tkinter.Label(footer, text="unsaved")
 filedir.pack(side="left")
