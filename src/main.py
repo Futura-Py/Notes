@@ -1,4 +1,4 @@
-ver = "0.6 beta"
+ver = "0.7 beta"
 
 import tkinter, ntkutils, pygments, darkdetect, sv_ttk
 from tkinter.font import Font
@@ -48,6 +48,12 @@ else:
     textwidget._set_color_scheme(theme["color_scheme"])
     textwidget.pack(side="right", fill="both", expand=True)
 
+textwidget.update()
+
+scrollbar = ttk.Scrollbar(root, command=textwidget.yview)
+textwidget["yscrollcommand"] = scrollbar.set
+scrollbar.place(x=root.winfo_width() - 20, y=50, height=textwidget.winfo_height() - 70)
+
 if cfg["linenumbers"]:
     style = ttk.Style()
     style.configure("TLineNumbers", background=theme["primary"], foreground=theme["opposite_secondary"])
@@ -62,7 +68,12 @@ if cfg["linenumbers"]:
     textwidget.bind("<Return>", lambda event: root.after_idle(linenums.redraw), add=True)
     textwidget.bind(f"<BackSpace>", lambda event: root.after_idle(linenums.redraw), add=True)
     textwidget.bind(f"<Control-v>", lambda event: root.after_idle(linenums.redraw), add=True)
-    textwidget["yscrollcommand"] = linenums.redraw
+
+    def onscroll(first, last):
+        scrollbar.set(first, last)
+        linenums.redraw()
+
+    textwidget["yscrollcommand"] = onscroll
 
     textwidget.linenums = linenums
 
