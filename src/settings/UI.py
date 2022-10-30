@@ -134,7 +134,7 @@ def build():
     save = False
 
     settings = tkinter.Toplevel()
-    ntkutils.windowsetup(settings, "txt2 - Settings", "assets/logo.png", False, "500x400")
+    ntkutils.windowsetup(settings, "Onyx - Settings", "assets/logo.png", False, "500x400")
     if system != "Darwin" and dark():
         ntkutils.dark_title_bar(settings)
 

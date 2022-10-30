@@ -1,4 +1,4 @@
-ver = "0.5"
+ver = "0.6"
 
 import tkinter, ntkutils, pygments, darkdetect, sv_ttk
 from tkinter.font import Font
@@ -24,7 +24,7 @@ else: theme = light.get()
 root = TkinterDnD.Tk()
 root.geometry(size.get())
 root.withdraw()
-ntkutils.windowsetup(root, title="txt2 - Untitled *", resizeable=False, size=size.get(), icon=Path("assets/logo.png"))
+ntkutils.windowsetup(root, title="Onyx - Untitled *", resizeable=False, size=size.get(), icon=Path("assets/logo.png"))
 sv_ttk.set_theme(cfg["theme"].lower())
 root.update_idletasks()
 ntkutils.placeappincenter(root)

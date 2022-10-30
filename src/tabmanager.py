@@ -18,7 +18,7 @@ def updatetab(file):
     tabs[v.tabselected][2] = file.name
     tabs[v.tabselected][3] = ""
 
-def updatetitle(): v.root.title("txt2 - {} {}".format(tabs[v.tabselected][0], tabs[v.tabselected][3]))
+def updatetitle(): v.root.title("Onyx - {} {}".format(tabs[v.tabselected][0], tabs[v.tabselected][3]))
 
 def redrawlinenums(): 
     if v.cfg["linenumbers"]: v.textwidget.linenums.redraw()
