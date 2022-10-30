@@ -1,4 +1,4 @@
-ver = "0.6"
+ver = "0.6 beta"
 
 import tkinter, ntkutils, pygments, darkdetect, sv_ttk
 from tkinter.font import Font
@@ -7,7 +7,7 @@ from tkinter import ttk
 from tkinterdnd2 import *
 from tklinenums import TkLineNumbers
 
-import config, tabmanager
+import config, tabmanager, about
 import settings.UI as settingsui
 from settings.images import setimages
 import generatesize as size
@@ -95,7 +95,7 @@ filemenu.add_command(label="Preview Markdown", command=md.build, foreground="bla
 filemenu.add_command(label="Close Preview", command=closepreview, foreground="black")
 
 settingsmenu.add_command(label="Open Settings", command=settingsui.build, foreground="black")
-settingsmenu.add_command(label="About", state="disabled")
+settingsmenu.add_command(label="About", command=about.build, foreground="black")
 
 if cfg["mica"]: 
     if cfg["theme"] == "Dark" or (cfg["theme"] == "System" and darkdetect.isDark()):
@@ -137,6 +137,7 @@ v.tabbar = notebook
 v.footer = footer
 v.closeimg = closeimg
 v.theme = theme
+v.ver = ver
 
 setimages()
 

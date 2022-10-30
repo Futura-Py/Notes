@@ -8,3 +8,6 @@ def setimages():
     v.keyboard_dark = tkinter.PhotoImage(master=v.root, file="./assets/keyboard_dark.png")
     v.warn_light = tkinter.PhotoImage(master=v.root, file="./assets/warn_light.png")
     v.warn_dark = tkinter.PhotoImage(master=v.root, file="./assets/warn_dark.png")
+    v.logo = tkinter.PhotoImage(master=v.root, file="./assets/logo.png")
+    v.github_dark = tkinter.PhotoImage(master=v.root, file="./assets/github_dark.png")
+    v.github_light = tkinter.PhotoImage(master=v.root, file="./assets/github_light.png")
