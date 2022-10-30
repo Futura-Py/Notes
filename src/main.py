@@ -35,7 +35,8 @@ closeimg = tkinter.PhotoImage(file=Path(theme["closeimg"]))
 
 def closepreview():
     md.close()
-    textwidget.text.bind("<KeyPress>", refreshtitle)
+    textwidget.bind("<KeyPress>", refreshtitle)
+    if cfg["linenumbers"]: textwidget.bind(f"<BackSpace>", lambda event: root.after_idle(linenums.redraw), add=True)
 
 notebook = ttk.Notebook(root)
 notebook.pack(fill="both", expand=True)
