@@ -24,7 +24,7 @@ else: theme = light.get()
 root = TkinterDnD.Tk()
 root.geometry(size.get())
 root.withdraw()
-ntkutils.windowsetup(root, title="Onyx - Untitled *", resizeable=False, size=size.get(), icon=Path("assets/logo.png"))
+ntkutils.windowsetup(root, title="Onyx - Untitled *", size=size.get(), icon=Path("assets/logo.png"))
 sv_ttk.set_theme(cfg["theme"].lower())
 root.update_idletasks()
 ntkutils.placeappincenter(root)
@@ -45,6 +45,9 @@ footer.update_idletasks()
 footer.pack(side="bottom", fill="x")
 footer.pack_propagate(False)
 
+scrollbar = ttk.Scrollbar(root)
+scrollbar.pack(side="right", fill="y")
+
 if not cfg["syntax-highlighting"]:
     textwidget = tkinter.Text(root, width=100, borderwidth=0, height=root.winfo_height() - 125, font=(cfg["font"], int(cfg["font-size"])))
     textwidget.pack(side="right", fill="both", expand=True)
@@ -55,9 +58,8 @@ else:
 
 textwidget.update()
 
-scrollbar = ttk.Scrollbar(root, command=textwidget.yview)
+scrollbar.configure(command=textwidget.yview)
 textwidget["yscrollcommand"] = scrollbar.set
-scrollbar.place(x=root.winfo_width() - 20, y=50, height=textwidget.winfo_height() - 70)
 
 if cfg["linenumbers"]:
     style = ttk.Style()
