@@ -1,13 +1,19 @@
 ver = "0.7 beta"
 
 import tkinter
-from tkinter import ttk
-import ntkutils, darkdetect, sv_ttk
 from pathlib import Path
+from tkinter import ttk
+
+import darkdetect
+import ntkutils
+import sv_ttk
 from tkinterdnd2 import *
 
-import config, editor, tabmanager, generatesize as size
-from themes import light, dark
+import config
+import editor
+import generatesize as size
+import tabmanager
+from themes import dark, light
 
 cfg = config.get()
 

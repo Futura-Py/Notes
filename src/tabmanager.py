@@ -1,10 +1,11 @@
 import tkinter
 from tkinter import filedialog
-from pygments.lexers import get_lexer_for_filename
-import pygments.lexers
 
-import vars as v
+import pygments.lexers
+from pygments.lexers import get_lexer_for_filename
+
 import pages.filetype as f
+import vars as v
 
 tabs = [["Untitled", "", "unsaved", "*"]]
 

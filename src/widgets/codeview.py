@@ -8,16 +8,14 @@ from __future__ import annotations
 
 import contextlib
 import tkinter
-from pathlib import Path
 from tkinter import ttk
 from tkinter.font import Font
 from typing import Any
 
+import chlorophyll
 import pygments
 import pygments.lexers
 import toml
-
-import chlorophyll
 from chlorophyll.schemeparser import _parse_scheme
 
 color_schemes_dir = str(chlorophyll.__file__).removesuffix("__init__.py") + "/colorschemes"

@@ -1,9 +1,13 @@
-import tkinter, ntkutils, darkdetect
-from tkinter import ttk, font
-from generatesize import system
+import tkinter
+from tkinter import font, ttk
+
+import darkdetect
+import ntkutils
 
 import config
 import vars as v
+from generatesize import system
+
 
 def dark():
     if v.cfg["theme"] == "Dark" or (v.cfg["theme"] == "System" and darkdetect.isDark()): return True

@@ -1,20 +1,24 @@
 ver = "0.7 beta"
 
-import tkinter, ntkutils, pygments, darkdetect, sv_ttk
-from tkinter.font import Font
+import tkinter
 from pathlib import Path
 from tkinter import ttk
+from tkinter.font import Font
+
+import darkdetect
+import ntkutils
+import pygments
 from tkinterdnd2 import *
 from tklinenums import TkLineNumbers
 
-import config, tabmanager, pages.about as about
-import settings.UI as settingsui
-from settings.images import setimages
-import generatesize as size
-import vars as v
 import mdpreview as md
+import pages.about as about
+import settings.UI as settingsui
+import tabmanager
+import vars as v
+from settings.images import setimages
 from widgets.codeview import CodeView
-from themes import light, dark
+
 
 def build(cfg, theme, root):
     closeimg = tkinter.PhotoImage(file=Path(theme["closeimg"]))

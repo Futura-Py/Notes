@@ -1,5 +1,7 @@
-import vars as v
 import tkinter
+
+import vars as v
+
 
 def setimages():
     v.brush_light = tkinter.PhotoImage(master=v.root, file="./assets/brush_light.png")
