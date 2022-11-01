@@ -7,7 +7,7 @@ from tkinter import ttk
 from tkinterdnd2 import *
 from tklinenums import TkLineNumbers
 
-import config, tabmanager, about
+import config, tabmanager, pages.about as about
 import settings.UI as settingsui
 from settings.images import setimages
 import generatesize as size

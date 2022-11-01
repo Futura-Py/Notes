@@ -4,7 +4,7 @@ from pygments.lexers import get_lexer_for_filename
 import pygments.lexers
 
 import vars as v
-import filetype as f
+import pages.filetype as f
 
 tabs = [["Untitled", "", "unsaved", "*"]]
 
