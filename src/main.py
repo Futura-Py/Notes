@@ -39,19 +39,15 @@ def preparewindow():
     root.resizable(True, True)
     editor.build(cfg, theme, root)
 
-def openfile():
+def openfile(path):
     preparewindow()
-    tabmanager.openfile()
-
-def openlast():
-    preparewindow()
-    tabmanager.openfile(path=content)
+    tabmanager.openfile(path=path)
 
 title = tkinter.Label(root, text="Onyx Editor", font=("Segoe UI", 20, "bold")).pack(anchor="nw", padx=20, pady=20)
 btncreatenew = ttk.Button(root, text="Create New File", command=preparewindow).pack(anchor="nw", padx=20)
-btnopenfile = ttk.Button(root, text="Open File", command=openfile).pack(anchor="nw", pady=10, padx=20)
+btnopenfile = ttk.Button(root, text="Open File", command=lambda: openfile(path="")).pack(anchor="nw", pady=10, padx=20)
 btnopendir = ttk.Button(root, text="Open Directory", state="disabled").pack(anchor="nw", padx=20)
-btnopenlast = ttk.Button(root, text="Open last file", command=openlast)
+btnopenlast = ttk.Button(root, text="Open last file", command=lambda: openfile(path=content))
 btnopenlast.pack(anchor="nw", padx=20, pady=20)
 
 file = open("lastfile.txt", "r")
