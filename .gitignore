@@ -130,3 +130,5 @@ dmypy.json
 
 #Config file
 cfg.json
+
+lastfile.txt

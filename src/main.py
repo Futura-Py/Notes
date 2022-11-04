@@ -1,5 +1,6 @@
 ver = "0.7 beta"
 
+import os
 import tkinter
 from pathlib import Path
 from tkinter import ttk
@@ -13,6 +14,7 @@ import config
 import editor
 import generatesize as size
 import tabmanager
+import vars as v
 from themes import dark, light
 
 cfg = config.get()
@@ -21,7 +23,7 @@ if cfg["theme"] == "Dark" or (cfg["theme"] == "System" and darkdetect.isDark()):
 else: theme = light.get()
 
 root = TkinterDnD.Tk()
-root.geometry("200x300")
+root.geometry("200x350")
 root.withdraw()
 ntkutils.windowsetup(root, title="Onyx - Untitled *", icon=Path("assets/logo.png"), resizeable=False)
 sv_ttk.set_theme(cfg["theme"].lower())
@@ -41,11 +43,31 @@ def openfile():
     preparewindow()
     tabmanager.openfile()
 
+def openlast():
+    preparewindow()
+    tabmanager.openfile(path=content)
+
 title = tkinter.Label(root, text="Onyx Editor", font=("Segoe UI", 20, "bold")).pack(anchor="nw", padx=20, pady=20)
 btncreatenew = ttk.Button(root, text="Create New File", command=preparewindow).pack(anchor="nw", padx=20)
 btnopenfile = ttk.Button(root, text="Open File", command=openfile).pack(anchor="nw", pady=10, padx=20)
 btnopendir = ttk.Button(root, text="Open Directory", state="disabled").pack(anchor="nw", padx=20)
+btnopenlast = ttk.Button(root, text="Open last file", command=openlast)
+btnopenlast.pack(anchor="nw", padx=20, pady=20)
+
+file = open("lastfile.txt", "r")
+content = file.read()
+file.close()
+
+if not os.path.isfile(content): btnopenlast.configure(state="disabled")
 
 root.update_idletasks()
 root.deiconify()
 root.mainloop()
+
+# Save path of last opened file
+content = tabmanager.tabs[v.tabselected][2]
+
+if content != "unsaved":
+    file = open("lastfile.txt", "w+")
+    file.write(content)
+    file.close()
