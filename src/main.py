@@ -55,7 +55,9 @@ if os.path.isfile("lastfile.txt"):
     content = file.read()
     file.close()
 
-if not os.path.isfile(content): btnopenlast.configure(state="disabled")
+    if not os.path.isfile(content): btnopenlast.configure(state="disabled")
+else:
+    btnopenlast.configure(state="disabled")
 
 root.update_idletasks()
 root.deiconify()
