@@ -1,4 +1,5 @@
 import platform
+
 system = platform.system()
 if system == "Windows":
     from win32api import GetMonitorInfo, MonitorFromPoint

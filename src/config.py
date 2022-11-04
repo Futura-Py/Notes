@@ -1,6 +1,8 @@
-import ntkutils.cfgtools as cfgtools
-from generatesize import system
 import json
+
+import ntkutils.cfgtools as cfgtools
+
+from generatesize import system
 
 default_win = {
     "theme": "Dark",

@@ -1,6 +1,11 @@
-import os, tkinter, ntkutils
+import os
+import tkinter
 from tkinter import ttk
+
+import ntkutils
+
 from generatesize import system
+
 
 def changetype(filename):
     global filetype

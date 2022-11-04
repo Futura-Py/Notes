@@ -3,6 +3,7 @@ from tkinterweb.htmlwidgets import HtmlFrame
 
 import vars as v
 
+
 def update():
     html = markdown.markdown(v.textwidget.get("1.0", "end"))
     display.load_html(html)
