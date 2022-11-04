@@ -50,9 +50,10 @@ btnopendir = ttk.Button(root, text="Open Directory", state="disabled").pack(anch
 btnopenlast = ttk.Button(root, text="Open last file", command=lambda: openfile(path=content))
 btnopenlast.pack(anchor="nw", padx=20, pady=20)
 
-file = open("lastfile.txt", "r")
-content = file.read()
-file.close()
+if os.path.isfile("lastfile.txt"):
+    file = open("lastfile.txt", "r")
+    content = file.read()
+    file.close()
 
 if not os.path.isfile(content): btnopenlast.configure(state="disabled")
 
