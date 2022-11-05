@@ -1,4 +1,4 @@
-ver = "0.7 beta"
+ver = "0.8 beta"
 
 import os
 import tkinter
@@ -42,7 +42,7 @@ def preparewindow():
     root.update()
     ntkutils.placeappincenter(root)
     root.resizable(True, True)
-    editor.build(cfg, theme, root)
+    editor.build(cfg, theme, root, ver)
 
 
 def openfile(path):

@@ -1,5 +1,3 @@
-ver = "0.7 beta"
-
 import tkinter
 from pathlib import Path
 from tkinter import ttk
@@ -20,7 +18,7 @@ from settings.images import setimages
 from widgets.codeview import CodeView
 
 
-def build(cfg, theme, root):
+def build(cfg, theme, root, ver):
     closeimg = tkinter.PhotoImage(file=Path(theme["closeimg"]))
 
     def closepreview():

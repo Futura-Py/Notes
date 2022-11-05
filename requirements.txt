@@ -6,3 +6,4 @@ markdown
 tkinterweb
 tkinterdnd2
 tklinenums >= 1.5
+requests
