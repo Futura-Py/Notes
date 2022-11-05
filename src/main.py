@@ -19,17 +19,22 @@ from themes import dark, light
 
 cfg = config.get()
 
-if cfg["theme"] == "Dark" or (cfg["theme"] == "System" and darkdetect.isDark()): theme = dark.get()
-else: theme = light.get()
+if cfg["theme"] == "Dark" or (cfg["theme"] == "System" and darkdetect.isDark()):
+    theme = dark.get()
+else:
+    theme = light.get()
 
 root = TkinterDnD.Tk()
 root.geometry("200x350")
 root.withdraw()
-ntkutils.windowsetup(root, title="Onyx - Untitled *", icon=Path("assets/logo.png"), resizeable=False)
+ntkutils.windowsetup(
+    root, title="Onyx - Untitled *", icon=Path("assets/logo.png"), resizeable=False
+)
 sv_ttk.set_theme(cfg["theme"].lower())
 root.update_idletasks()
 ntkutils.placeappincenter(root)
 root.update_idletasks()
+
 
 def preparewindow():
     ntkutils.clearwin(root)
@@ -39,15 +44,27 @@ def preparewindow():
     root.resizable(True, True)
     editor.build(cfg, theme, root)
 
+
 def openfile(path):
     preparewindow()
     tabmanager.openfile(path=path)
 
-title = tkinter.Label(root, text="Onyx Editor", font=("Segoe UI", 20, "bold")).pack(anchor="nw", padx=20, pady=20)
-btncreatenew = ttk.Button(root, text="Create New File", command=preparewindow).pack(anchor="nw", padx=20)
-btnopenfile = ttk.Button(root, text="Open File", command=lambda: openfile(path="")).pack(anchor="nw", pady=10, padx=20)
-btnopendir = ttk.Button(root, text="Open Directory", state="disabled").pack(anchor="nw", padx=20)
-btnopenlast = ttk.Button(root, text="Open last file", command=lambda: openfile(path=content))
+
+title = tkinter.Label(root, text="Onyx Editor", font=("Segoe UI", 20, "bold")).pack(
+    anchor="nw", padx=20, pady=20
+)
+btncreatenew = ttk.Button(root, text="Create New File", command=preparewindow).pack(
+    anchor="nw", padx=20
+)
+btnopenfile = ttk.Button(
+    root, text="Open File", command=lambda: openfile(path="")
+).pack(anchor="nw", pady=10, padx=20)
+btnopendir = ttk.Button(root, text="Open Directory", state="disabled").pack(
+    anchor="nw", padx=20
+)
+btnopenlast = ttk.Button(
+    root, text="Open last file", command=lambda: openfile(path=content)
+)
 btnopenlast.pack(anchor="nw", padx=20, pady=20)
 
 if os.path.isfile("lastfile.txt"):
@@ -55,7 +72,8 @@ if os.path.isfile("lastfile.txt"):
     content = file.read()
     file.close()
 
-    if not os.path.isfile(content): btnopenlast.configure(state="disabled")
+    if not os.path.isfile(content):
+        btnopenlast.configure(state="disabled")
 else:
     btnopenlast.configure(state="disabled")
 

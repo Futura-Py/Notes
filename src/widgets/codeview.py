@@ -18,7 +18,9 @@ import pygments.lexers
 import toml
 from chlorophyll.schemeparser import _parse_scheme
 
-color_schemes_dir = str(chlorophyll.__file__).removesuffix("__init__.py") + "/colorschemes"
+color_schemes_dir = (
+    str(chlorophyll.__file__).removesuffix("__init__.py") + "/colorschemes"
+)
 
 
 class CodeView(tkinter.Text):

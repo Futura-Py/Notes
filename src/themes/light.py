@@ -6,5 +6,6 @@ theme = {
     "closeimg": "assets/close_dark.png",
 }
 
+
 def get():
     return theme

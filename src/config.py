@@ -23,7 +23,7 @@ default_mac = {
     "hkey-open": "Command-o",
     "hkey-save": "Command-s",
     "linenumbers": True,
-    "syntax-highlighting": False, 
+    "syntax-highlighting": False,
 }
 
 # Update Config if settings are missing
@@ -41,6 +41,7 @@ try:
         cfgtools.SaveCFG(cfg)
 except FileNotFoundError:
     pass
+
 
 def get():
     if system != "Darwin":

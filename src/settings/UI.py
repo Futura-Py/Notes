@@ -10,8 +10,11 @@ from generatesize import system
 
 
 def dark():
-    if v.cfg["theme"] == "Dark" or (v.cfg["theme"] == "System" and darkdetect.isDark()): return True
-    else: return False
+    if v.cfg["theme"] == "Dark" or (v.cfg["theme"] == "System" and darkdetect.isDark()):
+        return True
+    else:
+        return False
+
 
 def appearance():
     global boxtheme, boxfont, boxsize, btnnumbers, btnhighlight, page
@@ -20,15 +23,19 @@ def appearance():
     clearstates()
 
     btnappearence.configure(style="Accent.TButton")
-    if dark(): btnappearence.configure(image=v.brush_light)
-    else: btnappearence.configure(image=v.brush_dark)
+    if dark():
+        btnappearence.configure(image=v.brush_light)
+    else:
+        btnappearence.configure(image=v.brush_dark)
 
     ntkutils.clearwin(frameright)
 
     page = "appearance"
 
     lbltheme = tkinter.Label(frameright, text="Theme:").place(x=10, y=15)
-    boxtheme = ttk.Combobox(frameright, values=["Dark", "Light", "System"], state="readonly", width=25)
+    boxtheme = ttk.Combobox(
+        frameright, values=["Dark", "Light", "System"], state="readonly", width=25
+    )
     boxtheme.set(cfg["theme"])
     boxtheme.pack(padx=10, pady=10, anchor="e")
 
@@ -40,17 +47,23 @@ def appearance():
     boxsize.insert(0, cfg["font-size"])
     boxsize.place(x=260, y=63)
 
-    lblnumbers = tkinter.Label(frameright, text="Display line numbers:").place(x=10, y=118)
+    lblnumbers = tkinter.Label(frameright, text="Display line numbers:").place(
+        x=10, y=118
+    )
     btnnumbers = ttk.Checkbutton(frameright, style="Switch.TCheckbutton")
     btnnumbers.pack(padx=10, pady=10, anchor="e")
     btnnumbers.state(["!alternate"])
-    if cfg["linenumbers"]: btnnumbers.state(["!alternate", "selected"])
+    if cfg["linenumbers"]:
+        btnnumbers.state(["!alternate", "selected"])
 
-    lblhighlight = tkinter.Label(frameright, text="Syntax Highlighting:").place(x=10, y=168)
+    lblhighlight = tkinter.Label(frameright, text="Syntax Highlighting:").place(
+        x=10, y=168
+    )
     btnhighlight = ttk.Checkbutton(frameright, style="Switch.TCheckbutton")
     btnhighlight.pack(padx=10, pady=15, anchor="e")
     btnhighlight.state(["!alternate"])
-    if cfg["syntax-highlighting"]: btnhighlight.state(["!alternate", "selected"])
+    if cfg["syntax-highlighting"]:
+        btnhighlight.state(["!alternate", "selected"])
 
 
 def experimental():
@@ -60,8 +73,10 @@ def experimental():
     clearstates()
 
     btnexperimental.configure(style="Accent.TButton")
-    if dark(): btnexperimental.configure(image=v.warn_light)
-    else: btnexperimental.configure(image=v.warn_dark)
+    if dark():
+        btnexperimental.configure(image=v.warn_light)
+    else:
+        btnexperimental.configure(image=v.warn_dark)
 
     ntkutils.clearwin(frameright)
 
@@ -71,7 +86,9 @@ def experimental():
     btnmica = ttk.Checkbutton(frameright, style="Switch.TCheckbutton")
     btnmica.pack(padx=10, pady=10, anchor="e")
     btnmica.state(["!alternate"])
-    if cfg["mica"]: btnmica.state(["!alternate", "selected"])
+    if cfg["mica"]:
+        btnmica.state(["!alternate", "selected"])
+
 
 def hotkeys():
     global page, entryopen, entrysave
@@ -80,9 +97,10 @@ def hotkeys():
     clearstates()
 
     btnhotkeys.configure(style="Accent.TButton")
-    if dark(): btnhotkeys.configure(image=v.keyboard_light)
-    else: btnhotkeys.configure(image=v.keyboard_dark)
-
+    if dark():
+        btnhotkeys.configure(image=v.keyboard_light)
+    else:
+        btnhotkeys.configure(image=v.keyboard_dark)
 
     ntkutils.clearwin(frameright)
 
@@ -98,6 +116,7 @@ def hotkeys():
     entrysave.insert(0, cfg["hkey-save"])
     entrysave.pack(padx=10, pady=10, anchor="e")
 
+
 def savechanges():
     if page == "appearance":
         cfg["theme"] = boxtheme.get()
@@ -106,19 +125,26 @@ def savechanges():
         cfg["linenumbers"] = btnnumbers.instate(["selected"])
         cfg["syntax-highlighting"] = btnhighlight.instate(["selected"])
 
-        if dark(): btnappearence.configure(image=v.brush_dark)
-        else: btnappearence.configure(image=v.brush_light)
+        if dark():
+            btnappearence.configure(image=v.brush_dark)
+        else:
+            btnappearence.configure(image=v.brush_light)
     elif page == "experimental":
         cfg["mica"] = btnmica.instate(["selected"])
 
-        if dark(): btnexperimental.configure(image=v.warn_dark)
-        else: btnexperimental.configure(image=v.warn_light)
+        if dark():
+            btnexperimental.configure(image=v.warn_dark)
+        else:
+            btnexperimental.configure(image=v.warn_light)
     elif page == "hotkeys":
         cfg["hkey-open"] = entryopen.get()
         cfg["hkey-save"] = entrysave.get()
 
-        if dark(): btnhotkeys.configure(image=v.keyboard_dark)
-        else: btnhotkeys.configure(image=v.keyboard_light)
+        if dark():
+            btnhotkeys.configure(image=v.keyboard_dark)
+        else:
+            btnhotkeys.configure(image=v.keyboard_light)
+
 
 def apply():
     global page, save
@@ -138,7 +164,9 @@ def build():
     save = False
 
     settings = tkinter.Toplevel()
-    ntkutils.windowsetup(settings, "Onyx - Settings", "assets/logo.png", False, "500x400")
+    ntkutils.windowsetup(
+        settings, "Onyx - Settings", "assets/logo.png", False, "500x400"
+    )
     if system != "Darwin" and dark():
         ntkutils.dark_title_bar(settings)
 
@@ -150,19 +178,49 @@ def build():
     frameright.pack(side=tkinter.LEFT, fill="both")
     frameright.pack_propagate(False)
 
-    btnappearence = ttk.Button(frameleft, text="Appearence", style="Accent.TButton", width=16, command=appearance, image=v.brush_dark, compound="left")
+    btnappearence = ttk.Button(
+        frameleft,
+        text="Appearence",
+        style="Accent.TButton",
+        width=16,
+        command=appearance,
+        image=v.brush_dark,
+        compound="left",
+    )
     btnappearence.pack(pady=10)
 
-    btnhotkeys = ttk.Button(frameleft, text="Hotkeys", width=16, command=hotkeys, image=v.keyboard_light, compound="left")
+    btnhotkeys = ttk.Button(
+        frameleft,
+        text="Hotkeys",
+        width=16,
+        command=hotkeys,
+        image=v.keyboard_light,
+        compound="left",
+    )
     btnhotkeys.pack()
 
-    btnexperimental = ttk.Button(frameleft, text="Unstable Features", width=16, command=experimental, image=v.warn_light, compound="left")
+    btnexperimental = ttk.Button(
+        frameleft,
+        text="Unstable Features",
+        width=16,
+        command=experimental,
+        image=v.warn_light,
+        compound="left",
+    )
     btnexperimental.pack(pady=10)
 
-    btnapply = ttk.Button(frameleft, text="Apply", style="Accent.TButton", width=20, command=apply)
+    btnapply = ttk.Button(
+        frameleft, text="Apply", style="Accent.TButton", width=20, command=apply
+    )
     btnapply.pack(side="bottom", pady=10)
 
-    lblrestart = tkinter.Label(frameleft, text="Restart required!", wraplength=170, fg="grey", bg=v.theme["secondary"]).pack(side="bottom")
+    lblrestart = tkinter.Label(
+        frameleft,
+        text="Restart required!",
+        wraplength=170,
+        fg="grey",
+        bg=v.theme["secondary"],
+    ).pack(side="bottom")
 
     if dark():
         btnappearence.configure(image=v.brush_light)
@@ -172,12 +230,16 @@ def build():
     getfonts()
     appearance()
 
+
 def clearstates():
     for i in frameleft.pack_slaves():
-        try: i.configure(style="TButton")
-        except: pass
+        try:
+            i.configure(style="TButton")
+        except:
+            pass
+
 
 def getfonts():
     global fonts
-    fonts=list(font.families())
+    fonts = list(font.families())
     fonts.sort()
