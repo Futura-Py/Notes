@@ -1,9 +1,9 @@
 sv-ttk
 ntkutils
 darkdetect
-pywin32
+pywin32; sys_platform == 'win'
+chlorophyll
 markdown
 tkinterweb
 tkinterdnd2
 tklinenums >= 1.5
-requests
