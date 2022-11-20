@@ -8,6 +8,26 @@ import config
 import vars as v
 from generatesize import system
 
+options = [
+    "Theme",
+    "Font",
+    "Font Size",
+    "Display Line Numbers",
+    "Syntax Highlighting",
+    "Hotkeys",
+    "Mica Blur",
+]
+
+options2 = {
+    "Theme": "appearance",
+    "Font": "appearance",
+    "Font Size": "appearance",
+    "Display Line Numbers": "appearance",
+    "Syntax Highlighting": "appearance",
+    "Hotkeys": "hotkeys",
+    "Mica Blur": "experimental",
+}
+
 
 def dark():
     if v.cfg["theme"] == "Dark" or (v.cfg["theme"] == "System" and darkdetect.isDark()):
@@ -178,6 +198,46 @@ def build():
     frameright.pack(side=tkinter.LEFT, fill="both")
     frameright.pack_propagate(False)
 
+    def update(data):
+        menu.delete(0, "end")
+        for value in data:
+            menu.insert("end", value)
+        menu.configure(height=len(data))
+
+    def check(e):
+        v = search.get()
+        if v == "":
+            data = options
+        else:
+            data = []
+            for item in options:
+                if v.lower() in item.lower():
+                    data.append(item)
+        update(data)
+
+    def showlist(e):
+        menu.bind("<<ListboxSelect>>", onselect)
+        menu.place(x=search.winfo_x(), y=search.winfo_y() + search.winfo_height())
+        check("")
+
+    def removelist(e):
+        menu.unbind("<<ListboxSelect>>")
+        menu.place(x=1000, y=1000)
+
+    search = ttk.Entry(frameleft)
+    search.pack(pady=10)
+    search.bind("<KeyRelease>", check)
+    search.update()
+    search.bind("<FocusIn>", showlist)
+    search.bind("<FocusOut>", removelist)
+
+    def onselect(evt):
+        w = evt.widget
+        index = int(w.curselection()[0])
+        value = w.get(index)
+        func = eval(options2[value])
+        func()
+
     btnappearence = ttk.Button(
         frameleft,
         text="Appearence",
@@ -221,6 +281,9 @@ def build():
         fg="grey",
         bg=v.theme["secondary"],
     ).pack(side="bottom")
+
+    menu = tkinter.Listbox(frameleft, width=23)
+    menu.bind("<<ListboxSelect>>", onselect)
 
     if dark():
         btnappearence.configure(image=v.brush_light)

@@ -22,11 +22,14 @@ def checkforupdates():
     if response == True:
         webbrowser.open("https://github.com/not-nef/onyx/releases")
     elif response == False:
-        messagebox.showinfo(title="Update", message="You are on the newest version of onyx!")
+        messagebox.showinfo(
+            title="Update", message="You are on the newest version of onyx!"
+        )
     else:
-        messagebox.showinfo(title="Rate Limit"
-        , message="""You have managed to exceed the github api rate limit of 60 requests per hour. idk how that can be achieved by accident. try again in an hour i guess.
-        """
+        messagebox.showinfo(
+            title="Rate Limit",
+            message="""You have managed to exceed the github api rate limit of 60 requests per hour. idk how that can be achieved by accident. try again in an hour i guess.
+        """,
         )
 
 
@@ -35,7 +38,6 @@ def build():
     root.title("About Onyx")
     root.geometry("650x200")
     root.resizable(False, False)
-
 
     logolabel = tkinter.Label(root, image=v.logo).place(x=10, y=20)
 
@@ -66,5 +68,5 @@ def build():
         text="  Check for Updates",
         image=v.update_light if dark() else v.update_dark,
         compound="left",
-        command=checkforupdates
+        command=checkforupdates,
     ).place(x=350, y=120)
