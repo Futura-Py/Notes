@@ -216,6 +216,7 @@ def build():
         update(data)
 
     def showlist(e):
+        search.delete(0, "end")
         menu.bind("<<ListboxSelect>>", onselect)
         menu.place(x=search.winfo_x(), y=search.winfo_y() + search.winfo_height())
         check("")
@@ -230,6 +231,7 @@ def build():
     search.update()
     search.bind("<FocusIn>", showlist)
     search.bind("<FocusOut>", removelist)
+    search.insert(0, "Search for a setting...")
 
     def onselect(evt):
         w = evt.widget
