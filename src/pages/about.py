@@ -1,7 +1,6 @@
 import tkinter
-from tkinter import messagebox
 import webbrowser
-from tkinter import ttk
+from tkinter import messagebox, ttk
 
 import darkdetect
 

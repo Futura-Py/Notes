@@ -6,6 +6,7 @@ from tkinter.font import Font
 import darkdetect
 import ntkutils
 import pygments
+import pyperclip
 from tkinterdnd2 import *
 from tklinenums import TkLineNumbers
 
@@ -112,35 +113,17 @@ def build(cfg, theme, root, ver):
     menubar.add_cascade(label="File", menu=filemenu)
     menubar.add_cascade(label="Settings", menu=settingsmenu)
 
-    filemenu.add_command(
-        label="Save ({})".format(cfg["hkey-save"]),
-        command=tabmanager.save,
-        foreground="black",
-    )
-    filemenu.add_command(
-        label="Save As",
-        command=lambda: tabmanager.save(saveas=True),
-        foreground="black",
-    )
-    filemenu.add_command(
-        label="Open ({})".format(cfg["hkey-open"]),
-        command=tabmanager.openfile,
-        foreground="black",
-    )
+    filemenu.add_command(label="Save ({})".format(cfg["hkey-save"]), command=tabmanager.save, foreground="black" )
+    filemenu.add_command(label="Save As", command=lambda: tabmanager.save(saveas=True), foreground="black")
+    filemenu.add_command(label="Open ({})".format(cfg["hkey-open"]), command=tabmanager.openfile, foreground="black")
     filemenu.add_command(label="New", command=tabmanager.new, foreground="black")
     filemenu.add_separator()
-    filemenu.add_command(
-        label="Change file extension", command=tabmanager.changetype, foreground="black"
-    )
+    filemenu.add_command(label="Change file extension", command=tabmanager.changetype, foreground="black")
     filemenu.add_separator()
     filemenu.add_command(label="Preview Markdown", command=md.build, foreground="black")
-    filemenu.add_command(
-        label="Close Preview", command=closepreview, foreground="black"
-    )
+    filemenu.add_command(label="Close Preview", command=closepreview, foreground="black")
 
-    settingsmenu.add_command(
-        label="Open Settings", command=settingsui.build, foreground="black"
-    )
+    settingsmenu.add_command(label="Open Settings", command=settingsui.build, foreground="black")
     settingsmenu.add_command(label="About", command=about.build, foreground="black")
 
     if cfg["mica"]:
@@ -175,6 +158,28 @@ def build(cfg, theme, root, ver):
     root.drop_target_register(DND_FILES)
     root.dnd_bind("<<Drop>>", filedrop)
 
+    def cut():
+        pyperclip.copy(textwidget.selection_get())
+        textwidget.delete("sel.first", "sel.last")
+
+    def copy(): 
+        pyperclip.copy(textwidget.selection_get())
+
+    def paste():
+        textwidget.insert("insert", pyperclip.paste())
+
+    def popup(event):
+        try:
+            context.tk_popup(event.x_root, event.y_root, 0)
+        finally:
+            context.grab_release()
+
+    context = tkinter.Menu(root, tearoff=False, bg="white")
+    context.add_command(label="Cut", command=cut, foreground="black")
+    context.add_command(label="Copy", command=copy, foreground="black")
+    context.add_command(label="Paste", command=paste, foreground="black")
+    root.bind("<Button-3>", popup)
+
     # Set global variables
     v.cfg = cfg
     v.root = root
@@ -188,9 +193,6 @@ def build(cfg, theme, root, ver):
 
     setimages()
 
-    notebook.add(
-        tkinter.Frame(), text=tabmanager.tabs[0][0], image=closeimg, compound="right"
-    )
-    notebook.bind(
-        "<ButtonRelease-1>", tabmanager.click, add="+"
-    )  # Bind Left mouse button to write content of selected tab into the text widget
+    notebook.add(tkinter.Frame(), text=tabmanager.tabs[0][0], image=closeimg, compound="right")
+    # Bind Left mouse button to write content of selected tab into the text widget
+    notebook.bind("<ButtonRelease-1>", tabmanager.click, add="+")  
