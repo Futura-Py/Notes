@@ -1,7 +1,5 @@
 <div align="center">
 
-![logo](https://raw.githubusercontent.com/not-nef/onyx/main/assets/logo.png)
-
 # Onyx
 <a style="text-decoration:none" href="https://github.com/not-nef/txt2/releases">
     <img src="https://img.shields.io/github/v/release/not-nef/onyx?display_name=release&include_prereleases" alt="Releases" />
