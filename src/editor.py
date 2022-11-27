@@ -3,6 +3,7 @@ from pathlib import Path
 from tkinter import ttk
 from tkinter.font import Font
 
+import chlorophyll
 import darkdetect
 import ntkutils
 import pygments
@@ -16,7 +17,6 @@ import settings.UI as settingsui
 import tabmanager
 import vars as v
 from settings.images import setimages
-from widgets.codeview import CodeView
 
 
 def build(cfg, theme, root, ver):
@@ -41,17 +41,8 @@ def build(cfg, theme, root, ver):
     scrollbar = ttk.Scrollbar(root)
     scrollbar.pack(side="right", fill="y")
 
-    if not cfg["syntax-highlighting"]:
-        textwidget = tkinter.Text(
-            root,
-            width=100,
-            borderwidth=0,
-            height=root.winfo_height() - 125,
-            font=(cfg["font"], int(cfg["font-size"])),
-        )
-        textwidget.pack(side="right", fill="both", expand=True)
-    else:
-        textwidget = CodeView(
+    if cfg["syntax-highlighting"]:
+        textwidget = chlorophyll.CodeView(
             root,
             height=800,
             bg=theme["primary"],
@@ -59,6 +50,17 @@ def build(cfg, theme, root, ver):
             font=(cfg["font"], int(cfg["font-size"])),
         )
         textwidget._set_color_scheme(theme["color_scheme"])
+        textwidget.pack(side="right", fill="both", expand=True)
+        textwidget._hs.grid_remove()
+        textwidget._vs.grid_remove()
+    else:       
+        textwidget = tkinter.Text(
+            root,
+            width=100,
+            borderwidth=0,
+            height=root.winfo_height() - 125,
+            font=(cfg["font"], int(cfg["font-size"])),
+        )
         textwidget.pack(side="right", fill="both", expand=True)
 
     textwidget.update()
