@@ -19,7 +19,7 @@ def checkforupdates():
     response = update.check()
 
     if response == True:
-        webbrowser.open("https://github.com/not-nef/onyx/releases")
+        webbrowser.open("https://github.com/futura-py/notes/releases")
     elif response == False:
         messagebox.showinfo(
             title="Update", message="You are on the newest version of onyx!"
