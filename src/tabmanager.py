@@ -22,7 +22,7 @@ def updatetab(file):
 
 
 def updatetitle():
-    v.root.title("Onyx - {} {}".format(tabs[v.tabselected][0], tabs[v.tabselected][3]))
+    v.root.title("Futura Notes - {} {}".format(tabs[v.tabselected][0], tabs[v.tabselected][3]))
 
 
 def redrawlinenums():

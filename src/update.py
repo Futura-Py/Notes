@@ -8,7 +8,7 @@ def install():
 
 
 def check():
-    api_response = requests.get("https://api.github.com/repos/not-nef/onyx/releases")
+    api_response = requests.get("https://api.github.com/repos/futura-py/notes/releases")
 
     try:
         latest_tag = next(iter(api_response.json()))["tag_name"]

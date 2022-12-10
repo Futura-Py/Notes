@@ -24,7 +24,7 @@ def changetype(filename):
     filetype = tkinter.Toplevel()
     if system != "Darwin":
         ntkutils.dark_title_bar(filetype)
-    filetype.title("txt2 - Change file type")
+    filetype.title("Futura Notes - Change file type")
     lbl = tkinter.Label(filetype, text="Change file extension:", font=("", 20)).pack(
         pady=5
     )

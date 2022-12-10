@@ -1,4 +1,4 @@
-ver = "0.8 beta"
+ver = "0.9 beta"
 
 import os
 import tkinter
@@ -16,10 +16,11 @@ import generatesize as size
 import tabmanager
 import vars as v
 from themes import dark, light
+import utils as u
 
-cfg = config.get()
+v.cfg = config.get()
 
-if cfg["theme"] == "Dark" or (cfg["theme"] == "System" and darkdetect.isDark()):
+if u.dark():
     theme = dark.get()
 else:
     theme = light.get()
@@ -27,22 +28,21 @@ else:
 root = TkinterDnD.Tk()
 root.geometry("200x350")
 root.withdraw()
-ntkutils.windowsetup(
-    root, title="Onyx - Untitled *", icon=Path("assets/logo.png"), resizeable=False
-)
-sv_ttk.set_theme(cfg["theme"].lower())
+ntkutils.windowsetup(root, title="Futura Notes", resizeable=False)
+sv_ttk.set_theme(v.cfg["theme"].lower())
 root.update_idletasks()
 ntkutils.placeappincenter(root)
 root.update_idletasks()
 
 
 def preparewindow():
+    root.title("Futura Notes - Untitled *")
     ntkutils.clearwin(root)
     root.geometry(size.get())
     root.update()
     ntkutils.placeappincenter(root)
     root.resizable(True, True)
-    editor.build(cfg, theme, root, ver)
+    editor.build(theme, root, ver)
 
 
 def openfile(path):
@@ -50,7 +50,7 @@ def openfile(path):
     tabmanager.openfile(path=path)
 
 
-title = tkinter.Label(root, text="Onyx Editor", font=("Segoe UI", 20, "bold")).pack(anchor="nw", padx=20, pady=20)
+title = tkinter.Label(root, text="Futura Notes", font=("Segoe UI", 20, "bold")).pack(anchor="nw", padx=20, pady=20)
 btncreatenew = ttk.Button(root, text="Create New File", command=preparewindow).pack(anchor="nw", padx=20)
 btnopenfile = ttk.Button(root, text="Open File", command=lambda: openfile(path="")).pack(anchor="nw", pady=10, padx=20)
 btnopendir = ttk.Button(root, text="Open Directory", state="disabled").pack(anchor="nw", padx=20)

@@ -19,13 +19,13 @@ import vars as v
 from settings.images import setimages
 
 
-def build(cfg, theme, root, ver):
+def build(theme, root, ver):
     closeimg = tkinter.PhotoImage(file=Path(theme["closeimg"]))
 
     def closepreview():
         md.close()
         textwidget.bind("<KeyPress>", refreshtitle)
-        if cfg["linenumbers"]:
+        if v.cfg["linenumbers"]:
             textwidget.bind(
                 f"<BackSpace>", lambda event: root.after_idle(linenums.redraw), add=True
             )
@@ -41,13 +41,13 @@ def build(cfg, theme, root, ver):
     scrollbar = ttk.Scrollbar(root)
     scrollbar.pack(side="right", fill="y")
 
-    if cfg["syntax-highlighting"]:
+    if v.cfg["syntax-highlighting"]:
         textwidget = chlorophyll.CodeView(
             root,
             height=800,
             bg=theme["primary"],
             lexer=pygments.lexers.TextLexer,
-            font=(cfg["font"], int(cfg["font-size"])),
+            font=(v.cfg["font"], int(v.cfg["font-size"])),
         )
         textwidget._set_color_scheme(theme["color_scheme"])
         textwidget.pack(side="right", fill="both", expand=True)
@@ -59,7 +59,7 @@ def build(cfg, theme, root, ver):
             width=100,
             borderwidth=0,
             height=root.winfo_height() - 125,
-            font=(cfg["font"], int(cfg["font-size"])),
+            font=(v.cfg["font"], int(v.cfg["font-size"])),
         )
         textwidget.pack(side="right", fill="both", expand=True)
 
@@ -68,7 +68,7 @@ def build(cfg, theme, root, ver):
     scrollbar.configure(command=textwidget.yview)
     textwidget["yscrollcommand"] = scrollbar.set
 
-    if cfg["linenumbers"]:
+    if v.cfg["linenumbers"]:
         style = ttk.Style()
         style.configure(
             "TLineNumbers",
@@ -77,7 +77,7 @@ def build(cfg, theme, root, ver):
         )
 
         font = Font(
-            family="Courier New bold", size=cfg["font-size"], name="TkLineNumsFont"
+            family="Courier New bold", size=v.cfg["font-size"], name="TkLineNumsFont"
         )
 
         linenums = TkLineNumbers(root, textwidget, font, "right")
@@ -115,9 +115,9 @@ def build(cfg, theme, root, ver):
     menubar.add_cascade(label="File", menu=filemenu)
     menubar.add_cascade(label="Settings", menu=settingsmenu)
 
-    filemenu.add_command(label="Save ({})".format(cfg["hkey-save"]), command=tabmanager.save, foreground="black" )
+    filemenu.add_command(label="Save ({})".format(v.cfg["hkey-save"]), command=tabmanager.save, foreground="black" )
     filemenu.add_command(label="Save As", command=lambda: tabmanager.save(saveas=True), foreground="black")
-    filemenu.add_command(label="Open ({})".format(cfg["hkey-open"]), command=tabmanager.openfile, foreground="black")
+    filemenu.add_command(label="Open ({})".format(v.cfg["hkey-open"]), command=tabmanager.openfile, foreground="black")
     filemenu.add_command(label="New", command=tabmanager.new, foreground="black")
     filemenu.add_separator()
     filemenu.add_command(label="Change file extension", command=tabmanager.changetype, foreground="black")
@@ -128,8 +128,8 @@ def build(cfg, theme, root, ver):
     settingsmenu.add_command(label="Open Settings", command=settingsui.build, foreground="black")
     settingsmenu.add_command(label="About", command=about.build, foreground="black")
 
-    if cfg["mica"]:
-        if cfg["theme"] == "Dark" or (cfg["theme"] == "System" and darkdetect.isDark()):
+    if v.cfg["mica"]:
+        if v.cfg["theme"] == "Dark" or (v.cfg["theme"] == "System" and darkdetect.isDark()):
             notebook.configure(bg="#1c1c1c")
             ntkutils.blur_window_background(root, dark=True)
             textwidget.text.configure(bg="#1b1c1b")
@@ -148,8 +148,8 @@ def build(cfg, theme, root, ver):
 
     textwidget.bind("<KeyPress>", refreshtitle)
 
-    root.event_add("<<Open>>", "<{}>".format(cfg["hkey-open"]))
-    root.event_add("<<Save>>", "<{}>".format(cfg["hkey-save"]))
+    root.event_add("<<Open>>", "<{}>".format(v.cfg["hkey-open"]))
+    root.event_add("<<Save>>", "<{}>".format(v.cfg["hkey-save"]))
 
     root.bind("<<Open>>", tabmanager.openfile)
     root.bind("<<Save>>", tabmanager.save)
@@ -183,7 +183,6 @@ def build(cfg, theme, root, ver):
     root.bind("<Button-3>", popup)
 
     # Set global variables
-    v.cfg = cfg
     v.root = root
     v.textwidget = textwidget
     v.filedir = filedir
