@@ -1,14 +1,13 @@
 import tkinter
 from tkinter import font, ttk
 
-import darkdetect
 import ntkutils
 import sv_ttk
 
 import config
+import utils as u
 import vars as v
 from generatesize import system
-import utils as u
 
 options = [
     "Theme",

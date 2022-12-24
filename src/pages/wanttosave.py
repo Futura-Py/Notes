@@ -1,8 +1,9 @@
 import tkinter
 from tkinter import ttk
 
-import vars as v
 import tabmanager as t
+import vars as v
+
 
 def save(e=""):
     t.save()
