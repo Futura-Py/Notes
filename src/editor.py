@@ -13,6 +13,7 @@ from tklinenums import TkLineNumbers
 
 import mdpreview as md
 import pages.about as about
+import pages.wanttosave as w
 import settings.UI as settingsui
 import tabmanager
 import vars as v
@@ -181,6 +182,18 @@ def build(theme, root, ver):
     context.add_command(label="Copy", command=copy, foreground="black")
     context.add_command(label="Paste", command=paste, foreground="black")
     root.bind("<Button-3>", popup)
+
+    def on_closing():
+        if v.cfg["onclose"] == "Do Nothing":
+            root.destroy()
+        elif v.cfg["onclose"] == "Save":
+            tabmanager.save()
+            root.destroy()
+        else:
+            w.build()
+
+
+    root.protocol("WM_DELETE_WINDOW", on_closing)
 
     # Set global variables
     v.root = root

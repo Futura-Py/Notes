@@ -2,10 +2,8 @@ ver = "0.9 beta"
 
 import os
 import tkinter
-from pathlib import Path
 from tkinter import ttk
 
-import darkdetect
 import ntkutils
 import sv_ttk
 from tkinterdnd2 import *
@@ -13,10 +11,11 @@ from tkinterdnd2 import *
 import config
 import editor
 import generatesize as size
+import settings.UI as settings
 import tabmanager
+import utils as u
 import vars as v
 from themes import dark, light
-import utils as u
 
 v.cfg = config.get()
 
@@ -49,11 +48,15 @@ def openfile(path):
     preparewindow()
     tabmanager.openfile(path=path)
 
+def settingss():
+    preparewindow()
+    settings.build()
+
 
 title = tkinter.Label(root, text="Futura Notes", font=("Segoe UI", 20, "bold")).pack(anchor="nw", padx=20, pady=20)
 btncreatenew = ttk.Button(root, text="Create New File", command=preparewindow).pack(anchor="nw", padx=20)
 btnopenfile = ttk.Button(root, text="Open File", command=lambda: openfile(path="")).pack(anchor="nw", pady=10, padx=20)
-btnopendir = ttk.Button(root, text="Open Directory", state="disabled").pack(anchor="nw", padx=20)
+btnopendir = ttk.Button(root, text="Open Directory", command=settingss).pack(anchor="nw", padx=20)
 btnopenlast = ttk.Button(root, text="Open last file", command=lambda: openfile(path=content))
 btnopenlast.pack(anchor="nw", padx=20, pady=20)
 

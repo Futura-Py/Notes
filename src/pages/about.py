@@ -3,8 +3,8 @@ import webbrowser
 from tkinter import messagebox, ttk
 
 import update
-import vars as v
 import utils as u
+import vars as v
 
 
 def checkforupdates():

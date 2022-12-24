@@ -13,6 +13,7 @@ default_win = {
     "hkey-save": "Control-s",
     "linenumbers": True,
     "syntax-highlighting": False,
+    "onclose": "Ask",
 }
 
 default_mac = {

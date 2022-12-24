@@ -1,4 +1,4 @@
-sv-ttk
+sv-ttk >= 2.4
 ntkutils
 darkdetect
 pywin32; sys_platform == 'win'
