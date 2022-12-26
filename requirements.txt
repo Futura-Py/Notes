@@ -1,7 +1,7 @@
 sv-ttk >= 2.4
 ntkutils
 darkdetect
-pywin32; sys_platform == 'win'
+pywin32; sys_platform == 'win32'
 chlorophyll
 markdown
 tkinterweb
