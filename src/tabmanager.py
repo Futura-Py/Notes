@@ -37,9 +37,7 @@ def new():
     v.filedir.configure(text="unsaved")
     v.tabselected += 1
 
-    v.tabbar.add(
-        tkinter.Frame(), text=tabs[v.tabselected][0], image=v.closeimg, compound="right"
-    )
+    v.tabbar.add(tkinter.Frame(), text=tabs[v.tabselected][0], image=v.closeimg, compound="right")
     v.tabbar.select(v.tabselected)
 
     updatetitle()
@@ -77,11 +75,8 @@ def openfile(e="", path=""):
 
     isopen = False
 
-    for i in tabs:
-        print(i[2])
-        print(file.name)
-        if i[2] == file.name:
-            isopen=True
+    for i in tabs: 
+        if i[2] == file.name: isopen=True
 
     if not isopen:
         if v.textwidget.get("1.0", "end").replace("\n", "") != "":
@@ -91,9 +86,7 @@ def openfile(e="", path=""):
 
         file.close()
 
-        v.tabbar.tab(
-            v.tabselected, text=tabs[v.tabselected][0], image=v.closeimg, compound="right"
-        )
+        v.tabbar.tab(v.tabselected, text=tabs[v.tabselected][0], image=v.closeimg, compound="right")
         v.textwidget.insert("1.0", content)
         v.filedir.configure(text=tabs[v.tabselected][2])
 
@@ -125,9 +118,7 @@ def setlexer():
             lexer = get_lexer_for_filename(tabs[v.tabselected][0])
         except pygments.util.ClassNotFound:
             lexer = pygments.lexers.TextLexer
-        lexer = "pygments.lexers." + str(lexer).split(".")[-1].removesuffix(
-            ">"
-        ).removesuffix("'")
+        lexer = "pygments.lexers." + str(lexer).split(".")[-1].removesuffix(">").removesuffix("'")
         v.textwidget._set_lexer(eval(lexer))
 
 
