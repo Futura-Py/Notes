@@ -75,22 +75,31 @@ def openfile(e="", path=""):
         file = open(path, "r")
         content = file.read()
 
-    if v.textwidget.get("1.0", "end").replace("\n", "") != "":
-        new()
+    isopen = False
 
-    updatetab(file)
+    for i in tabs:
+        print(i[2])
+        print(file.name)
+        if i[2] == file.name:
+            isopen=True
 
-    file.close()
+    if not isopen:
+        if v.textwidget.get("1.0", "end").replace("\n", "") != "":
+            new()
 
-    v.tabbar.tab(
-        v.tabselected, text=tabs[v.tabselected][0], image=v.closeimg, compound="right"
-    )
-    v.textwidget.insert("1.0", content)
-    v.filedir.configure(text=tabs[v.tabselected][2])
+        updatetab(file)
 
-    updatetitle()
-    setlexer()
-    redrawlinenums()
+        file.close()
+
+        v.tabbar.tab(
+            v.tabselected, text=tabs[v.tabselected][0], image=v.closeimg, compound="right"
+        )
+        v.textwidget.insert("1.0", content)
+        v.filedir.configure(text=tabs[v.tabselected][2])
+
+        updatetitle()
+        setlexer()
+        redrawlinenums()
 
 
 def opentab(event, tabdeleted=False):
