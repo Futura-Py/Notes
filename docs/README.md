@@ -1,6 +1,6 @@
 <div align="center">
 
-# Onyx
+# Futura Notes
 <a style="text-decoration:none" href="https://github.com/not-nef/txt2/releases">
     <img src="https://img.shields.io/github/v/release/futura-py/notes?display_name=release&include_prereleases" alt="Releases" />
 </a>
