@@ -1,83 +1,53 @@
-ver = "0.9 beta"
+from tkinter import Tk, Label
+from tkinter.ttk import Button
+from sv_ttk import set_theme
+from ntkutils import placeappincenter
 
-import os
-import tkinter
-from tkinter import ttk
+from editor import Manager
 
-import ntkutils
-import sv_ttk
-from tkinterdnd2 import *
+onlaunch = "new"
+screenheight = 0
+screenwidth = 0
 
-import config
-import editor
-import generatesize as size
-import settings.UI as settings
-import tabmanager
-import utils as u
-import vars as v
-from themes import dark, light
+class StartupWindow(Tk):
+    def __init__(self):
+        super().__init__()
+        self.geometry("250x300")
+        self.withdraw()
+        self.title("Futura Notes")
+        self.resizable(False, False)
+        set_theme("dark")
+        placeappincenter(self)
+        self.update_idletasks()
 
-v.cfg = config.get()
+        self.title = Label(self, text="Futura Notes", font=("Segoe UI", 20, "bold")).pack(anchor="nw", padx=20, pady=20)
+        self.btncreatenew = Button(self, text="Create New File", command=self.openmainwindow).pack(anchor="nw", padx=20)
 
-if u.dark():
-    theme = dark.get()
-else:
-    theme = light.get()
+        self.deiconify()
 
-root = TkinterDnD.Tk()
-root.geometry("200x350")
-root.withdraw()
-ntkutils.windowsetup(root, title="Futura Notes", resizeable=False)
-sv_ttk.set_theme(v.cfg["theme"].lower())
-root.update_idletasks()
-ntkutils.placeappincenter(root)
-root.update_idletasks()
+    def openmainwindow(self):
+        self.destroy()
 
+class App(Tk):
+    def __init__(self, onlaunch="new"):
+        super().__init__()
+        self.withdraw()
 
-def preparewindow():
-    root.title("Futura Notes - Untitled *")
-    ntkutils.clearwin(root)
-    root.geometry(size.get())
-    root.update()
-    ntkutils.placeappincenter(root)
-    root.resizable(True, True)
-    editor.build(theme, root, ver)
+        self.h = self.winfo_screenheight() - 200
+        self.w = self.winfo_screenwidth() - 100
+        self.x = int((self.winfo_screenwidth() - self.w) / 2)
+        self.y = int((self.winfo_screenheight() - self.h - 75) / 2)
 
+        self.geometry("{}x{}+{}+{}".format(self.w, self.h, self.x, self.y))
+        self.deiconify()
 
-def openfile(path):
-    preparewindow()
-    tabmanager.openfile(path=path)
-
-def settingss():
-    preparewindow()
-    settings.build()
+        self.manager = Manager(self)
+        self.manager.pack(fill="both", expand=True)
 
 
-title = tkinter.Label(root, text="Futura Notes", font=("Segoe UI", 20, "bold")).pack(anchor="nw", padx=20, pady=20)
-btncreatenew = ttk.Button(root, text="Create New File", command=preparewindow).pack(anchor="nw", padx=20)
-btnopenfile = ttk.Button(root, text="Open File", command=lambda: openfile(path="")).pack(anchor="nw", pady=10, padx=20)
-btnopendir = ttk.Button(root, text="Open Directory", state="disabled").pack(anchor="nw", padx=20)
-btnopenlast = ttk.Button(root, text="Open last file", command=lambda: openfile(path=content))
-btnopenlast.pack(anchor="nw", padx=20, pady=20)
 
-if os.path.isfile("lastfile.txt"):
-    file = open("lastfile.txt", "r")
-    content = file.read()
-    file.close()
-
-    if not os.path.isfile(content):
-        btnopenlast.configure(state="disabled")
-else:
-    btnopenlast.configure(state="disabled")
-
-root.update_idletasks()
-root.deiconify()
-root.mainloop()
-
-# Save path of last opened file
-content = tabmanager.tabs[v.tabselected][2]
-
-if content != "unsaved":
-    file = open("lastfile.txt", "w+")
-    file.write(content)
-    file.close()
+if __name__ == "__main__":
+    start = StartupWindow()
+    start.mainloop()
+    main = App()
+    main.mainloop()
