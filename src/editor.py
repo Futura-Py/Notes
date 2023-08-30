@@ -1,7 +1,6 @@
 from tkinter.ttk import Notebook
-from tkinter import _Cursor, _Relief, _ScreenUnits, _TakeFocusValue, Frame, Misc
+from tkinter import Frame
 from typing import Any
-from typing_extensions import Literal
 
 class Manager(Notebook):
     def __init__(self, *args):

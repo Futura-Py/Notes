@@ -1,13 +1,7 @@
 from tkinter import Tk, Label
 from tkinter.ttk import Button
 from sv_ttk import set_theme
-from ntkutils import placeappincenter
-
 from editor import Manager
-
-onlaunch = "new"
-screenheight = 0
-screenwidth = 0
 
 class StartupWindow(Tk):
     def __init__(self):
@@ -17,7 +11,6 @@ class StartupWindow(Tk):
         self.title("Futura Notes")
         self.resizable(False, False)
         set_theme("dark")
-        placeappincenter(self)
         self.update_idletasks()
 
         self.title = Label(self, text="Futura Notes", font=("Segoe UI", 20, "bold")).pack(anchor="nw", padx=20, pady=20)
@@ -29,7 +22,7 @@ class StartupWindow(Tk):
         self.destroy()
 
 class App(Tk):
-    def __init__(self, onlaunch="new"):
+    def __init__(self):
         super().__init__()
         self.withdraw()
 
