@@ -1,6 +1,5 @@
 from tkinter.ttk import Notebook
 from tkinter import Frame
-from typing import Any
 
 class Manager(Notebook):
     def __init__(self, *args):
