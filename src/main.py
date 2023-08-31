@@ -1,4 +1,4 @@
-from tkinter import Tk, Label
+from tkinter import Tk, Label, Menu
 from tkinter.ttk import Button
 from sv_ttk import SunValleyTtkTheme
 from editor import Manager
@@ -24,7 +24,6 @@ class StartupWindow(Tk):
 class App(Tk):
     def __init__(self):
         super().__init__()
-        self.withdraw()
 
         SunValleyTtkTheme.initialized = False
         SunValleyTtkTheme.set_theme("dark")
@@ -35,11 +34,17 @@ class App(Tk):
         self.y = int((self.winfo_screenheight() - self.h - 75) / 2)
 
         self.geometry("{}x{}+{}+{}".format(self.w, self.h, self.x, self.y))
-        self.deiconify()
 
         self.manager = Manager(self)
         self.manager.pack(fill="both", expand=True)
         self.manager.newtab("Test")
+
+        self.menubar = Menu(self, tearoff=False)
+        self.config(menu=self.menubar)
+
+        self.filemenu = Menu(self.menubar, tearoff=False, bg="white")
+
+        self.menubar.add_cascade(label="File", menu=self.filemenu)
 
 
 

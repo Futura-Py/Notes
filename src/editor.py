@@ -1,5 +1,5 @@
 from tkinter.ttk import Notebook, Style
-from tkinter import Frame
+from tkinter import Frame, Label
 from tkinter.font import Font
 from chlorophyll import CodeView
 from tklinenums import TkLineNumbers
@@ -19,6 +19,9 @@ class Editor(Frame):
         self.footer = Frame(self, width=self.winfo_width(), height=25)
         self.footer.pack(side="bottom", fill="x")
         self.footer.pack_propagate(False)
+
+        self.filedir = Label(self.footer, text="unsaved")
+        self.filedir.pack(side="left")
 
         self.text = CodeView(self, bg="#1c1c1c", lexer=TextLexer)
         self.text._set_color_scheme("ayu-dark")
