@@ -1,6 +1,6 @@
 from tkinter import Frame, Label, PhotoImage
 from tkinter.font import Font
-from tkinter.ttk import Notebook, Style
+from tkinter.ttk import Notebook, Style, Scrollbar
 
 from chlorophyll import CodeView
 from pygments.lexers import TextLexer
@@ -23,9 +23,13 @@ class Manager(Notebook):
         self.add(Editor(), text=name, image=self.closeimg, compound="right")
 
     def closetab(self, event):
-        print("close tab")
+        self.before = self.index(f"@{event.x},{event.y}")
+        self.after = self.before + 1
+        self.forget(self.tabs()[self.before:self.after][0])
+        if len(self.tabs()) == 0: self.master.destroy()
 
     def on_click(self, event) -> None:
+        self.update_idletasks()
         if event.widget.identify(event.x, event.y) == "label":
             # find the right edge of the top label (including close button)
             right = event.x
@@ -48,14 +52,16 @@ class Editor(Frame):
         self.filedir = Label(self.footer, text="unsaved")
         self.filedir.pack(side="left")
 
+        self.scrollbar = Scrollbar(self)
+        self.scrollbar.pack(side="right", fill="y")
+
         self.text = CodeView(self, bg="#1c1c1c", lexer=TextLexer)
         self.text._set_color_scheme("ayu-dark")
         self.text.pack(side="right", fill="both", expand=True)
+        self.text._vs.grid_remove()
         self.text._hs.grid_remove()
 
-        self.style = Style()
-        self.style.configure("TLineNumbers", background="#1c1c1c", foreground="white")
-        self.linenumbersfont = Font(family="Courier New bold", name="TkLineNumsFont")
+        self.scrollbar.configure(command=self.text.yview)
 
         self.linenumbers = TkLineNumbers(self, self.text, "right")
         self.linenumbers.pack(side="left", fill="y")
@@ -65,6 +71,11 @@ class Editor(Frame):
         self.text.bind("<BackSpace>", lambda event: self.after_idle(self.linenumbers.redraw), add=True)
         self.text.bind("<Control-v>", lambda event: self.after_idle(self.linenumbers.redraw), add=True)
 
-        self.text["yscrollcommand"] = self.linenumbers.redraw
-        self.text._line_numbers.destroy()
+        self.text._line_numbers.destroy() # mine look cooler
         self.text._line_numbers = self.linenumbers
+
+        self.text["yscrollcommand"] = self.yscroll
+
+    def yscroll(self, *args):
+        self.scrollbar.set(*args)
+        self.linenumbers.redraw(*args)

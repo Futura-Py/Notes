@@ -1,4 +1,5 @@
 from tkinter import Label, Menu, Tk
+from tkinter.font import Font
 from tkinter.ttk import Button
 
 from sv_ttk import SunValleyTtkTheme
@@ -48,6 +49,8 @@ class App(Tk):
         self.filemenu = Menu(self.menubar, tearoff=False, bg="white")
 
         self.menubar.add_cascade(label="File", menu=self.filemenu)
+
+        self.filemenu.add_command(label="New", command=lambda:self.manager.newtab("Test"), foreground="black")
 
 
 
