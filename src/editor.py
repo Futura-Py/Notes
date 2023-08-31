@@ -22,6 +22,8 @@ class Manager(Notebook):
     def newtab(self, name):
         self.add(Editor(), text=name, image=self.closeimg, compound="right")
 
+    # The next two functions are heavily inspired by Akuli:
+    # https://github.com/Akuli/porcupine/blob/main/porcupine/plugins/tab_closing.py
     def closetab(self, event):
         self.before = self.index(f"@{event.x},{event.y}")
         self.after = self.before + 1
@@ -76,6 +78,7 @@ class Editor(Frame):
 
         self.text["yscrollcommand"] = self.yscroll
 
+    # Extra function so that the linenumbers and the scrollbar dont fight over the yscrollcommand
     def yscroll(self, *args):
         self.scrollbar.set(*args)
         self.linenumbers.redraw(*args)
