@@ -1,4 +1,5 @@
-from tkinter import Frame, Label
+from pathlib import Path
+from tkinter import Frame, Label, PhotoImage
 from tkinter.font import Font
 from tkinter.ttk import Notebook, Style
 
@@ -11,8 +12,31 @@ class Manager(Notebook):
     def __init__(self, *args):
         super().__init__(*args)
 
+        # Remove dotted line :O
+        self.style = Style()
+        self.style.configure("TNotebook.Tab", focuscolor=self.style.configure(".")["background"])
+
+        self.closeimg = PhotoImage(file="assets/close_light.png")
+
+        self.bind("<Button-1>", self.on_click, add=True)
+
     def newtab(self, name):
-        self.add(Editor(), text=name)
+        self.add(Editor(), text=name, image=self.closeimg, compound="right")
+
+    def closetab(self, event):
+        print("close tab")
+
+    def on_click(self, event) -> None:
+        if event.widget.identify(event.x, event.y) == "label":
+            # find the right edge of the top label (including close button)
+            right = event.x
+            while event.widget.identify(right, event.y) == "label":
+                right += 1
+
+            # hopefully the image is on the right edge of the label and there's no padding :O
+            if event.x >= right - self.closeimg.width():
+                self.closetab(event)
+
 
 class Editor(Frame):
     def __init__(self, *args):
