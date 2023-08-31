@@ -1,4 +1,3 @@
-from pathlib import Path
 from tkinter import Frame, Label, PhotoImage
 from tkinter.font import Font
 from tkinter.ttk import Notebook, Style
@@ -54,8 +53,8 @@ class Editor(Frame):
         self.text.pack(side="right", fill="both", expand=True)
         self.text._hs.grid_remove()
 
-        self.linenumbersstyle = Style()
-        self.linenumbersstyle.configure("TLineNumbers", background="#1c1c1c", foreground="white")
+        self.style = Style()
+        self.style.configure("TLineNumbers", background="#1c1c1c", foreground="white")
         self.linenumbersfont = Font(family="Courier New bold", name="TkLineNumsFont")
 
         self.linenumbers = TkLineNumbers(self, self.text, "right")
