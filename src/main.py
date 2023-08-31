@@ -1,7 +1,10 @@
-from tkinter import Tk, Label, Menu
+from tkinter import Label, Menu, Tk
 from tkinter.ttk import Button
+
 from sv_ttk import SunValleyTtkTheme
+
 from editor import Manager
+
 
 class StartupWindow(Tk):
     def __init__(self):

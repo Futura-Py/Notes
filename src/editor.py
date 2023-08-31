@@ -1,9 +1,11 @@
-from tkinter.ttk import Notebook, Style
 from tkinter import Frame, Label
 from tkinter.font import Font
+from tkinter.ttk import Notebook, Style
+
 from chlorophyll import CodeView
-from tklinenums import TkLineNumbers
 from pygments.lexers import TextLexer
+from tklinenums import TkLineNumbers
+
 
 class Manager(Notebook):
     def __init__(self, *args):
