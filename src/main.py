@@ -1,6 +1,6 @@
 from tkinter import Tk, Label
 from tkinter.ttk import Button
-from sv_ttk import set_theme
+from sv_ttk import SunValleyTtkTheme
 from editor import Manager
 
 class StartupWindow(Tk):
@@ -10,7 +10,7 @@ class StartupWindow(Tk):
         self.withdraw()
         self.title("Futura Notes")
         self.resizable(False, False)
-        set_theme("dark")
+        SunValleyTtkTheme.set_theme("dark")
         self.update_idletasks()
 
         self.title = Label(self, text="Futura Notes", font=("Segoe UI", 20, "bold")).pack(anchor="nw", padx=20, pady=20)
@@ -26,6 +26,9 @@ class App(Tk):
         super().__init__()
         self.withdraw()
 
+        SunValleyTtkTheme.initialized = False
+        SunValleyTtkTheme.set_theme("dark")
+
         self.h = self.winfo_screenheight() - 200
         self.w = self.winfo_screenwidth() - 100
         self.x = int((self.winfo_screenwidth() - self.w) / 2)
@@ -36,6 +39,7 @@ class App(Tk):
 
         self.manager = Manager(self)
         self.manager.pack(fill="both", expand=True)
+        self.manager.newtab("Test")
 
 
 
