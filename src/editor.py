@@ -1,6 +1,8 @@
+from os.path import basename
 from tkinter import Frame, Label, PhotoImage
+from tkinter.filedialog import askopenfile
 from tkinter.font import Font
-from tkinter.ttk import Notebook, Style, Scrollbar
+from tkinter.ttk import Notebook, Style, Scrollbar, Button
 
 from chlorophyll import CodeView
 from pygments.lexers import TextLexer
@@ -17,10 +19,23 @@ class Manager(Notebook):
 
         self.closeimg = PhotoImage(file="assets/close_light.png")
 
+        self.home = Frame(self)
+        self.title = Label(self.home, text="Futura Notes", font=("Segoe UI", 20, "bold")).pack(anchor="nw", padx=20, pady=20)
+        self.btncreatenew = Button(self.home, text="Create New File", command=self.newtab).pack(anchor="nw", padx=20)
+        self.btnopen = Button(self.home, text="Open File", command=self.openfile).pack(anchor="nw", padx=20, pady=20)
+        self.add(self.home, text="Home", image=self.closeimg, compound="right")
+
         self.bind("<Button-1>", self.on_click, add=True)
 
-    def newtab(self, name):
-        self.add(Editor(), text=name, image=self.closeimg, compound="right")
+    def newtab(self, file=None):
+        self.add(Editor(file), text="Untitled" if file==None else basename(file.name), image=self.closeimg, compound="right")
+        self.select(self.index(self.select()) + 1) # Select newly opened tab
+
+    def openfile(self):
+        self.file = askopenfile()
+        self.newtab(self.file)
+        self.file.close()
+        
 
     # The next two functions are heavily inspired by Akuli:
     # https://github.com/Akuli/porcupine/blob/main/porcupine/plugins/tab_closing.py
@@ -44,7 +59,7 @@ class Manager(Notebook):
 
 
 class Editor(Frame):
-    def __init__(self, *args):
+    def __init__(self, file, *args):
         super().__init__(*args)
 
         self.footer = Frame(self, width=self.winfo_width(), height=25)
@@ -78,7 +93,18 @@ class Editor(Frame):
 
         self.text["yscrollcommand"] = self.yscroll
 
+
+        if file != None:
+            self.text.insert("1.0", file.read())
+
+
     # Extra function so that the linenumbers and the scrollbar dont fight over the yscrollcommand
     def yscroll(self, *args):
         self.scrollbar.set(*args)
         self.linenumbers.redraw(*args)
+
+class Home(Frame):
+    def __init__(self):
+        super().__init__()
+
+

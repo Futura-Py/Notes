@@ -1,29 +1,8 @@
-from tkinter import Label, Menu, Tk
-from tkinter.font import Font
-from tkinter.ttk import Button
+from tkinter import Menu, Tk
 
 from sv_ttk import SunValleyTtkTheme
 
 from editor import Manager
-
-
-class StartupWindow(Tk):
-    def __init__(self):
-        super().__init__()
-        self.geometry("250x300")
-        self.withdraw()
-        self.title("Futura Notes")
-        self.resizable(False, False)
-        SunValleyTtkTheme.set_theme("dark")
-        self.update_idletasks()
-
-        self.title = Label(self, text="Futura Notes", font=("Segoe UI", 20, "bold")).pack(anchor="nw", padx=20, pady=20)
-        self.btncreatenew = Button(self, text="Create New File", command=self.openmainwindow).pack(anchor="nw", padx=20)
-
-        self.deiconify()
-
-    def openmainwindow(self):
-        self.destroy()
 
 class App(Tk):
     def __init__(self):
@@ -41,8 +20,6 @@ class App(Tk):
 
         self.manager = Manager(self)
         self.manager.pack(fill="both", expand=True)
-        self.manager.newtab("Test")
-
         self.menubar = Menu(self, tearoff=False)
         self.config(menu=self.menubar)
 
@@ -50,12 +27,11 @@ class App(Tk):
 
         self.menubar.add_cascade(label="File", menu=self.filemenu)
 
-        self.filemenu.add_command(label="New", command=lambda:self.manager.newtab("Test"), foreground="black")
+        self.filemenu.add_command(label="New", command=lambda:self.manager.newtab(), foreground="black")
+        self.filemenu.add_command(label="Open", command=self.manager.openfile, foreground="black")
 
 
 
 if __name__ == "__main__":
-    start = StartupWindow()
-    start.mainloop()
     main = App()
     main.mainloop()
