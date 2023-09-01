@@ -29,7 +29,7 @@ class Manager(Notebook):
 
     def newtab(self, file=None):
         self.add(Editor(file), text="Untitled" if file==None else basename(file.name), image=self.closeimg, compound="right")
-        self.select(self.index(self.select()) + 1) # Select newly opened tab
+        self.select(len(self.tabs()) - 1) # Select newly opened tab
 
     def openfile(self):
         self.file = askopenfile()
