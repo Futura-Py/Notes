@@ -1,8 +1,8 @@
 from os.path import basename
 from tkinter import Frame, Label, PhotoImage
 from tkinter.filedialog import askopenfile
-from tkinter.font import Font
-from tkinter.ttk import Notebook, Style, Scrollbar, Button
+from tkinter.ttk import Button, Notebook, Scrollbar, Style
+from toml import load
 
 from chlorophyll import CodeView
 from pygments.lexers import TextLexer
@@ -72,11 +72,13 @@ class Editor(Frame):
         self.scrollbar = Scrollbar(self)
         self.scrollbar.pack(side="right", fill="y")
 
-        self.text = CodeView(self, bg="#1c1c1c", lexer=TextLexer)
-        self.text._set_color_scheme("ayu-dark")
+        self.text = CodeView(self, lexer=TextLexer)
         self.text.pack(side="right", fill="both", expand=True)
         self.text._vs.grid_remove()
         self.text._hs.grid_remove()
+
+        self.color_scheme = load("src/dark.toml")
+        self.text._set_color_scheme(self.color_scheme)
 
         self.scrollbar.configure(command=self.text.yview)
 

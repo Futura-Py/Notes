@@ -4,6 +4,7 @@ from sv_ttk import SunValleyTtkTheme
 
 from editor import Manager
 
+
 class App(Tk):
     def __init__(self):
         super().__init__()
