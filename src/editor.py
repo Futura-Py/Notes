@@ -98,6 +98,7 @@ class Editor(Frame):
 
         if file != None:
             self.text.insert("1.0", file.read())
+            self.filedir.configure(text=file.name)
 
 
     # Extra function so that the linenumbers and the scrollbar dont fight over the yscrollcommand
