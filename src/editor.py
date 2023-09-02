@@ -35,6 +35,9 @@ class Manager(Notebook):
         self.file = askopenfile()
         self.newtab(self.file)
         self.file.close()
+
+    def save(self):
+        pass
         
 
     # The next two functions are heavily inspired by Akuli:

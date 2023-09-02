@@ -3,7 +3,10 @@ from tkinter import Menu, Tk
 from sv_ttk import SunValleyTtkTheme
 
 from editor import Manager
+from platform import system
 
+if system() == "Linux": LINUX = True
+else: LINUX = False
 
 class App(Tk):
     def __init__(self):
@@ -28,8 +31,9 @@ class App(Tk):
 
         self.menubar.add_cascade(label="File", menu=self.filemenu)
 
-        self.filemenu.add_command(label="New", command=lambda:self.manager.newtab(), foreground="black")
-        self.filemenu.add_command(label="Open", command=self.manager.openfile, foreground="black")
+        self.filemenu.add_command(label="New", command=lambda:self.manager.newtab(), foreground="white" if LINUX else "black")
+        self.filemenu.add_command(label="Open", command=self.manager.openfile, foreground="white" if LINUX else "black")
+        self.filemenu.add_command(label="Save", command=self.manager.save, foreground="white" if LINUX else "black")
 
 
 
