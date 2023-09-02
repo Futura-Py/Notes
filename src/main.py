@@ -31,9 +31,10 @@ class App(Tk):
 
         self.menubar.add_cascade(label="File", menu=self.filemenu)
 
-        self.filemenu.add_command(label="New", command=lambda:self.manager.newtab(), foreground="white" if LINUX else "black")
+        self.filemenu.add_command(label="New", command=self.manager.newtab, foreground="white" if LINUX else "black")
         self.filemenu.add_command(label="Open", command=self.manager.openfile, foreground="white" if LINUX else "black")
         self.filemenu.add_command(label="Save", command=self.manager.save, foreground="white" if LINUX else "black")
+        self.filemenu.add_command(label="Save As", command=self.manager.saveas, foreground="white" if LINUX else "black")
 
 
 

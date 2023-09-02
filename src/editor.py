@@ -1,6 +1,6 @@
-from os.path import basename
+from os.path import basename, isfile
 from tkinter import Frame, Label, PhotoImage
-from tkinter.filedialog import askopenfile
+from tkinter.filedialog import askopenfile, asksaveasfile
 from tkinter.ttk import Button, Notebook, Scrollbar, Style
 from toml import load
 
@@ -37,7 +37,24 @@ class Manager(Notebook):
         self.file.close()
 
     def save(self):
-        pass
+        self.editor = self.nametowidget(self.select()) # Retrieves Editor Object of currently opened Tab
+        self.filetosave = self.editor.filedir.cget("text")
+        if isfile(self.filetosave):
+            self.file2 = open(self.filetosave, "w")
+            self.file2.write(self.editor.text.get("1.0", "end"))
+            self.file2.close()
+        else:
+            self.saveas()
+
+    def saveas(self):
+        self.editor = self.nametowidget(self.select())
+        self.file3 = asksaveasfile()
+        if self.file3 != None:
+            self.file3.write(self.editor.text.get("1.0", "end"))
+            self.editor.filedir.configure(text=self.file3.name)
+            self.tab(self.select(), text=basename(self.file3.name))
+            self.file3.close()
+
         
 
     # The next two functions are heavily inspired by Akuli:
@@ -98,10 +115,10 @@ class Editor(Frame):
 
         self.text["yscrollcommand"] = self.yscroll
 
-
         if file != None:
             self.text.insert("1.0", file.read())
             self.filedir.configure(text=file.name)
+            file.close()
 
 
     # Extra function so that the linenumbers and the scrollbar dont fight over the yscrollcommand
