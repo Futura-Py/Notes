@@ -1,6 +1,6 @@
 from os.path import basename, isfile
+from tkfilebrowser import askopenfilename, asksaveasfilename
 from tkinter import Frame, Label, PhotoImage
-from tkinter.filedialog import askopenfile, asksaveasfile
 from tkinter.ttk import Button, Notebook, Style
 from toml import load
 
@@ -31,7 +31,7 @@ class Manager(Notebook):
         self.select(self.tabs()[-1]) # Select newly opened tab
 
     def openfile(self):
-        self.file = askopenfile()
+        self.file = open(askopenfilename(), "r")
         self.newtab(self.file)
         self.file.close()
 
@@ -47,7 +47,7 @@ class Manager(Notebook):
 
     def saveas(self):
         self.editor = self.nametowidget(self.select())
-        self.file3 = asksaveasfile()
+        self.file3 = open(asksaveasfilename(), "w")
         if self.file3 != None:
             self.file3.write(self.editor.text.get("1.0", "end"))
             self.editor.filedir.configure(text=self.file3.name)
