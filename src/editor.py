@@ -1,12 +1,11 @@
 from os.path import basename, isfile
 from tkinter import Frame, Label, PhotoImage
 from tkinter.filedialog import askopenfile, asksaveasfile
-from tkinter.ttk import Button, Notebook, Scrollbar, Style
+from tkinter.ttk import Button, Notebook, Style
 from toml import load
 
 from chlorophyll import CodeView
 from pygments.lexers import TextLexer
-from tklinenums import TkLineNumbers
 
 
 class Manager(Notebook):
