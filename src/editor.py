@@ -102,8 +102,4 @@ class Editor(Frame):
             self.filedir.configure(text=file.name)
             file.close()
 
-class Home(Frame):
-    def __init__(self):
-        super().__init__()
-
 
