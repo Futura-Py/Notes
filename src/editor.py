@@ -29,7 +29,7 @@ class Manager(Notebook):
 
     def newtab(self, file=None):
         self.add(Editor(file), text="Untitled" if file==None else basename(file.name), image=self.closeimg, compound="right")
-        self.select(len(self.tabs()) - 1) # Select newly opened tab
+        self.select(self.tabs()[-1]) # Select newly opened tab
 
     def openfile(self):
         self.file = askopenfile()
@@ -54,8 +54,7 @@ class Manager(Notebook):
             self.editor.filedir.configure(text=self.file3.name)
             self.tab(self.select(), text=basename(self.file3.name))
             self.file3.close()
-
-        
+    
 
     # The next two functions are heavily inspired by Akuli:
     # https://github.com/Akuli/porcupine/blob/main/porcupine/plugins/tab_closing.py
