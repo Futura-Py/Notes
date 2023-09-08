@@ -88,42 +88,19 @@ class Editor(Frame):
         self.filedir = Label(self.footer, text="unsaved")
         self.filedir.pack(side="left")
 
-        self.scrollbar = Scrollbar(self)
-        self.scrollbar.pack(side="right", fill="y")
-
         self.text = CodeView(self, lexer=TextLexer)
         self.text.pack(side="right", fill="both", expand=True)
-        self.text._vs.grid_remove()
         self.text._hs.grid_remove()
 
         self.color_scheme = load("src/dark.toml")
         self.text._set_color_scheme(self.color_scheme)
 
-        self.scrollbar.configure(command=self.text.yview)
-
-        self.linenumbers = TkLineNumbers(self, self.text, "right")
-        self.linenumbers.pack(side="left", fill="y")
-        self.linenumbers.configure(borderwidth=0)
-
-        self.text.bind("<Return>", lambda event: self.after_idle(self.linenumbers.redraw), add=True)
-        self.text.bind("<BackSpace>", lambda event: self.after_idle(self.linenumbers.redraw), add=True)
-        self.text.bind("<Control-v>", lambda event: self.after_idle(self.linenumbers.redraw), add=True)
-
-        self.text._line_numbers.destroy() # mine look cooler
-        self.text._line_numbers = self.linenumbers
-
-        self.text["yscrollcommand"] = self.yscroll
+        self.text._line_numbers.configure(borderwidth=0)
 
         if file != None:
             self.text.insert("1.0", file.read())
             self.filedir.configure(text=file.name)
             file.close()
-
-
-    # Extra function so that the linenumbers and the scrollbar dont fight over the yscrollcommand
-    def yscroll(self, *args):
-        self.scrollbar.set(*args)
-        self.linenumbers.redraw(*args)
 
 class Home(Frame):
     def __init__(self):
