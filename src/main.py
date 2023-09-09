@@ -1,4 +1,4 @@
-from tkinter import Menu, PhotoImage
+from tkinter import Menu, PhotoImage, Toplevel
 from tkinterdnd2 import Tk, DND_FILES
 
 from sv_ttk import set_theme
@@ -15,6 +15,7 @@ class App(Tk):
     def __init__(self):
         super().__init__()
 
+        self.title("Futura Notes")
         set_theme(theme)
 
         self.checkimg = PhotoImage(file="assets/check_{}.png".format(theme))
@@ -41,6 +42,8 @@ class App(Tk):
         self.filemenu.add_command(label="Save As", command=self.manager.saveas, foreground="white" if LINUX and theme == "dark" else "black")
         self.filemenu.add_separator()
         self.filemenu.add_command(label="Preview", command=self.openpreview, foreground="white" if LINUX and theme == "dark" else "black", compound="right")
+        self.filemenu.add_separator()
+        self.filemenu.add_command(label="Properties", command=self.openproperties, foreground="white" if LINUX and theme == "dark" else "black")
 
         self.drop_target_register(DND_FILES)
         self.dnd_bind("<<Drop>>", self.filedrop)
@@ -55,6 +58,14 @@ class App(Tk):
         self.manager.newtab(self.file)
         self.file.close()
 
+    def openproperties(self):
+        self.properties = Properties(self)
+
+class Properties(Toplevel):
+    def __init__(self, *args):
+        super().__init__(*args)
+
+        self.title("Properties Window")
 
 
 if __name__ == "__main__":

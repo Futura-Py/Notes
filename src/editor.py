@@ -1,7 +1,7 @@
 from markdown import markdown
 from os.path import basename, isfile
 from tkfilebrowser import askopenfilename, asksaveasfilename
-from tkinter import Frame, Label, PhotoImage, TclError
+from tkinter import Frame, Label, PhotoImage
 from tkinter.ttk import Button, Notebook, Style
 from tkinterweb import HtmlFrame
 from toml import load
