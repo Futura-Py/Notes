@@ -130,7 +130,7 @@ class Editor(Frame):
         self.updatepreview()
 
     def updatepreview(self, *args):
-        self.after_idle(lambda: self.preview.load_html(markdown(self.text.get("1.0", "end").replace("\n", "<br>"))))
+        self.after_idle(lambda: self.preview.load_html(markdown(self.text.get("1.0", "end"))))  
 
 
 
