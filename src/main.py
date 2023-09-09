@@ -1,17 +1,22 @@
+from os import rename
 from os.path import isfile
-from tkinter import Menu, PhotoImage, Toplevel, Label
-from tkinter.ttk import Entry
+from tkinter import Menu, PhotoImage, Toplevel, Label, Frame
+from tkinter.ttk import Entry, Button
 from tkinterdnd2 import Tk, DND_FILES
 
 from sv_ttk import set_theme
 
+from dialogs import show_message
 from editor import Manager
 from platform import system
+
+BLOCKEDCHARS = "\\/:*?\"<>|"
 
 if system() == "Linux": LINUX = True
 else: LINUX = False
 
 theme = "dark"
+newfile = ""
 
 class App(Tk):
     def __init__(self):
@@ -62,15 +67,23 @@ class App(Tk):
 
     def openproperties(self):
         self.filetoopen = self.manager.getcurrentchild().filedir.cget("text")
+
         if isfile(self.filetoopen): 
             self.properties = Properties(self.filetoopen, self)
+            self.wait_window(self.properties)
+
+        if isfile(newfile):
+            self.manager.forget(self.manager.select())
+            self.manager.newtab(open(newfile, "r"))
 
 class Properties(Toplevel):
     def __init__(self, file, *args):
         super().__init__(*args)
 
+        self.file = file
+
         self.title("File Properties")
-        self.geometry("350x400")
+        self.geometry("350x175")
         self.resizable(False, False)
 
         self.imagefile = "assets/filetypes/{}_{}.png".format(file.split(".")[-1], theme)
@@ -84,6 +97,39 @@ class Properties(Toplevel):
 
         self.filepath = Label(self, text="/".join(file.split("/")[:-1]), font=("Segoe UI", 10), width=27, anchor="w")
         self.filepath.pack(anchor="ne", padx=15)
+
+        self.btnframe = Frame(self, width=320, height=40)
+        self.btnframe.pack_propagate(False)
+
+        self.cancelbtn = Button(self.btnframe, text="Cancel", command=self.cancel, width=14).pack(side="left")
+        self.applybtn = Button(self.btnframe, text="Apply", command=self.apply, width=14).pack(side="right")
+
+        self.btnframe.pack(anchor="nw", padx=15, pady=15)
+
+    def cancel(self):
+        global newfile
+
+        newfile = ""
+
+        self.destroy()
+
+    def apply(self):
+        global newfile # im sorry
+
+        for i in BLOCKEDCHARS:
+            if i in self.filename.get():
+                show_message(title="Invalid File Name", details="\nA File Name cannot contain one of the following characters:\n\n{}".format(BLOCKEDCHARS))
+                return
+            
+        newfile = self.file.split("/")
+        newfile[-1] = self.filename.get()
+        newfile = "/".join(newfile)
+
+        rename(self.file, newfile)
+
+        self.destroy()
+
+
 
 
 if __name__ == "__main__":
