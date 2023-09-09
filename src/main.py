@@ -1,4 +1,6 @@
-from tkinter import Menu, PhotoImage, Toplevel
+from os.path import isfile
+from tkinter import Menu, PhotoImage, Toplevel, Label
+from tkinter.ttk import Entry
 from tkinterdnd2 import Tk, DND_FILES
 
 from sv_ttk import set_theme
@@ -59,13 +61,29 @@ class App(Tk):
         self.file.close()
 
     def openproperties(self):
-        self.properties = Properties(self)
+        self.filetoopen = self.manager.getcurrentchild().filedir.cget("text")
+        if isfile(self.filetoopen): 
+            self.properties = Properties(self.filetoopen, self)
 
 class Properties(Toplevel):
-    def __init__(self, *args):
+    def __init__(self, file, *args):
         super().__init__(*args)
 
-        self.title("Properties Window")
+        self.title("File Properties")
+        self.geometry("350x400")
+        self.resizable(False, False)
+
+        self.imagefile = "assets/filetypes/{}_{}.png".format(file.split(".")[-1], theme)
+        if isfile(self.imagefile): self.image = PhotoImage(file=self.imagefile)
+        else: self.image = PhotoImage(file="assets/filetypes/other_{}.png".format(theme))
+        self.imagelabel = Label(self, image=self.image).place(x=5, y=5)
+
+        self.filename = Entry(self, width=25)
+        self.filename.insert(0, file.split("/")[-1])
+        self.filename.pack(anchor="ne", padx=15, pady=20)
+
+        self.filepath = Label(self, text="/".join(file.split("/")[:-1]), font=("Segoe UI", 10), width=27, anchor="w")
+        self.filepath.pack(anchor="ne", padx=15)
 
 
 if __name__ == "__main__":
