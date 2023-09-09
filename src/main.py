@@ -1,6 +1,6 @@
 from tkinter import Menu, Tk
 
-from sv_ttk import SunValleyTtkTheme
+from sv_ttk import set_theme
 
 from editor import Manager
 from platform import system
@@ -8,12 +8,13 @@ from platform import system
 if system() == "Linux": LINUX = True
 else: LINUX = False
 
+theme = "dark"
+
 class App(Tk):
     def __init__(self):
         super().__init__()
 
-        SunValleyTtkTheme.initialized = False
-        SunValleyTtkTheme.set_theme("dark")
+        set_theme(theme)
 
         self.h = self.winfo_screenheight() - 200
         self.w = self.winfo_screenwidth() - 100
@@ -22,7 +23,7 @@ class App(Tk):
 
         self.geometry("{}x{}+{}+{}".format(self.w, self.h, self.x, self.y))
 
-        self.manager = Manager(self)
+        self.manager = Manager(theme, self)
         self.manager.pack(fill="both", expand=True)
         self.menubar = Menu(self, tearoff=False)
         self.config(menu=self.menubar)

@@ -1,6 +1,6 @@
 [editor]
-bg = "#1c1c1c"
-fg = "#ffffff"
+bg = "#fafafa"
+fg = "#000000"
 select_bg = "#1b2733"
 inactive_select_bg = "#1b2733"
 caret = "#b3b1ad"

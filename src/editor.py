@@ -9,14 +9,16 @@ from pygments.lexers import TextLexer
 
 
 class Manager(Notebook):
-    def __init__(self, *args):
+    def __init__(self, theme, *args):
         super().__init__(*args)
+
+        self.theme = theme
 
         # Remove dotted line :O
         self.style = Style()
         self.style.configure("TNotebook.Tab", focuscolor=self.style.configure(".")["background"])
 
-        self.closeimg = PhotoImage(file="assets/close_light.png")
+        self.closeimg = PhotoImage(file="assets/close_{}.png".format(theme))
 
         self.home = Frame(self)
         self.title = Label(self.home, text="Futura Notes", font=("Segoe UI", 20, "bold")).pack(anchor="nw", padx=20, pady=20)
@@ -27,7 +29,7 @@ class Manager(Notebook):
         self.bind("<Button-1>", self.on_click, add=True)
 
     def newtab(self, file=None):
-        self.add(Editor(file), text="Untitled" if file==None else basename(file.name), image=self.closeimg, compound="right")
+        self.add(Editor(file, self.theme), text="Untitled" if file==None else basename(file.name), image=self.closeimg, compound="right")
         self.select(self.tabs()[-1]) # Select newly opened tab
 
     def openfile(self):
@@ -77,7 +79,7 @@ class Manager(Notebook):
 
 
 class Editor(Frame):
-    def __init__(self, file, *args):
+    def __init__(self, file, theme, *args):
         super().__init__(*args)
 
         self.footer = Frame(self, width=self.winfo_width(), height=25)
@@ -91,7 +93,7 @@ class Editor(Frame):
         self.text.pack(side="right", fill="both", expand=True)
         self.text._hs.grid_remove()
 
-        self.color_scheme = load("src/dark.toml")
+        self.color_scheme = load("src/{}.toml".format(theme))
         self.text._set_color_scheme(self.color_scheme)
 
         self.text._line_numbers.configure(borderwidth=0)
