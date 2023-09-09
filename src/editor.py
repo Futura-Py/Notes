@@ -1,7 +1,9 @@
+from markdown import markdown
 from os.path import basename, isfile
 from tkfilebrowser import askopenfilename, asksaveasfilename
 from tkinter import Frame, Label, PhotoImage
 from tkinter.ttk import Button, Notebook, Style
+from tkinterweb import HtmlFrame
 from toml import load
 
 from chlorophyll import CodeView
@@ -78,6 +80,9 @@ class Manager(Notebook):
             if event.x >= right - self.closeimg.width():
                 self.closetab(event)
 
+    def openpreview(self):
+        self.nametowidget(self.select()).openpreview()
+
 
 class Editor(Frame):
     def __init__(self, file, theme, *args):
@@ -91,7 +96,7 @@ class Editor(Frame):
         self.filedir.pack(side="left")
 
         self.text = CodeView(self)
-        self.text.pack(side="right", fill="both", expand=True)
+        self.text.pack(side="left", fill="both", expand=True)
         self.text._hs.grid_remove()
 
         self.color_scheme = load("src/{}.toml".format(theme))
@@ -112,5 +117,21 @@ class Editor(Frame):
             lexer = TextLexer
 
         return lexer
+    
+    def openpreview(self):
+        self.update()
+        self.preview = HtmlFrame(self, messages_enabled = False, width = int(self.winfo_width() / 2), vertical_scrollbar=False)
+        self.preview.pack_propagate = False
+        self.preview.pack(side="right", fill = "both", expand=True)
+        self.preview.on_link_click(self.updatepreview)
+
+        self.text.bind("<KeyPress>", self.updatepreview, add=True)
+        self.text.bind("<BackSpace>", self.updatepreview, add=True)
+        self.updatepreview()
+
+    def updatepreview(self, *args):
+        self.after_idle(lambda: self.preview.load_html(markdown(self.text.get("1.0", "end").replace("\n", "<br>"))))
+
+
 
 

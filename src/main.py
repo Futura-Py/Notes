@@ -36,6 +36,8 @@ class App(Tk):
         self.filemenu.add_command(label="Open", command=self.manager.openfile, foreground="white" if LINUX else "black")
         self.filemenu.add_command(label="Save", command=self.manager.save, foreground="white" if LINUX else "black")
         self.filemenu.add_command(label="Save As", command=self.manager.saveas, foreground="white" if LINUX else "black")
+        self.filemenu.add_separator()
+        self.filemenu.add_command(label="Preview", command=self.manager.openpreview, foreground="white" if LINUX else "black")
 
 
 
