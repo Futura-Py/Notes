@@ -1,7 +1,7 @@
 from markdown import markdown
 from os.path import basename, isfile
 from tkfilebrowser import askopenfilename, asksaveasfilename
-from tkinter import Frame, Label, PhotoImage
+from tkinter import Frame, Label, PhotoImage, TclError
 from tkinter.ttk import Button, Notebook, Style
 from tkinterweb import HtmlFrame
 from toml import load
@@ -17,11 +17,11 @@ class Manager(Notebook):
 
         self.theme = theme
 
+        self.closeimg = PhotoImage(file="assets/close_{}.png".format(theme))
+
         # Remove dotted line :O
         self.style = Style()
         self.style.configure("TNotebook.Tab", focuscolor=self.style.configure(".")["background"])
-
-        self.closeimg = PhotoImage(file="assets/close_{}.png".format(theme))
 
         self.home = Frame(self)
         self.title = Label(self.home, text="Futura Notes", font=("Segoe UI", 20, "bold")).pack(anchor="nw", padx=20, pady=20)
@@ -41,7 +41,7 @@ class Manager(Notebook):
         self.file.close()
 
     def save(self):
-        self.editor = self.nametowidget(self.select()) # Retrieves Editor Object of currently opened Tab
+        self.editor = self.getcurrentchild()
         self.filetosave = self.editor.filedir.cget("text")
         if isfile(self.filetosave):
             self.file2 = open(self.filetosave, "w")
@@ -51,13 +51,16 @@ class Manager(Notebook):
             self.saveas()
 
     def saveas(self):
-        self.editor = self.nametowidget(self.select())
+        self.editor = self.getcurrentchild()
         self.file3 = open(asksaveasfilename(), "w")
         if self.file3 != None:
             self.file3.write(self.editor.text.get("1.0", "end"))
             self.editor.filedir.configure(text=self.file3.name)
             self.tab(self.select(), text=basename(self.file3.name))
             self.file3.close()
+
+    def getcurrentchild(self):
+        return self.nametowidget(self.select())
     
 
     # The next two functions are heavily inspired by Akuli:
@@ -87,6 +90,8 @@ class Manager(Notebook):
 class Editor(Frame):
     def __init__(self, file, theme, *args):
         super().__init__(*args)
+
+        self.ispreviewed = False
 
         self.footer = Frame(self, width=self.winfo_width(), height=25)
         self.footer.pack(side="bottom", fill="x")
@@ -119,18 +124,24 @@ class Editor(Frame):
         return lexer
     
     def openpreview(self):
-        self.update()
-        self.preview = HtmlFrame(self, messages_enabled = False, width = int(self.winfo_width() / 2), vertical_scrollbar=False)
-        self.preview.pack_propagate = False
-        self.preview.pack(side="right", fill = "both", expand=True)
-        self.preview.on_link_click(self.updatepreview)
+        if not self.ispreviewed:
+            self.ispreviewed = True
+            self.update()
+            self.preview = HtmlFrame(self, messages_enabled = False, width = int(self.winfo_width() / 2), vertical_scrollbar=False)
+            self.preview.pack_propagate = False
+            self.preview.pack(side="right", fill = "both", expand=True)
+            self.preview.on_link_click(self.updatepreview)
 
-        self.text.bind("<KeyPress>", self.updatepreview, add=True)
-        self.text.bind("<BackSpace>", self.updatepreview, add=True)
-        self.updatepreview()
+            self.text.bind("<KeyPress>", self.updatepreview, add=True)
+            self.text.bind("<BackSpace>", self.updatepreview, add=True)
+            self.updatepreview()    
+        else:
+            self.ispreviewed = False
+            self.preview.destroy()
 
     def updatepreview(self, *args):
-        self.after_idle(lambda: self.preview.load_html(markdown(self.text.get("1.0", "end"))))  
+        if self.ispreviewed:
+            self.after_idle(lambda: self.preview.load_html(markdown(self.text.get("1.0", "end"))))  
 
 
 
