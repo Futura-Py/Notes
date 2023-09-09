@@ -1,4 +1,5 @@
-from tkinter import Menu, Tk, PhotoImage
+from tkinter import Menu, PhotoImage
+from tkinterdnd2 import Tk, DND_FILES
 
 from sv_ttk import set_theme
 
@@ -41,10 +42,18 @@ class App(Tk):
         self.filemenu.add_separator()
         self.filemenu.add_command(label="Preview", command=self.openpreview, foreground="white" if LINUX and theme == "dark" else "black", compound="right")
 
+        self.drop_target_register(DND_FILES)
+        self.dnd_bind("<<Drop>>", self.filedrop)
+
     def openpreview(self):
         self.manager.openpreview()
         if self.manager.getcurrentchild().ispreviewed: self.filemenu.entryconfigure(6, image=self.checkimg)
         else: self.filemenu.entryconfigure(6, image="")
+
+    def filedrop(self, event):
+        self.file = open(event.data.replace("{", "").replace("}", ""), "r")
+        self.manager.newtab(self.file)
+        self.file.close()
 
 
 
