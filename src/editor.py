@@ -5,7 +5,8 @@ from tkinter.ttk import Button, Notebook, Style
 from toml import load
 
 from chlorophyll import CodeView
-from pygments.lexers import TextLexer
+from pygments.lexers import TextLexer, get_lexer_for_filename
+from pygments.util import ClassNotFound
 
 
 class Manager(Notebook):
@@ -89,7 +90,7 @@ class Editor(Frame):
         self.filedir = Label(self.footer, text="unsaved")
         self.filedir.pack(side="left")
 
-        self.text = CodeView(self, lexer=TextLexer)
+        self.text = CodeView(self)
         self.text.pack(side="right", fill="both", expand=True)
         self.text._hs.grid_remove()
 
@@ -101,6 +102,15 @@ class Editor(Frame):
         if file != None:
             self.text.insert("1.0", file.read())
             self.filedir.configure(text=file.name)
+            self.text._set_lexer(self.get_lexer(file))
             file.close()
+
+    def get_lexer(self, file):
+        try:
+            lexer = get_lexer_for_filename(file.name)
+        except ClassNotFound:
+            lexer = TextLexer
+
+        return lexer
 
 
