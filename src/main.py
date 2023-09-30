@@ -25,7 +25,7 @@ class App(Tk):
         self.title("Futura Notes")
         set_theme(theme)
 
-        self.checkimg = PhotoImage(file="assets/check_{}.png".format(theme))
+        self.checkimg = PhotoImage(file="assets/check_light.png")
 
         self.h = self.winfo_screenheight() - 200
         self.w = self.winfo_screenwidth() - 100
@@ -43,21 +43,22 @@ class App(Tk):
 
         self.menubar.add_cascade(label="File", menu=self.filemenu)
 
-        self.filemenu.add_command(label="New", command=self.manager.newtab, foreground="white" if LINUX and theme == "dark" else "black")
-        self.filemenu.add_command(label="Open", command=self.manager.openfile, foreground="white" if LINUX and theme == "dark" else "black")
-        self.filemenu.add_command(label="Save", command=self.manager.save, foreground="white" if LINUX and theme == "dark" else "black")
-        self.filemenu.add_command(label="Save As", command=self.manager.saveas, foreground="white" if LINUX and theme == "dark" else "black")
-        self.filemenu.add_separator()
-        self.filemenu.add_command(label="Preview", command=self.openpreview, foreground="white" if LINUX and theme == "dark" else "black", compound="right")
-        self.filemenu.add_separator()
-        self.filemenu.add_command(label="Properties", command=self.openproperties, foreground="white" if LINUX and theme == "dark" else "black")
+        self.filemenu.add_command(label="New", command=self.manager.newtab, background="white", foreground="black")
+        self.filemenu.add_command(label="Open", command=self.manager.openfile, background="white", foreground="black")
+        self.filemenu.add_command(label="Save", command=self.manager.save, background="white", foreground="black")
+        self.filemenu.add_command(label="Save As", command=self.manager.saveas, background="white", foreground="black")
+        self.filemenu.add_separator(background="white")
+        self.filemenu.add_command(label="Preview", command=self.openpreview, background="white", foreground="black", compound="right")
+        self.filemenu.add_separator(background="white")
+        self.filemenu.add_command(label="Properties", command=self.openproperties, background="white", foreground="black")
 
         self.drop_target_register(DND_FILES)
         self.dnd_bind("<<Drop>>", self.filedrop)
 
     def openpreview(self):
         self.manager.openpreview()
-        if self.manager.getcurrentchild().ispreviewed: self.filemenu.entryconfigure(6, image=self.checkimg)
+        if self.manager.getcurrentchild().ispreviewed: 
+            self.filemenu.entryconfigure(5, image=self.checkimg)
         else: self.filemenu.entryconfigure(6, image="")
 
     def filedrop(self, event):
