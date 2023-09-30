@@ -10,3 +10,4 @@ tklinenums >= 1.5
 requests; sys_platform != 'linux'
 pygments
 pyperclip
+pillow == 10.0.0 # tkinterweb requires version 10.0.0

@@ -1,212 +1,148 @@
-import tkinter
-from pathlib import Path
-from tkinter import ttk
-from tkinter.font import Font
+from markdown import markdown
+from os.path import basename, isfile
+from tkfilebrowser import askopenfilename, asksaveasfilename
+from tkinter import Frame, Label, PhotoImage
+from tkinter.ttk import Button, Notebook, Style
+from tkinterweb import HtmlFrame
+from toml import load
 
-import chlorophyll
-import darkdetect
-import ntkutils
-import pygments
-import pyperclip
-from tkinterdnd2 import *
-from tklinenums import TkLineNumbers
-
-import mdpreview as md
-import pages.about as about
-import pages.wanttosave as w
-import settings.UI as settingsui
-import tabmanager
-import vars as v
-from settings.images import setimages
+from chlorophyll import CodeView
+from pygments.lexers import TextLexer, get_lexer_for_filename
+from pygments.util import ClassNotFound
 
 
-def build(theme, root, ver):
-    closeimg = tkinter.PhotoImage(file=Path(theme["closeimg"]))
+class Manager(Notebook):
+    def __init__(self, theme, *args):
+        super().__init__(*args)
 
-    def closepreview():
-        md.close()
-        textwidget.bind("<KeyPress>", refreshtitle)
-        if v.cfg["linenumbers"]:
-            textwidget.bind(
-                f"<BackSpace>", lambda event: root.after_idle(linenums.redraw), add=True
-            )
+        self.theme = theme
 
-    notebook = ttk.Notebook(root)
-    notebook.pack(fill="both", expand=True)
+        self.closeimg = PhotoImage(file="assets/close_{}.png".format(theme))
 
-    footer = tkinter.Frame(root, width=root.winfo_width(), height=25)
-    footer.update_idletasks()
-    footer.pack(side="bottom", fill="x")
-    footer.pack_propagate(False)
+        # Remove dotted line :O
+        self.style = Style()
+        self.style.configure("TNotebook.Tab", focuscolor=self.style.configure(".")["background"])
 
-    scrollbar = ttk.Scrollbar(root)
-    scrollbar.pack(side="right", fill="y")
+        self.home = Frame(self)
+        self.title = Label(self.home, text="Futura Notes", font=("Segoe UI", 20, "bold")).pack(anchor="nw", padx=20, pady=20)
+        self.btncreatenew = Button(self.home, text="Create New File", command=self.newtab).pack(anchor="nw", padx=20)
+        self.btnopen = Button(self.home, text="Open File", command=self.openfile).pack(anchor="nw", padx=20, pady=20)
+        self.add(self.home, text="Home", image=self.closeimg, compound="right")
 
-    if v.cfg["syntax-highlighting"]:
-        textwidget = chlorophyll.CodeView(
-            root,
-            height=800,
-            bg=theme["primary"],
-            lexer=pygments.lexers.TextLexer,
-            font=(v.cfg["font"], int(v.cfg["font-size"])),
-        )
-        textwidget._set_color_scheme(theme["color_scheme"])
-        textwidget.pack(side="right", fill="both", expand=True)
-        textwidget._hs.grid_remove()
-        textwidget._vs.grid_remove()
-    else:       
-        textwidget = tkinter.Text(
-            root,
-            width=100,
-            borderwidth=0,
-            height=root.winfo_height() - 125,
-            font=(v.cfg["font"], int(v.cfg["font-size"])),
-        )
-        textwidget.pack(side="right", fill="both", expand=True)
+        self.bind("<Button-1>", self.on_click, add=True)
 
-    textwidget.update()
+    def newtab(self, file=None):
+        self.add(Editor(file, self.theme), text="Untitled" if file==None else basename(file.name), image=self.closeimg, compound="right")
+        self.select(self.tabs()[-1]) # Select newly opened tab
 
-    scrollbar.configure(command=textwidget.yview)
-    textwidget["yscrollcommand"] = scrollbar.set
+    def openfile(self):
+        self.file = open(askopenfilename(), "r")
+        self.newtab(self.file)
+        self.file.close()
 
-    if v.cfg["linenumbers"]:
-        style = ttk.Style()
-        style.configure(
-            "TLineNumbers",
-            background=theme["primary"],
-            foreground=theme["opposite_secondary"],
-        )
-
-        font = Font(
-            family="Courier New bold", size=v.cfg["font-size"], name="TkLineNumsFont"
-        )
-
-        linenums = TkLineNumbers(root, textwidget, font, "right")
-        linenums.pack(side="left", fill="y")
-        linenums.configure(borderwidth=0)
-        linenums.reload(font)
-
-        textwidget.bind(
-            "<Return>", lambda event: root.after_idle(linenums.redraw), add=True
-        )
-        textwidget.bind(
-            f"<BackSpace>", lambda event: root.after_idle(linenums.redraw), add=True
-        )
-        textwidget.bind(
-            f"<Control-v>", lambda event: root.after_idle(linenums.redraw), add=True
-        )
-
-        def onscroll(first, last):
-            scrollbar.set(first, last)
-            linenums.redraw()
-
-        textwidget["yscrollcommand"] = onscroll
-
-        textwidget.linenums = linenums
-
-    filedir = tkinter.Label(footer, text="unsaved")
-    filedir.pack(side="left")
-
-    menubar = tkinter.Menu(root)
-    root.config(menu=menubar)
-
-    filemenu = tkinter.Menu(menubar, tearoff=False, bg="white")
-    settingsmenu = tkinter.Menu(menubar, tearoff=False, bg="white")
-
-    menubar.add_cascade(label="File", menu=filemenu)
-    menubar.add_cascade(label="Settings", menu=settingsmenu)
-
-    filemenu.add_command(label="Save ({})".format(v.cfg["hkey-save"]), command=tabmanager.save, foreground="black" )
-    filemenu.add_command(label="Save As", command=lambda: tabmanager.save(saveas=True), foreground="black")
-    filemenu.add_command(label="Open ({})".format(v.cfg["hkey-open"]), command=tabmanager.openfile, foreground="black")
-    filemenu.add_command(label="New", command=tabmanager.new, foreground="black")
-    filemenu.add_separator()
-    filemenu.add_command(label="Change file extension", command=tabmanager.changetype, foreground="black")
-    filemenu.add_separator()
-    filemenu.add_command(label="Preview Markdown", command=md.build, foreground="black")
-    filemenu.add_command(label="Close Preview", command=closepreview, foreground="black")
-
-    settingsmenu.add_command(label="Open Settings", command=settingsui.build, foreground="black")
-    settingsmenu.add_command(label="About", command=about.build, foreground="black")
-
-    if v.cfg["mica"]:
-        if v.cfg["theme"] == "Dark" or (v.cfg["theme"] == "System" and darkdetect.isDark()):
-            notebook.configure(bg="#1c1c1c")
-            ntkutils.blur_window_background(root, dark=True)
-            textwidget.text.configure(bg="#1b1c1b")
-            try:
-                textwidget.numberLines.configure(bg="#1b1c1b")
-            except:
-                pass
+    def save(self):
+        self.editor = self.getcurrentchild()
+        self.filetosave = self.editor.filedir.cget("text")
+        if isfile(self.filetosave):
+            self.file2 = open(self.filetosave, "w")
+            self.file2.write(self.editor.text.get("1.0", "end"))
+            self.file2.close()
         else:
-            ntkutils.blur_window_background(root)
-            textwidget.text.configure(bg="#fafbfa")
+            self.saveas()
 
-    def refreshtitle(e):
-        if not root.wm_title().endswith("*"):
-            root.title(root.wm_title() + "*")
-        tabmanager.tabs[v.tabselected][3] = "*"
+    def saveas(self):
+        self.editor = self.getcurrentchild()
+        self.file3 = open(asksaveasfilename(), "w")
+        if self.file3 != None:
+            self.file3.write(self.editor.text.get("1.0", "end"))
+            self.editor.filedir.configure(text=self.file3.name)
+            self.tab(self.select(), text=basename(self.file3.name))
+            self.file3.close()
 
-    textwidget.bind("<KeyPress>", refreshtitle)
+    def getcurrentchild(self):
+        return self.nametowidget(self.select())
+    
 
-    root.event_add("<<Open>>", "<{}>".format(v.cfg["hkey-open"]))
-    root.event_add("<<Save>>", "<{}>".format(v.cfg["hkey-save"]))
+    # The next two functions are heavily inspired by Akuli:
+    # https://github.com/Akuli/porcupine/blob/main/porcupine/plugins/tab_closing.py
+    def closetab(self, event):
+        self.before = self.index(f"@{event.x},{event.y}")
+        self.after = self.before + 1
+        self.forget(self.tabs()[self.before:self.after][0])
+        if len(self.tabs()) == 0: self.master.destroy()
 
-    root.bind("<<Open>>", tabmanager.openfile)
-    root.bind("<<Save>>", tabmanager.save)
+    def on_click(self, event) -> None:
+        self.update_idletasks()
+        if event.widget.identify(event.x, event.y) == "label":
+            # find the right edge of the top label (including close button)
+            right = event.x
+            while event.widget.identify(right, event.y) == "label":
+                right += 1
 
-    def filedrop(event):
-        tabmanager.openfile(path=event.data)
+            # hopefully the image is on the right edge of the label and there's no padding :O
+            if event.x >= right - self.closeimg.width():
+                self.closetab(event)
 
-    root.drop_target_register(DND_FILES)
-    root.dnd_bind("<<Drop>>", filedrop)
+    def openpreview(self):
+        self.nametowidget(self.select()).openpreview()
 
-    def cut():
-        pyperclip.copy(textwidget.selection_get())
-        textwidget.delete("sel.first", "sel.last")
 
-    def copy(): 
-        pyperclip.copy(textwidget.selection_get())
+class Editor(Frame):
+    def __init__(self, file, theme, *args):
+        super().__init__(*args)
 
-    def paste():
-        textwidget.insert("insert", pyperclip.paste())
+        self.ispreviewed = False
 
-    def popup(event):
+        self.footer = Frame(self, width=self.winfo_width(), height=25)
+        self.footer.pack(side="bottom", fill="x")
+        self.footer.pack_propagate(False)
+
+        self.filedir = Label(self.footer, text="unsaved")
+        self.filedir.pack(side="left")
+
+        self.text = CodeView(self)
+        self.text.pack(side="left", fill="both", expand=True)
+        self.text._hs.grid_remove()
+
+        self.color_scheme = load("src/{}.toml".format(theme))
+        self.text._set_color_scheme(self.color_scheme)
+
+        self.text._line_numbers.configure(borderwidth=0)
+
+        if file != None:
+            self.text.insert("1.0", file.read())
+            self.filedir.configure(text=file.name)
+            self.text._set_lexer(self.get_lexer(file))
+            file.close()
+
+    def get_lexer(self, file):
         try:
-            context.tk_popup(event.x_root, event.y_root, 0)
-        finally:
-            context.grab_release()
+            lexer = get_lexer_for_filename(file.name)
+        except ClassNotFound:
+            lexer = TextLexer
 
-    context = tkinter.Menu(root, tearoff=False, bg="white")
-    context.add_command(label="Cut", command=cut, foreground="black")
-    context.add_command(label="Copy", command=copy, foreground="black")
-    context.add_command(label="Paste", command=paste, foreground="black")
-    root.bind("<Button-3>", popup)
+        return lexer
+    
+    def openpreview(self):
+        if not self.ispreviewed:
+            self.ispreviewed = True
+            self.update()
+            self.preview = HtmlFrame(self, messages_enabled = False, width = int(self.winfo_width() / 2), vertical_scrollbar=False)
+            self.preview.pack_propagate = False
+            self.preview.pack(side="right", fill = "both", expand=True)
+            self.preview.on_link_click(self.updatepreview)
 
-    def on_closing():
-        if v.cfg["onclose"] == "Do Nothing":
-            root.destroy()
-        elif v.cfg["onclose"] == "Save":
-            tabmanager.save()
-            root.destroy()
+            self.text.bind("<KeyPress>", self.updatepreview, add=True)
+            self.text.bind("<BackSpace>", self.updatepreview, add=True)
+            self.updatepreview()    
         else:
-            w.build()
+            self.ispreviewed = False
+            self.preview.destroy()
+
+    def updatepreview(self, *args):
+        if self.ispreviewed:
+            self.after_idle(lambda: self.preview.load_html(markdown(self.text.get("1.0", "end"))))  
 
 
-    root.protocol("WM_DELETE_WINDOW", on_closing)
 
-    # Set global variables
-    v.root = root
-    v.textwidget = textwidget
-    v.filedir = filedir
-    v.tabbar = notebook
-    v.footer = footer
-    v.closeimg = closeimg
-    v.theme = theme
-    v.ver = ver
 
-    setimages()
-
-    notebook.add(tkinter.Frame(), text=tabmanager.tabs[0][0], image=closeimg, compound="right")
-    # Bind Left mouse button to write content of selected tab into the text widget
-    notebook.bind("<ButtonRelease-1>", tabmanager.click, add="+")  

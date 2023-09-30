@@ -1,83 +1,138 @@
-ver = "0.9 beta"
+from os import rename
+from os.path import isfile
+from tkinter import Menu, PhotoImage, Toplevel, Label, Frame
+from tkinter.ttk import Entry, Button
+from tkinterdnd2 import Tk, DND_FILES
 
-import os
-import tkinter
-from tkinter import ttk
+from sv_ttk import set_theme
 
-import ntkutils
-import sv_ttk
-from tkinterdnd2 import *
+from dialogs import show_message
+from editor import Manager
+from platform import system
 
-import config
-import editor
-import generatesize as size
-import settings.UI as settings
-import tabmanager
-import utils as u
-import vars as v
-from themes import dark, light
+BLOCKEDCHARS = "\\/:*?\"<>|"
 
-v.cfg = config.get()
+if system() == "Linux": LINUX = True
+else: LINUX = False
 
-if u.dark():
-    theme = dark.get()
-else:
-    theme = light.get()
+theme = "dark"
+newfile = ""
 
-root = TkinterDnD.Tk()
-root.geometry("200x350")
-root.withdraw()
-ntkutils.windowsetup(root, title="Futura Notes", resizeable=False)
-sv_ttk.set_theme(v.cfg["theme"].lower())
-root.update_idletasks()
-ntkutils.placeappincenter(root)
-root.update_idletasks()
+class App(Tk):
+    def __init__(self):
+        super().__init__()
+
+        self.title("Futura Notes")
+        set_theme(theme)
+
+        self.checkimg = PhotoImage(file="assets/check_light.png")
+
+        self.h = self.winfo_screenheight() - 200
+        self.w = self.winfo_screenwidth() - 100
+        self.x = int((self.winfo_screenwidth() - self.w) / 2)
+        self.y = int((self.winfo_screenheight() - self.h - 75) / 2)
+
+        self.geometry("{}x{}+{}+{}".format(self.w, self.h, self.x, self.y))
+
+        self.manager = Manager(theme, self)
+        self.manager.pack(fill="both", expand=True)
+        self.menubar = Menu(self, tearoff=False)
+        self.config(menu=self.menubar)
+
+        self.filemenu = Menu(self.menubar, tearoff=False)
+
+        self.menubar.add_cascade(label="File", menu=self.filemenu)
+
+        self.filemenu.add_command(label="New", command=self.manager.newtab, background="white", foreground="black")
+        self.filemenu.add_command(label="Open", command=self.manager.openfile, background="white", foreground="black")
+        self.filemenu.add_command(label="Save", command=self.manager.save, background="white", foreground="black")
+        self.filemenu.add_command(label="Save As", command=self.manager.saveas, background="white", foreground="black")
+        self.filemenu.add_separator(background="white")
+        self.filemenu.add_command(label="Preview", command=self.openpreview, background="white", foreground="black", compound="right")
+        self.filemenu.add_separator(background="white")
+        self.filemenu.add_command(label="Properties", command=self.openproperties, background="white", foreground="black")
+
+        self.drop_target_register(DND_FILES)
+        self.dnd_bind("<<Drop>>", self.filedrop)
+
+    def openpreview(self):
+        self.manager.openpreview()
+        if self.manager.getcurrentchild().ispreviewed: 
+            self.filemenu.entryconfigure(5, image=self.checkimg)
+        else: self.filemenu.entryconfigure(6, image="")
+
+    def filedrop(self, event):
+        self.file = open(event.data.replace("{", "").replace("}", ""), "r")
+        self.manager.newtab(self.file)
+        self.file.close()
+
+    def openproperties(self):
+        self.filetoopen = self.manager.getcurrentchild().filedir.cget("text")
+
+        if isfile(self.filetoopen): 
+            self.properties = Properties(self.filetoopen, self)
+            self.wait_window(self.properties)
+
+        if isfile(newfile):
+            self.manager.forget(self.manager.select())
+            self.manager.newtab(open(newfile, "r"))
+
+class Properties(Toplevel):
+    def __init__(self, file, *args):
+        super().__init__(*args)
+
+        self.file = file
+
+        self.title("File Properties")
+        self.geometry("350x175")
+        self.resizable(False, False)
+
+        self.imagefile = "assets/filetypes/{}_{}.png".format(file.split(".")[-1], theme)
+        if isfile(self.imagefile): self.image = PhotoImage(file=self.imagefile)
+        else: self.image = PhotoImage(file="assets/filetypes/other_{}.png".format(theme))
+        self.imagelabel = Label(self, image=self.image).place(x=5, y=5)
+
+        self.filename = Entry(self, width=25)
+        self.filename.insert(0, file.split("/")[-1])
+        self.filename.pack(anchor="ne", padx=15, pady=20)
+
+        self.filepath = Label(self, text="/".join(file.split("/")[:-1]), font=("Segoe UI", 10), width=27, anchor="w")
+        self.filepath.pack(anchor="ne", padx=15)
+
+        self.btnframe = Frame(self, width=320, height=40)
+        self.btnframe.pack_propagate(False)
+
+        self.cancelbtn = Button(self.btnframe, text="Cancel", command=self.cancel, width=14).pack(side="left")
+        self.applybtn = Button(self.btnframe, text="Apply", command=self.apply, width=14).pack(side="right")
+
+        self.btnframe.pack(anchor="nw", padx=15, pady=15)
+
+    def cancel(self):
+        global newfile
+
+        newfile = ""
+
+        self.destroy()
+
+    def apply(self):
+        global newfile # im sorry
+
+        for i in BLOCKEDCHARS:
+            if i in self.filename.get():
+                show_message(title="Invalid File Name", details="\nA File Name cannot contain one of the following characters:\n\n{}".format(BLOCKEDCHARS))
+                return
+            
+        newfile = self.file.split("/")
+        newfile[-1] = self.filename.get()
+        newfile = "/".join(newfile)
+
+        rename(self.file, newfile)
+
+        self.destroy()
 
 
-def preparewindow():
-    root.title("Futura Notes - Untitled *")
-    ntkutils.clearwin(root)
-    root.geometry(size.get())
-    root.update()
-    ntkutils.placeappincenter(root)
-    root.resizable(True, True)
-    editor.build(theme, root, ver)
 
 
-def openfile(path):
-    preparewindow()
-    tabmanager.openfile(path=path)
-
-def settingss():
-    preparewindow()
-    settings.build()
-
-
-title = tkinter.Label(root, text="Futura Notes", font=("Segoe UI", 20, "bold")).pack(anchor="nw", padx=20, pady=20)
-btncreatenew = ttk.Button(root, text="Create New File", command=preparewindow).pack(anchor="nw", padx=20)
-btnopenfile = ttk.Button(root, text="Open File", command=lambda: openfile(path="")).pack(anchor="nw", pady=10, padx=20)
-btnopendir = ttk.Button(root, text="Open Directory", state="disabled").pack(anchor="nw", padx=20)
-btnopenlast = ttk.Button(root, text="Open last file", command=lambda: openfile(path=content))
-btnopenlast.pack(anchor="nw", padx=20, pady=20)
-
-if os.path.isfile("lastfile.txt"):
-    file = open("lastfile.txt", "r")
-    content = file.read()
-    file.close()
-
-    if not os.path.isfile(content):
-        btnopenlast.configure(state="disabled")
-else:
-    btnopenlast.configure(state="disabled")
-
-root.update_idletasks()
-root.deiconify()
-root.mainloop()
-
-# Save path of last opened file
-content = tabmanager.tabs[v.tabselected][2]
-
-if content != "unsaved":
-    file = open("lastfile.txt", "w+")
-    file.write(content)
-    file.close()
+if __name__ == "__main__":
+    main = App()
+    main.mainloop()
