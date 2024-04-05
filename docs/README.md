@@ -6,6 +6,8 @@
 </a>
 <br><br>
 
+> The Main Branch is unusable. There is a rewrite branch, but that was paused because of performance difficulties
+
 A text editor in python!
 
 Modern and native look thanks to rdbendes [Sun Valley ttk theme](https://github.com/rdbende/Sun-Valley-ttk-theme)
